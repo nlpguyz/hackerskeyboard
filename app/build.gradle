@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "org.pocketworkstation.pckeyboard"
-        minSdkVersion 8
+        minSdkVersion 11
         targetSdkVersion 19
 
         ndk {
