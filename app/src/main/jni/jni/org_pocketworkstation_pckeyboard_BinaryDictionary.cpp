@@ -21,7 +21,7 @@
 #include <fcntl.h>
 
 #include <jni.h>
-#include "dictionary.h"
+#include "../src/dictionary.h"
 
 // ----------------------------------------------------------------------------
 
