@@ -1,0 +1,21 @@
+// Get loaded schemata
+Rime.getSchemaNames()
+Rime.getSchemaIndex()
+
+// Select a schema
+Rime.selectSchema(id)
+
+// Set ascii/Chinese mode
+Rime.setOption("ascii_mode", true | false);
+
+// Handle a key press
+boolean ret = Rime.onKey(event);
+
+// Check if there is a comit
+boolean r = Rime.getCommit();
+if (r) commitText(Rime.getCommitText());
+
+// Composition update
+
+// Candidate update
+
