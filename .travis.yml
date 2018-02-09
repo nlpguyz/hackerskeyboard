@@ -29,7 +29,7 @@ android:
 
 before_install:
     - export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin
-    - export NDK_VERSION=r16b
+    - export NDK_VERSION=r15c
     - curl -L http://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux-x86_64.zip -O
     - unzip android-ndk-${NDK_VERSION}-linux-x86_64.zip > /dev/null
     - rm android-ndk-${NDK_VERSION}-linux-x86_64.zip
