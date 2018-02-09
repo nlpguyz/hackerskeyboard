@@ -16,6 +16,7 @@ android {
                         // arguments "-DVAR_NAME=ARG_1 ARG_2"
                         // The following line passes 'rtti' and 'exceptions' to 'ANDROID_CPP_FEATURES'.
                         "-DANDROID_CPP_FEATURES=rtti exceptions"
+                abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
             }
         }
     }
