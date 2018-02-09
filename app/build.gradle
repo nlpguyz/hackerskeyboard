@@ -11,11 +11,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_ARM_NEON=TRUE",
-                        // If you're passing multiple arguments to a variable, pass them together:
-                        // arguments "-DVAR_NAME=ARG_1 ARG_2"
-                        // The following line passes 'rtti' and 'exceptions' to 'ANDROID_CPP_FEATURES'.
-                        "-DANDROID_CPP_FEATURES=rtti exceptions"
+                arguments "-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_static", "-DANDROID_STL_FORCE_FEATURES=ON"
                 abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
             }
         }

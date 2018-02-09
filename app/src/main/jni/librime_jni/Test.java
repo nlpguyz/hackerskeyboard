@@ -1,3 +1,5 @@
+package librime_jni;
+
 import java.util.logging.Logger;
 
 public class Test {
