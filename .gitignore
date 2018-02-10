@@ -7,3 +7,5 @@ app/build
 *.iml
 **/*.iml
 app/.externalNativeBuild
+.DS_Store
+**/.DS_Store
