@@ -20,10 +20,10 @@ package org.pocketworkstation.pckeyboard;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 public class Rime {
   private static Rime sInstance;
 
-  public Rime getInstance() {
+  public static Rime getInstance() {
     if (sInstance != null)
       return sInstance;
     synchronized (Rime.class) {
@@ -45,6 +45,24 @@ public class Rime {
   }
 
   private Rime() {
+  }
+
+  static class Config {
+      static String getSharedDataDir() {
+          return ""; // TODO
+      }
+
+      static String getUserDataDir() {
+          return ""; // TODO
+      }
+
+      static void deployOpencc() {
+          // TODO -- shouldn't be here
+      }
+
+      static String getResDataDir(String dir) {
+          return dir; // TODO
+      }
   }
 
   /** Rime編碼區 */
@@ -133,7 +151,7 @@ public class Rime {
   }
 
   /** Rime方案 */
-  public static class RimeSchema {
+  public class RimeSchema {
     private String kRightArrow = "→ ";
     private String kRadioSelected = " ✓";
 
@@ -299,7 +317,7 @@ public class Rime {
 
   private void init(boolean full_check) {
     mOnMessage = false;
-    initialize(Config.get().getSharedDataDir(), Config.get().getUserDataDir());
+    initialize(Config.getSharedDataDir(), Config.getUserDataDir());
     check(full_check);
     set_notification_handler();
     if (!find_session()) {
@@ -533,7 +551,7 @@ public class Rime {
 
   public String openccConvert(String line, String name) {
     if (name != null && name.length() > 0) {
-      File f = new File(Config.get().getResDataDir("opencc"), name);
+      File f = new File(Config.getResDataDir("opencc"), name);
       if (f.exists()) return opencc_convert(line, f.getAbsolutePath());
     }
     return line;

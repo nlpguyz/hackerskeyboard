@@ -401,7 +401,7 @@ string(STRIP ${LIBRIME_VERSION} LIBRIME_VERSION)
 set(LIBRIME_VERSION "${LIBRIME_VERSION}-${ANDROID_ABI}")
 MESSAGE(${LIBRIME_VERSION})
 target_compile_definitions(rime_jni PRIVATE
-  CLASSNAME="com/osfans/trime/Rime"
+  CLASSNAME="org/pocketworkstation/pckeyboard/Rime"
   OPENCC_VERSION="${OPENCC_VERSION}"
   LIBRIME_VERSION="${LIBRIME_VERSION}"
   )
