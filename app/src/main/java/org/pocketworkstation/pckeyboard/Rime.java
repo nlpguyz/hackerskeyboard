@@ -184,13 +184,13 @@ public class Rime {
           List<String> options = (List<String>) o.get("options");
           for (int i = 0; i < options.size(); i++) {
             String s = options.get(i);
-            if (Rime.get_option(s)) {
+            if (get_option(s)) {
               o.put("value", i);
               break;
             }
           }
         } else {
-          o.put("value", Rime.get_option(o.get("name").toString()) ? 1 : 0);
+          o.put("value", get_option(o.get("name").toString()) ? 1 : 0);
         }
         switches.set(j, o);
       }
@@ -203,12 +203,12 @@ public class Rime {
       if (value == null) value = 0;
       if (o.containsKey("options")) {
         List<String> options = (List<String>) o.get("options");
-        Rime.setOption(options.get(value), false);
+        setOption(options.get(value), false);
         value = (value + 1) % options.size();
-        Rime.setOption(options.get(value), true);
+        setOption(options.get(value), true);
       } else {
         value = 1 - value;
-        Rime.setOption(o.get("name").toString(), value == 1);
+        setOption(o.get("name").toString(), value == 1);
       }
       o.put("value", value);
       switches.set(i, o);
@@ -507,6 +507,7 @@ public class Rime {
   public void onMessage(String message_type, String message_value) {
     mOnMessage = true;
     Log.info(String.format("message: [%s] %s", message_type, message_value));
+/*
     Trime trime = Trime.getService();
     switch (message_type) {
       case "schema":
@@ -527,6 +528,7 @@ public class Rime {
         break;
     }
     mOnMessage = false;
+    */
   }
 
   public String openccConvert(String line, String name) {
