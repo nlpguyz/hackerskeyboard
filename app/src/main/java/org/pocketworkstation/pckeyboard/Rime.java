@@ -26,6 +26,9 @@
     import java.util.List;
     import java.util.logging.Logger;
 
+    import org.langwiki.alphatalk.script.*;
+    import org.mozilla.javascript.*;
+
     /**
      * Rime與OpenCC的Java實現
      *
@@ -532,7 +535,8 @@
         public void setMessageListener(Object func) {
             FunctionProxy funcProxy = FunctionProxy.getFunctionProxy(func);
             if (funcProxy == null) {
-                throw new ScriptException("1st arg should be a function");
+                Log.info("Error: 1st arg of setMessageListener must be a function");
+                return;
             }
 
             mOnMessageFunc = funcProxy;
