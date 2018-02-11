@@ -57,8 +57,8 @@
                 // TODO -- shouldn't be here
             }
 
-            static String getResDataDir(String dir) {
-                return dir; // TODO
+            static String getResDataDir(String moduleName) {
+                return moduleName; // TODO
             }
         }
 
@@ -90,8 +90,13 @@
 
         /** Rime候選項 */
         public static class RimeCandidate {
-            String text;
-            String comment;
+            public String text;
+            public String comment;
+
+            @Override
+            public String toString() {
+                return text + ", " + comment;
+            }
         }
 
         /** Rime候選區，包含多個{@link RimeCandidate 候選項} */
