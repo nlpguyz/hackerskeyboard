@@ -298,6 +298,14 @@ public class LatinIME extends InputMethodService implements
 
     private Rime mRime;
 
+    // Composer logic for Asian languages. This language group is not supported in original LatinIME,
+    // or original hackerskeyboard. The extra functionalities are encapsulated in this class.
+    private class CJKComposer {
+
+    }
+
+    private CJKComposer mComposer;
+
     public abstract static class WordAlternatives {
         protected CharSequence mChosenWord;
 

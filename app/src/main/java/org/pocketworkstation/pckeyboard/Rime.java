@@ -90,8 +90,8 @@
 
         /** Rime候選項 */
         public static class RimeCandidate {
-            public String text;
-            public String comment;
+            String text;
+            String comment;
 
             @Override
             public String toString() {
@@ -244,6 +244,7 @@
         private RimeSchema mSchema;
         private List mSchemaList;
         private boolean mOnMessage;
+        private FunctionProxy mOnMessageFunc;
 
         static {
             System.loadLibrary("opencc");
@@ -528,9 +529,22 @@
             getContexts();
         }
 
+        public void setMessageListener(Object func) {
+            FunctionProxy funcProxy = FunctionProxy.getFunctionProxy(func);
+            if (funcProxy == null) {
+                throw new ScriptException("1st arg should be a function");
+            }
+
+            mOnMessageFunc = funcProxy;
+        }
+
         public void onMessage(String message_type, String message_value) {
             mOnMessage = true;
-            Log.info(String.format("message: [%s] %s", message_type, message_value));
+            String msg = String.format("message: [%s] %s", message_type, message_value);
+            Log.info(msg);
+            if (mOnMessageFunc != null) {
+                mOnMessageFunc.invoke(msg);
+            }
     /*
         Trime trime = Trime.getService();
         switch (message_type) {
