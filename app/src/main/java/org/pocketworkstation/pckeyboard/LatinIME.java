@@ -47,7 +47,6 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.speech.SpeechRecognizer;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -55,9 +54,7 @@ import android.util.Log;
 import android.util.PrintWriterPrinter;
 import android.util.Printer;
 import android.view.HapticFeedbackConstants;
-import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -298,6 +295,35 @@ public class LatinIME extends InputMethodService implements
 
     private Rime mRime;
 
+    private Rime.RimeListener mRimeListener = new Rime.RimeListener() {
+        @Override
+        public void onMessage(String message_type, String message_value) {
+            Log.d(TAG, "onMessage(" + message_type + ", " + message_type + ")");
+            switch (message_type) {
+                case "schema":
+                    /*
+                    initSchema();
+                    if (trime != null) {
+                        trime.initKeyboard();
+                        trime.updateComposing();
+                    }
+                    */
+                    break;
+                case "option":
+                    /*
+                    getStatus();
+                    getContexts(); //切換中英文、簡繁體時更新候選
+                    if (trime != null) {
+                        boolean value = !message_value.startsWith("!");
+                        String option = message_value.substring(value ? 0 : 1);
+                        trime.onOptionChanged(option, value);
+                    }
+                    */
+                    break;
+            }
+        }
+    };
+
     // Composer logic for Asian languages. This language group is not supported in original LatinIME,
     // or original hackerskeyboard. The extra functionalities are encapsulated in this class.
     private class CJKComposer {
@@ -469,6 +495,7 @@ public class LatinIME extends InputMethodService implements
         setNotification(mKeyboardNotification);
 
         mRime = Rime.getInstance();
+        mRime.setRimeListener(mRimeListener);
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");

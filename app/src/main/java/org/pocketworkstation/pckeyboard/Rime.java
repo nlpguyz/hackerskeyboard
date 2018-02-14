@@ -47,6 +47,10 @@
             }
         }
 
+        public interface RimeListener {
+            void onMessage(String message_type, String message_value);
+        }
+
         static class Config {
             static String getSharedDataDir() {
                 return "/sdcard/rime";
@@ -248,6 +252,7 @@
         private List mSchemaList;
         private boolean mOnMessage;
         private FunctionProxy mOnMessageFunc;
+        private RimeListener mRimeListener;
 
         static {
             System.loadLibrary("opencc");
@@ -532,6 +537,7 @@
             getContexts();
         }
 
+        // Set a listener for Javascript
         public void setMessageListener(Object func) {
             FunctionProxy funcProxy = FunctionProxy.getFunctionProxy(func);
             if (funcProxy == null) {
@@ -542,6 +548,10 @@
             mOnMessageFunc = funcProxy;
         }
 
+        public void setRimeListener(RimeListener l) {
+            mRimeListener = l;
+        }
+
         public void onMessage(String message_type, String message_value) {
             mOnMessage = true;
             String msg = String.format("message: [%s] %s", message_type, message_value);
@@ -549,28 +559,10 @@
             if (mOnMessageFunc != null) {
                 mOnMessageFunc.invoke(msg);
             }
-    /*
-        Trime trime = Trime.getService();
-        switch (message_type) {
-          case "schema":
-            initSchema();
-            if (trime != null) {
-              trime.initKeyboard();
-              trime.updateComposing();
+
+            if (mRimeListener != null) {
+                mRimeListener.onMessage(message_type, message_value);
             }
-            break;
-          case "option":
-            getStatus();
-            getContexts(); //切換中英文、簡繁體時更新候選
-            if (trime != null) {
-              boolean value = !message_value.startsWith("!");
-              String option = message_value.substring(value ? 0 : 1);
-              trime.onOptionChanged(option, value);
-            }
-            break;
-        }
-        mOnMessage = false;
-        */
         }
 
         public String openccConvert(String line, String name) {
