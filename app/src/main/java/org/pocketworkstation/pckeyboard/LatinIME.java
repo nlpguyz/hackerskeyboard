@@ -60,6 +60,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.KeyEvent;
 import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
@@ -73,6 +74,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -180,7 +182,7 @@ public class LatinIME extends InputMethodService implements
 
     private Resources mResources;
 
-    private String mInputLocale;
+    /*private*/ public String mInputLocale;
     private String mSystemLocale;
     private LanguageSwitcher mLanguageSwitcher;
 
@@ -300,10 +302,9 @@ public class LatinIME extends InputMethodService implements
 
     private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
 
-    private Rime mRime;
+    public Rime mRime; // public for debugging
 
     private Rime.RimeListener mRimeListener = new Rime.RimeListener() {
-        @Override
         public void onMessage(String message_type, String message_value) {
             Log.d(TAG, "onMessage(" + message_type + ", " + message_type + ")");
             switch (message_type) {
@@ -338,6 +339,15 @@ public class LatinIME extends InputMethodService implements
     }
 
     private CJKComposer mComposer;
+
+    static final String[] sCjkLocales = new String[] {
+            "zh_CN",
+            "zh_TW",
+    };
+
+     private boolean isCJK() {
+        return Arrays.asList(sCjkLocales).contains(mInputLocale);
+    }
 
     public abstract static class WordAlternatives {
         protected CharSequence mChosenWord;
@@ -506,7 +516,7 @@ public class LatinIME extends InputMethodService implements
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");
-            ScriptManager.getInstance().setGlobalVariable(ScriptManager.VAR_NAME_SYS, mRime);
+            ScriptManager.getInstance().setGlobalVariable(ScriptManager.VAR_NAME_SYS, this);
 
             Thread th = new Thread() {
                 public void run() {
@@ -2605,6 +2615,44 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void showSuggestions(WordComposer word) {
+        if (isCJK()) {
+            showSuggestionsCJK(word);
+        } else {
+            showSuggestionsLatin(word);
+        }
+    }
+
+    private void showSuggestionsCJK(WordComposer word) {
+        Log.d(TAG, "showSuggestionsCJK " + word.getTypedWord());
+
+        // TODO CJK
+        CharSequence typedWord = word.getTypedWord();
+
+        // TMP: Feed to Rime
+        mRime.clearComposition();
+
+        List<CharSequence> stringList = new ArrayList<>();
+
+        if (typedWord != null) {
+            for (int i = 0; i < typedWord.length(); i++) {
+                char ch = Character.toLowerCase(typedWord.charAt(i));
+                mRime.onKey(new int[]{ch, 0});
+            }
+
+            // Get first row first
+            Rime.RimeCandidate[] candidates = mRime.getCandidates();
+            for (Rime.RimeCandidate c : candidates) {
+                stringList.add(c.text);
+            }
+        }
+
+        // TODO check the values
+        boolean correctionAvailable = false;
+        boolean typedWordValid = true;
+        showSuggestions(stringList, typedWord, typedWordValid, correctionAvailable);
+    }
+
+    private void showSuggestionsLatin(WordComposer word) {
         // long startTime = System.currentTimeMillis(); // TIME MEASUREMENT!
         // TODO Maybe need better way of retrieving previous word
         CharSequence prevWord = EditingUtil.getPreviousWord(
@@ -2728,6 +2776,7 @@ public class LatinIME extends InputMethodService implements
         TextEntryState.acceptedSuggestion(mComposing.toString(), suggestion);
         // Follow it with a space
         if (mAutoSpace && !correcting) {
+            //if (!isCJK())
             sendSpace();
             mJustAddedAutoSpace = true;
         }
