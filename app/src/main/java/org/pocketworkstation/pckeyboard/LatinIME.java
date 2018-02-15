@@ -81,6 +81,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/*
+   TODO
+   Under development. Add CJK language support.
+   Add a language into the language switcher. Support CJK by using an input
+   engine
+ */
+
 /**
  * Input method implementation for Qwerty'ish keyboard.
  */
