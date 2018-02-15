@@ -10,9 +10,6 @@
 [submodule "app/src/main/jni/leveldb"]
 	path = app/src/main/jni/leveldb
 	url = https://github.com/google/leveldb.git
-[submodule "app/src/main/jni/boost"]
-	path = app/src/main/jni/boost
-	url = https://github.com/nlpguyz/boost.git
 [submodule "app/src/main/jni/marisa-trie"]
 	path = app/src/main/jni/marisa-trie
 	url = https://github.com/s-yata/marisa-trie.git
@@ -25,3 +22,6 @@
 [submodule "app/src/main/jni/libiconv"]
 	path = app/src/main/jni/libiconv
 	url = https://github.com/osfans/libiconv-gnu.git
+[submodule "app/src/main/jni/boost"]
+	path = app/src/main/jni/boost
+	url = https://github.com/nlpguyz/boost
