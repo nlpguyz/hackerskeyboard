@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="settings_key_modes_values"><item>@string/settings_key_mode_auto</item><item>@string/settings_key_mode_always_show</item><item>@string/settings_key_mode_always_hide</item></string-array>
+<string-array name="settings_key_modes"><item>@string/settings_key_mode_auto_name</item><item>@string/settings_key_mode_always_show_name</item><item>@string/settings_key_mode_always_hide_name</item></string-array>
+<string-array name="prediction_modes"><item>无</item><item>基本模式</item><item>高级模式</item></string-array>
+<string-array name="prediction_modes_values"><item>@string/prediction_none</item><item>@string/prediction_basic</item><item>@string/prediction_full</item></string-array>
+<string-array name="voice_input_modes"><item>在主键盘</item><item>在符号键盘</item><item>关闭</item></string-array>
+<string-array name="voice_input_modes_values"><item>@string/voice_mode_main</item><item>@string/voice_mode_symbols</item><item>@string/voice_mode_off</item></string-array>
+<string-array name="voice_input_modes_summary"><item>在主键盘显示麦克风键</item><item>在符号键盘显示麦克风键</item><item>禁用语音输入</item></string-array>
+<string-array name="keyboard_layout_modes"><item>@string/layout_ics</item><item>@string/layout_gingerbread</item><item>@string/layout_stone_bold</item><item>@string/layout_trans_neon</item></string-array>
+<string-array name="keyboard_layout_modes_values"><item>0</item><item>1</item><item>2</item><item>3</item></string-array>
+<string-array name="keyboard_mode_entries"><item>4排 Gingerbread 布局</item><item>小型的5排布局 (仅US QWERTY ！)</item><item>完整的5排布局</item></string-array>
+<string-array name="keyboard_mode_values"><item>0</item><item>1</item><item>2</item></string-array>
+<string-array name="ctrl_a_override_entries"><item>禁用 Ctrl-A, 使用 Ctrl-Alt-A 来代替</item><item>"完全禁用 Ctrl-A "</item><item>使用 Ctrl-A (不重写)</item></string-array>
+<string-array name="ctrl_a_override_values"><item>0</item><item>1</item><item>2</item></string-array>
+<string-array name="chording_ctrl_key_entries"><item>无 (当没有调整其他键时忽视)</item><item>左 Ctrl</item><item>右 Ctrl</item></string-array>
+<string-array name="chording_ctrl_key_values"><item>0</item><item>113</item><item>114</item></string-array>
+<string-array name="chording_alt_key_entries"><item>无 (当没有调整其他键时忽视)</item><item>左 Alt</item><item>右 Alt</item></string-array>
+<string-array name="chording_alt_key_values"><item>0</item><item>57</item><item>58</item></string-array>
+<string-array name="chording_meta_key_entries"><item>无 (当没有调整其他键时忽视)</item><item>左 Meta</item><item>右 Meta</item></string-array>
+<string-array name="chording_meta_key_values"><item>0</item><item>117</item><item>118</item></string-array>
+<string-array name="hint_modes"><item>隐藏提示符号</item><item>"显示  ASCII 标点符号"</item><item>显示所有隐藏符号</item></string-array>
+<string-array name="hint_modes_values"><item>0</item><item>1</item><item>2</item></string-array>
+<string-array name="slide_keys_entries"><item>忽视滑动事件(推荐)</item><item>发送触摸的第一个按键</item><item>发送触摸的第二个按键</item><item>发送第一个和最后一个按键</item><item>发送滑动时触摸的所有按键</item></string-array>
+<string-array name="slide_keys_values"><item>0</item><item>1</item><item>2</item><item>3</item><item>4</item></string-array>
+<string-array name="click_method_entries"><item>系统默认 (忽视点击音量键)</item><item>完全点击音量</item><item>跟随媒体音量</item><item>Reverse media volume</item></string-array>
+<string-array name="click_method_values"><item>0</item><item>1</item><item>2</item><item>3</item></string-array>
+<string-array name="render_mode_entries"><item>直接渲染 (节省内存)</item><item>软件缓冲 (默认)</item><item>硬件加速 (实验性)</item></string-array>
+<string-array name="render_mode_values"><item>0</item><item>1</item><item>2</item></string-array>
+<string-array name="swipe_action_entries"><item>(无动作)</item><item>关闭键盘</item><item>切换扩展行</item><item>启动设定</item><item>转换建议</item><item>语音输入</item><item>转换键盘布局</item><item>增加高度</item><item>降低高度</item><item>上一种语言</item><item>下一种语言</item></string-array>
+<string-array name="swipe_action_values"><item>无</item><item>关闭</item><item>扩展</item><item>设定</item><item>建议</item><item>语音输入</item><item>完整模式</item><item>增加高度</item><item>减小高度</item><item>lang_prev</item><item>lang_next</item></string-array>
+<string-array name="popup_content_entries"><item>No popups</item><item>没有气泡, 使用自动回复</item><item>Unique only: 3 ⇒ ³, e ⇒ é</item><item>Add shifted: 3 ⇒ #³, e ⇒ é</item><item>Add upper: 3 ⇒ #³, e ⇒ Eé</item><item>Add self: 3 ⇒ 3#³, e ⇒ eEé</item></string-array>
+<string-array name="popup_content_values"><item>256</item><item>768</item><item>0</item><item>1</item><item>3</item><item>7</item></string-array>
+</resources>

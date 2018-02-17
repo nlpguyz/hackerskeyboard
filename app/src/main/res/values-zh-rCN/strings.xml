@@ -1,140 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-/*
-**
-** Copyright 2008, The Android Open Source Project
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-**
-**     http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*/
- -->
-
-<resources xmlns:android="http://schemas.android.com/apk/res/org.pocketworkstation.pckeyboard"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- <string name="english_ime_name" msgid="7252517407088836577">"Android 键盘"</string> -->
-    <!-- <string name="english_ime_settings" msgid="6661589557206947774">"Android 键盘设置"</string> -->
-    <string name="english_ime_input_options" msgid="3909945612939668554">"输入选项"</string>
-    <string name="vibrate_on_keypress" msgid="5258079494276955460">"按键时振动"</string>
-    <string name="sound_on_keypress" msgid="6093592297198243644">"按键时播放音效"</string>
-    <string name="popup_on_keypress" msgid="123894815723512944">"按键时显示弹出窗口"</string>
-    <string name="hit_correction" msgid="4855351009261318389">"纠正输入错误"</string>
-    <string name="hit_correction_summary" msgid="8761701873008070796">"启用输入错误纠正功能"</string>
-    <string name="hit_correction_land" msgid="2567691684825205448">"横向输入错误"</string>
-    <string name="hit_correction_land_summary" msgid="4076803842198368328">"启用输入错误纠正功能"</string>
-    <string name="auto_correction" msgid="7911639788808958255">"字词建议"</string>
-    <string name="auto_correction_summary" msgid="6881047311475758267">"自动纠正前面的字词"</string>
-    <string name="prediction" msgid="466220283138359837">"字词建议"</string>
-    <string name="prediction_category" msgid="7027100625580696660">"字词建议设置"</string>
-    <string name="prediction_summary" msgid="459788228830873110">"输入时启用自动填写功能"</string>
-    <string name="auto_complete_dialog_title" msgid="2172048590607201920">"自动完成"</string>
-    <string name="prediction_landscape" msgid="4874601565593216183">"扩大文字字段"</string>
-    <string name="prediction_landscape_summary" msgid="6736551095997839472">"在横向视图中隐藏字词建议"</string>
-    <string name="auto_cap" msgid="1719746674854628252">"自动大写"</string>
-    <string name="auto_cap_summary" msgid="3260681697600786825">"句首字母大写"</string>
-    <string name="auto_punctuate" msgid="7276672334264521751">"自动加标点"</string>
-    <string name="auto_punctuate_summary" msgid="6589441565817502132"></string>
-    <string name="quick_fixes" msgid="5353213327680897927">"快速纠正"</string>
-    <string name="quick_fixes_summary" msgid="3405028402510332373">"纠正常见的输入错误"</string>
-    <string name="show_suggestions" msgid="507074425254289133">"显示建议"</string>
-    <string name="show_suggestions_summary" msgid="1989672863935759654">"输入时启用联想提示"</string>
-    <string name="auto_complete" msgid="1103196318775486023">"自动填写"</string>
-    <string name="auto_complete_summary" msgid="6113149638718274624">"按空格键和标点符号时自动插入突出显示的字词"</string>
-    <string name="prefs_settings_key" msgid="4623341240804046498">"显示设置键"</string>
-    <string name="settings_key_mode_auto_name" msgid="2993460277873684680">"自动"</string>
-    <string name="settings_key_mode_always_show_name" msgid="3047567041784760575">"始终显示"</string>
-    <string name="settings_key_mode_always_hide_name" msgid="7833948046716923994">"始终隐藏"</string>
-    <!-- no translation found for settings_key_modes:0 (8549888726962891527) -->
-    <!-- no translation found for settings_key_modes:1 (881280041213210923) -->
-    <!-- no translation found for settings_key_modes:2 (7317310620171067848) -->
-    <string name="bigram_suggestion" msgid="1323347224043514969">"双连词建议"</string>
-    <string name="bigram_suggestion_summary" msgid="4383845146070101531">"使用以前的字词改进建议"</string>
-  <string-array name="prediction_modes">
-    <item msgid="4870266572388153286">"无"</item>
-    <item msgid="1669461741568287396">"基本模式"</item>
-    <item msgid="4894328801530136615">"高级"</item>
-  </string-array>
-    <string name="added_word" msgid="8993883354622484372">"<xliff:g id="WORD">%s</xliff:g>：已保存"</string>
-    <string name="tip_long_press" msgid="6101270866284343344">"按住某个键可看到重音符号（例如 ø、ö 等）"</string>
-    <string name="tip_dismiss" msgid="7585579046862204381">"随时可以通过按后退键 ↶ 关闭键盘"</string>
-    <string name="tip_access_symbols" msgid="6344098517525531652">"访问数字和符号"</string>
-    <string name="tip_add_to_dictionary" msgid="1487293888469227817">"长按最左侧的字可将其添加到词典中"</string>
-    <string name="touch_to_continue" msgid="7869803257948414531">"轻触此提示继续 »"</string>
-    <string name="touch_to_finish" msgid="7990196086480585789">"轻触此处可关闭该提示，然后便可开始输入内容！"</string>
-    <string name="tip_to_open_keyboard" msgid="6821200275486950452"><b>"您可以随时通过触摸文字字段打开键盘"</b></string>
-    <string name="tip_to_view_accents" msgid="5433158573693308501"><b>"轻触并按住某个键可以查看重音符号"\n"（ø、ö、ô、ó 等）"</b></string>
-    <string name="tip_to_open_symbols" msgid="7345139325622444880"><b>"轻触该键即可切换到数字和符号键盘"</b></string>
-    <string name="tip_to_close_symbols" msgid="5227724217206927185"><b>"再次轻触该键即可返回字母键盘"</b></string>
-    <string name="tip_to_launch_settings" msgid="8402961128983196128"><b>"触摸并按住该键可更改键盘设置，例如自动完成"</b></string>
-    <string name="tip_to_start_typing" msgid="7213843601369174313"><b>"试试吧！"</b></string>
-    <string name="label_go_key" msgid="1635148082137219148">"开始"</string>
-    <string name="label_next_key" msgid="362972844525672568">"下一步"</string>
-    <string name="label_done_key" msgid="2441578748772529288">"完成"</string>
-    <string name="label_send_key" msgid="2815056534433717444">"发送"</string>
-    <string name="label_symbol_key" msgid="6175820506864489453">"?123"</string>
-    <string name="label_phone_key" msgid="4275497665515080551">"123"</string>
-    <string name="label_alpha_key" msgid="8864943487292437456">"ABC"</string>
-    <string name="label_alt_key" msgid="2846315350346694811">"ALT"</string>
-    <string name="voice_warning_title" msgid="4419354150908395008">"语音输入"</string>
-    <string name="voice_warning_locale_not_supported" msgid="637923019716442333">"语音输入功能当前还不支持您的语言，您只能输入英语语音。"</string>
-    <string name="voice_warning_may_not_understand" msgid="4611518823070986445">"语音输入是一项试验性的功能，它采用了 Google 的网络语音识别功能。"</string>
-    <string name="voice_warning_how_to_turn_off" msgid="5652369578498701761">"要关闭语音输入功能，请转至键盘设置。"</string>
-    <string name="voice_hint_dialog_message" msgid="6892342981545727994">"要使用语音输入，请按麦克风按钮或者在屏幕键盘上滑动手指。"</string>
-    <string name="voice_listening" msgid="467518160751321844">"请开始说话"</string>
-    <string name="voice_working" msgid="6666937792815731889">"正在处理"</string>
-    <string name="voice_initializing" msgid="661962047129906646"></string>
-    <string name="voice_error" msgid="5140896300312186162">"出错，请重试。"</string>
-    <string name="voice_network_error" msgid="6649556447401862563">"无法连接"</string>
-    <string name="voice_too_much_speech" msgid="5746973620134227376">"出错，语音过长。"</string>
-    <string name="voice_audio_error" msgid="5072707727016414454">"音频问题"</string>
-    <string name="voice_server_error" msgid="7807129913977261644">"服务器出错"</string>
-    <string name="voice_speech_timeout" msgid="8461817525075498795">"未听到语音"</string>
-    <string name="voice_no_match" msgid="4285117547030179174">"未找到匹配项"</string>
-    <string name="voice_not_installed" msgid="5552450909753842415">"未安装语音搜索"</string>
-    <string name="voice_swipe_hint" msgid="6943546180310682021"><b>"提示："</b>"在键盘上滑动手指可激活语音功能"</string>
-    <string name="voice_punctuation_hint" msgid="1611389463237317754"><b>"提示："</b>"稍后，请尝试使用语音输入标点符号，如“句号”、“逗号”或“问号”。"</string>
-    <string name="cancel" msgid="6830980399865683324">"取消"</string>
-    <string name="ok" msgid="7898366843681727667">"确定"</string>
-    <string name="voice_input" msgid="2466640768843347841">"语音输入"</string>
-  <string-array name="voice_input_modes">
-    <item msgid="1349082139076086774">"主键盘上"</item>
-    <item msgid="8529385602829095903">"符号键盘上"</item>
-    <item msgid="7283103513488381103">"关"</item>
-  </string-array>
-  <string-array name="voice_input_modes_summary">
-    <item msgid="554248625705084903">"主键盘上的麦克风"</item>
-    <item msgid="6907837061058876770">"符号键盘上的麦克风"</item>
-    <item msgid="3664304608587798036">"已停用语音输入"</item>
-  </string-array>
-    <string name="auto_submit" msgid="9151008027068358518">"语音结束后自动提交"</string>
-    <string name="auto_submit_summary" msgid="4961875269610384226">"搜索或转到下一字段时自动按 Enter。"</string>
+<resources>
+    <string name="english_ime_name">黑客键盘</string>
+    <string name="english_ime_settings">黑客键盘设定</string>
+    <string name="english_ime_input_options">输入法选项</string>
+    <string name="title_keyboard_view_settings">键盘外观设定</string>
+    <string name="title_keyboard_height_portrait">键盘高度，竖屏</string>
+    <string name="title_keyboard_height_landscape">键盘高度，横屏</string>
+    <string name="title_key_layout_options">键盘布局设定</string>
+    <string name="title_key_behavior_settings">键盘行为设定</string>
+    <string name="title_long_press_alternate_keys">长按 ALT 键</string>
+    <string name="title_suggested_punctuation">标点建议</string>
+    <string name="title_input_mode_settings">输入模式设定</string>
+    <string name="title_debugging">调试</string>
+    <string name="title_input_connection_details">输入连接细节</string>
+    <string name="title_version">版本</string>
+    <string name="title_swipe_gestures">滑动手势 (实验版)</string>
+    <string name="title_hardware_key_actions">物理键盘按键动作</string>
+    <string name="vibrate_on_keypress">按键振动</string>
+    <string name="sound_on_keypress">按键声音</string>
+    <string name="popup_on_keypress">字符预览</string>
+    <string name="hit_correction">纠正输入错误</string>
+    <string name="hit_correction_summary">启用纠错</string>
+    <string name="hit_correction_land">横屏输入错误</string>
+    <string name="hit_correction_land_summary">启用纠错</string>
+    <string name="auto_correction">单词建议</string>
+    <string name="auto_correction_summary">自动纠正前一个字词</string>
+    <string name="prediction">单词建议</string>
+    <string name="prediction_category">单词建议设定</string>
+    <string name="prediction_summary">输入时启用自动完成</string>
+    <string name="auto_complete_dialog_title">自动完成</string>
+    <string name="prediction_landscape">增加文字区域大小</string>
+    <string name="prediction_landscape_summary">横屏时隐藏字词建议</string>
+    <string name="auto_cap">自动大写</string>
+    <string name="auto_cap_summary">句首大写</string>
+    <string name="auto_punctuate">自动加入标点</string>
+    <string name="auto_punctuate_summary" />
+    <string name="quick_fixes">Quick fixes</string>
+    <string name="quick_fixes_summary">纠正常用输入错误</string>
+    <string name="show_suggestions">显示建议</string>
+    <string name="show_suggestions_summary">输入时显示字词建议</string>
+    <string name="auto_complete">自动完成</string>
+    <string name="auto_complete_summary">使用空格和标点自动输入高亮词</string>
+    <string name="prefs_settings_key" />
+    <string name="settings_key_mode_auto_name">自动</string>
+    <string name="settings_key_mode_always_show_name">总是显示</string>
+    <string name="settings_key_mode_always_hide_name">总是隐藏</string>
+    <string name="bigram_suggestion">大内存建议</string>
+    <string name="bigram_suggestion_summary">使用以前的字词以提高建议</string>
+    <string name="prediction_none">0</string>
+    <string name="prediction_basic">1</string>
+    <string name="prediction_full">2</string>
+    <string name="added_word">%s: 已保存</string>
+    <string name="tip_long_press">Hold a key down to see accents (ø, ö, etc.)</string>
+    <string name="tip_dismiss">Press the back key ↶ to close the keyboard at any point</string>
+    <string name="tip_access_symbols">Access numbers and symbols</string>
+    <string name="tip_add_to_dictionary">Press and hold the left-most word to add it to the dictionary</string>
+    <string name="touch_to_continue">点击此处继续 »</string>
+    <string name="touch_to_finish">Touch here to close this hint and start typing!</string>
+    <string name="tip_to_open_keyboard"><b>The keyboard opens any time you touch a text field</b></string>
+    <string name="tip_to_view_accents"><b>"Touch &amp; hold a key to view accents
+        (ø, ö, ô, ó, and so on)"</b>" "</string>
+    <string name="tip_to_open_symbols"><b>Switch to numbers and symbols by touching this key</b></string>
+    <string name="tip_to_close_symbols"><b>Go back to letters by touching this key again</b></string>
+    <string name="tip_to_launch_settings"><b>Touch &amp; hold this key to change keyboard settings, like auto complete</b></string>
+    <string name="tip_to_start_typing">试试吧！</string>
+    <string name="label_go_key">Go</string>
+    <string name="label_next_key">下一步</string>
+    <string name="label_done_key">完成</string>
+    <string name="label_send_key">发送</string>
+    <string name="label_symbol_key">\?123</string>
+    <string name="label_phone_key">123</string>
+    <string name="label_alpha_key">ABC</string>
+    <string name="label_alt_key">ALT</string>
+    <string name="voice_warning_title">语音输入按键</string>
+    <string name="voice_warning_locale_not_supported">"语音输入功能当前还不支持您的语言，您只能输入英语语音。"</string>
+    <string name="voice_warning_may_not_understand">语音输入是一项试验性的功能，它采用了 Google 的网络语音识别功能。"</string>
+    <string name="voice_warning_how_to_turn_off">"要关闭语音输入功能，请转至键盘设置。"</string>
+    <string name="voice_hint_dialog_message">"要使用语音输入，请按麦克风按钮或者在屏幕键盘上滑动手指。"</string>
+    <string name="voice_listening">请开始说话</string>
+    <string name="voice_working">正在处理</string>
+    <string name="voice_initializing" />
+    <string name="voice_error">抱歉，请重试</string>
+    <string name="voice_network_error">"无法连接"</string>
+    <string name="voice_too_much_speech">"出错，语音过长。"</string>
+    <string name="voice_audio_error">"音频问题"</string>
+    <string name="voice_server_error">"服务器出错"</string>
+    <string name="voice_speech_timeout">"未听到语音"</string>
+    <string name="voice_no_match">"未找到匹配项"</string>
+    <string name="voice_not_installed">语音搜索没有安装</string>
+    <string name="voice_swipe_hint"><b>"提示："</b>"在键盘上滑动手指可激活语音功能"</string>
+    <string name="voice_punctuation_hint"><b>"提示："</b>"稍后，请尝试使用语音输入标点符号，如“句号”、“逗号”或“问号”。"</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="voice_input">"语音输入"</string>
+    <string name="voice_mode_main">0</string>
+    <string name="voice_mode_symbols">1</string>
+    <string name="voice_mode_off">2</string>
+    <string name="auto_submit">说完后自动提交</string>
+    <string name="auto_submit_summary">"搜索或转到下一字段时自动按 Enter。"</string>
     <string name="open_the_keyboard" msgid="2215920976029260466"><font size="17"><b>"打开键盘"\n</b></font><font size="3">\n</font>"触摸任意文本字段。"</string>
     <string name="close_the_keyboard" msgid="6251022259044940103"><font size="17"><b>"关闭键盘"\n</b></font><font size="3">\n</font>"按“返回”键。"</string>
     <string name="touch_and_hold" msgid="6154166367273010534"><font size="17"><b>"触摸并按住选项键"\n</b></font><font size="3">\n</font>"进入标点/重音符号界面。"</string>
     <string name="keyboard_settings" msgid="4585753477617374032"><font size="17"><b>"键盘设置"\n</b></font><font size="3">\n</font>"触摸并按住 "<b>"?123"</b>" 键。"</string>
-    <string name="popular_domain_0" msgid="3745279225122472969">".com"</string>
-    <string name="popular_domain_1" msgid="1370572248164278467">".net"</string>
-    <string name="popular_domain_2" msgid="3036812463748402878">".org"</string>
-    <string name="popular_domain_3" msgid="8718639560809452028">".gov"</string>
-    <string name="popular_domain_4" msgid="35359437471311470">".edu"</string>
-    <string name="selectInputMethod" msgid="315076553378705821">"选择输入法"</string>
-    <string name="language_selection_title" msgid="1651299598555326750">"输入语言"</string>
-    <string name="language_selection_summary" msgid="187110938289512256">"在空格键上滑动手指可更改语言"</string>
-    <string name="hint_add_to_dictionary" msgid="9006292060636342317">"← 再次触摸即可保存"</string>
-    <string name="has_dictionary" msgid="6071847973466625007">"提供字典"</string>
-    <string name="prefs_enable_log" msgid="6620424505072963557">"启用用户反馈"</string>
-    <string name="prefs_description_log" msgid="5827825607258246003">"自动向 Google 发送使用情况统计信息和崩溃报告，帮助改进该输入法编辑器。"</string>
-    <string name="prefs_enable_recorrection" msgid="4588408906649533582">"触摸以更正字词"</string>
-    <string name="prefs_enable_recorrection_summary" msgid="1056068922330206170">"触摸所输入字词以进行更正"</string>
-    <string name="keyboard_layout" msgid="437433231038683666">"键盘主题"</string>
-    <string name="subtype_mode_keyboard" msgid="2242090416595003881">"键盘"</string>
-    <string name="subtype_mode_voice" msgid="4394113125441627771">"语音"</string>
+    <string name="popular_domain_0">.com</string>
+    <string name="popular_domain_1">.net</string>
+    <string name="popular_domain_2">.org</string>
+    <string name="popular_domain_3">.gov</string>
+    <string name="popular_domain_4">.edu</string>
+    <string name="selectInputMethod">选择输入法</string>
+    <string name="language_selection_title">输入语言</string>
+    <string name="language_selection_summary">在空格键滑动切换语言</string>
+    <string name="hint_add_to_dictionary">← 再次触摸以保存</string>
+    <string name="has_dictionary">可用字典</string>
+    <string name="prefs_enable_log">启用用户反馈</string>
+    <string name="prefs_description_log">通过向谷歌自动发送使用状态和报告来帮助改进输入法。</string>
+    <string name="prefs_enable_recorrection">触摸纠正单词</string>
+    <string name="prefs_enable_recorrection_summary">触摸单词以纠正他它们</string>
+    <string name="pref_screen_feedback_title">按键反馈设定</string>
+    <string name="pref_screen_view_title">主题和符号设置</string>
+    <string name="keyboard_layout">键盘主题</string>
+    <string name="layout_basic">基本模式</string>
+    <string name="layout_high_contrast">基本模式 (高对比度)</string>
+    <string name="layout_stone_bold">Stone (bold)</string>
+    <string name="layout_stone_normal">Stone (normal)</string>
+    <string name="layout_gingerbread">Gingerbread</string>
+    <string name="layout_ics">Ice Cream Sandwich</string>
+    <string name="layout_trans">Transparent</string>
+    <string name="layout_trans_neon">Transparent (实验版)</string>
+    <string name="subtype_mode_keyboard">键盘</string>
+    <string name="subtype_mode_voice">语音</string>
+    <string name="title_keyboard_mode_portrait">键盘模式, 竖屏</string>
+    <string name="title_keyboard_mode_landscape">键盘模式， 横屏</string>
+    <string name="title_ctrl_a_override">Ctrl-A (全选) 重写</string>
+    <string name="toast_ctrl_a_override_info">Ctrl-A 被禁用. 请使用 Ctrl-Alt-A, 或在设定中将其设为允许.</string>
+    <string name="default_ctrl_a_override">0</string>
+    <string name="title_chording_ctrl_key">Ctrl 键模式</string>
+    <string name="default_chording_ctrl_key">0</string>
+    <string name="title_chording_alt_key">Alt 键模式</string>
+    <string name="default_chording_alt_key">0</string>
+    <string name="title_chording_meta_key">Meta 键模式</string>
+    <string name="default_chording_meta_key">0</string>
+    <string name="title_suggestions_in_landscape">横屏模式输入建议</string>
+    <string name="summary_suggestions_in_landscape_true">和竖屏模式相同</string>
+    <string name="summary_suggestions_in_landscape_false">横屏模式隐藏输入建议</string>
+    <string name="title_fullscreen_override">在横屏模式全屏输入</string>
+    <string name="summary_fullscreen_override_true">禁用，使用基础外观</string>
+    <string name="summary_fullscreen_override_false">在小型设备启用</string>
+    <string name="title_force_keyboard_on">显示软键盘</string>
+    <string name="summary_force_keyboard_on_true">总是</string>
+    <string name="summary_force_keyboard_on_false">没有物理键盘时激活</string>
+    <string name="title_keyboard_notification">使用常驻通知</string>
+    <string name="summary_keyboard_notification_true">轻击通知激活键盘</string>
+    <string name="summary_keyboard_notification_false">没有通知</string>
+    <string name="title_application_category">特殊应用设置</string>
+    <string name="title_connectbot_tab_hack">ConnectBot tab 键模式</string>
+    <string name="summary_connectbot_tab_hack_true">允许兼容性临时方案</string>
+    <string name="summary_connectbot_tab_hack_false">发送简单 Tab 键事件</string>
+    <string name="title_caps_lock">双击tap shift模式</string>
+    <string name="summary_caps_lock_true">Caps 锁定 (q1 => Q1)</string>
+    <string name="summary_caps_lock_false">Shift 锁定 (q1 => Q!)</string>
+    <string name="title_shift_lock_modifiers">在修饰符键应用 Shift 锁定?</string>
+    <string name="summary_shift_lock_modifiers_true">是，包括箭头键</string>
+    <string name="summary_shift_lock_modifiers_false">否，仅普通按键</string>
+    <string name="title_hint_mode">显示 ALT 键</string>
+    <string name="default_hint_mode">1</string>
+    <string name="title_touch_pos">屏幕校准</string>
+    <string name="summary_touch_pos_true">显示触屏位置反馈</string>
+    <string name="summary_touch_pos_false">关闭</string>
+    <string name="title_slide_keys">滑动按键事件</string>
+    <string name="percent">percent</string>
+    <string name="title_top_row_scale">第5行高度调整</string>
+    <string name="title_label_scale">按键和符号比例</string>
+    <string name="title_candidate_scale">输入建议的符号比例</string>
+    <string name="title_vibrate_len">持续振动</string>
+    <string name="title_click_volume">按键点击音量</string>
+    <string name="default_click_volume">0.2</string>
+    <string name="title_click_method">击键音量控制方法</string>
+    <string name="default_click_method">0</string>
+    <string name="title_long_press_duration">长按持续时间</string>
+    <string name="title_render_mode">渲染方法</string>
+    <string name="render_mode_unavailable">(在此设备上无法修改)</string>
+    <string name="pref_screen_actions_title">手势和按键行为</string>
+    <string name="title_swipe_up">上滑</string>
+    <string name="title_swipe_down">下滑</string>
+    <string name="title_swipe_left">左滑</string>
+    <string name="title_swipe_right">右滑</string>
+    <string name="title_vol_up">音量加</string>
+    <string name="title_vol_down">音量减</string>
+    <string name="default_swipe_up">扩展</string>
+    <string name="default_swipe_down">关闭</string>
+    <string name="default_swipe_left">无</string>
+    <string name="default_swipe_right">无</string>
+    <string name="default_vol_up">无</string>
+    <string name="default_vol_down">无</string>
+    <string name="title_popup_content">Popup mini-keyboard contents</string>
+    <string name="default_popup_content">1</string>
+    <string name="voice_not_enabled_warning">语音输入在此版本不可用</string>
+    <string name="recorrect_warning">FYI: recorrection does not work correctly on pre-Gingerbread devices due to missing operating system support.</string>
+    <string name="no_market_warning">无法打开“Market”</string>
+    <string name="english_ime_debug_settings">调试设定</string>
+    <string name="prefs_debug_mode">调试模式</string>
+    <string name="main_setup_configure_imes">启用键盘</string>
+    <string name="main_setup_set_ime">选择输入法</string>
+    <string name="main_setup_get_dicts">获取字典</string>
+    <string name="main_setup_input_lang">输入语言</string>
+    <string name="main_body">"
+        &lt;h2>启用黑客键盘&lt;/h2>
+
+        &lt;p>&lt;i>Hacker's Keyboard&lt;/i> provides a new Android input method. It is &lt;b>disabled by default&lt;/b>, and for security reasons Android doesn't allow programs to change input method settings. Please follow the following steps to activate it.&lt;p>
+
+        &lt;h3>Add the keyboard to the system's input method list:&lt;/h3>
+        &lt;blockquote>
+        &lt;p>&amp;#8226; Open the system input settings configuration by pressing the &lt;b>Enable Keyboard&lt;/b> button above.&lt;/p>
+        &lt;p>&amp;#8226; Find &lt;i>Hacker's Keyboard&lt;/i> in the input method list, tap the checkmark to switch it on.&lt;/p>
+        &lt;p>&amp;#8226; Acknowledge the warning shown by the system. The system always shows this message when enabling a third-party input method.&lt;/p>
+        &lt;p>&amp;#8226; Press the &lt;i>Back&lt;/i> button to return to this page.&lt;/p>
+        &lt;/blockquote>
+
+        &lt;h3>选择刚才激活的输入法&lt;/h3>
+        &lt;blockquote>
+        &lt;p>&amp;#8226; Press the &lt;b>Set input method&lt;/b> button above.&lt;/p>
+        &lt;p>&amp;#8226; Select &lt;i>Hacker's Keyboard&lt;/i> from the list.&lt;/p>
+        &lt;/blockquote>
+
+        &lt;h3>可选：选择输入法&lt;/h3>
+        &lt;blockquote>
+        &lt;p>&amp;#8226; 长按 &lt;b>Input languages&lt;/b> button above to select which keyboard layouts you want to use. You &lt;b>must&lt;/b> configure this if you want to use a language or layout other than the one corresponding to your system's default language.&lt;/p>
+        &lt;p>&amp;#8226; Press the &lt;i>Back&lt;/i> button to return to this page.&lt;/p>
+        &lt;p>&amp;#8226; When typing, slide the space bar horizontally to switch between selected layouts.
+        &lt;/blockquote>
+
+        &lt;h3>Optional: Install completion dictionary packages:&lt;/h3>
+        &lt;blockquote>
+        &lt;p>&amp;#8226; Press the &lt;b>Get dictionaries&lt;/b> button above to do a Market search.&lt;/p>
+        &lt;/blockquote>
+
+        &lt;h2>Additional information&lt;/h2>
+        &lt;p>Please refer to the &lt;a href='http://code.google.com/p/hackerskeyboard/'>project web page&lt;/a> for more information, including the user's guide, issue tracker, and discussion group.&lt;/p>
+        "</string>
+    <string name="text_test">Test</string>
+    <string name="seek_pref_0">0%</string>
+    <string name="seek_pref_val">x%</string>
+    <string name="seek_pref_max">100%</string>
 </resources>
