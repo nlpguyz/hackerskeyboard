@@ -2536,7 +2536,9 @@ public class LatinIME extends InputMethodService implements
     }
 
     private boolean isPredictionOn() {
-        return mPredictionOnForMode && isPredictionWanted();
+        boolean latinModeOn = mPredictionOnForMode && isPredictionWanted();
+        boolean cjkModeOn = isCJK();
+        return latinModeOn || cjkModeOn;
     }
 
     private boolean isPredictionWanted() {
@@ -2776,9 +2778,10 @@ public class LatinIME extends InputMethodService implements
         TextEntryState.acceptedSuggestion(mComposing.toString(), suggestion);
         // Follow it with a space
         if (mAutoSpace && !correcting) {
-            //if (!isCJK())
-            sendSpace();
-            mJustAddedAutoSpace = true;
+            if (!isCJK()) {
+                sendSpace();
+                mJustAddedAutoSpace = true;
+            }
         }
 
         final boolean showingAddToDictionaryHint = index == 0
