@@ -2969,6 +2969,10 @@ public class LatinIME extends InputMethodService implements
     }
 
     private boolean isCursorTouchingWord() {
+        // No difference in CJK mode
+        if (isCJK())
+            return false;
+
         InputConnection ic = getCurrentInputConnection();
         if (ic == null)
             return false;
