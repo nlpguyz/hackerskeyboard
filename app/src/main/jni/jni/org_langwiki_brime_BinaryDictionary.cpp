@@ -159,7 +159,7 @@ static int registerNativeMethods(JNIEnv* env, const char* className,
 
 static int registerNatives(JNIEnv *env)
 {
-    const char* const kClassPathName = "org/pocketworkstation/pckeyboard/BinaryDictionary";
+    const char* const kClassPathName = "org/langwiki/brime/BinaryDictionary";
     return registerNativeMethods(env,
             kClassPathName, gMethods, sizeof(gMethods) / sizeof(gMethods[0]));
 }

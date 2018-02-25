@@ -19,7 +19,7 @@ add_library( # Specifies the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s)
-             jni/org_pocketworkstation_pckeyboard_BinaryDictionary.cpp
+             jni/org_langwiki_brime_BinaryDictionary.cpp
              src/dictionary.cpp
              src/char_utils.cpp
 )
