@@ -6,7 +6,6 @@ config_version: "0.15.minimal"
 
 schema_list:
   - schema: luna_pinyin
-  - schema: cangjie5
 
 switcher:
   caption: 〔方案選單〕

@@ -55,7 +55,9 @@ public class ResourceFile {
             String line;
             while ((line = br.readLine()) != null) {
                 osw.write(line);
+                osw.write("\n");
             }
+            osw.flush();
         } catch (IOException e) {
             e.printStackTrace();
             return false;

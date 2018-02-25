@@ -29,6 +29,8 @@
     import org.langwiki.alphatalk.script.*;
     import org.mozilla.javascript.*;
 
+    import org.langwiki.brime.schema.SchemaManager;
+    
     /**
      * Rime與OpenCC的Java實現
      *
@@ -53,11 +55,11 @@
 
         static class Config {
             static String getSharedDataDir() {
-                return "/sdcard/brime";
+                return SchemaManager.USER_DIR;
             }
 
             static String getUserDataDir() {
-                return "/sdcard/brime";
+                return SchemaManager.USER_DIR;
             }
 
             static void deployOpencc() {

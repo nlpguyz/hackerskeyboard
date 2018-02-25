@@ -18,7 +18,7 @@ public class SchemaManager {
     private Context context;
     private Resources resources;
 
-    private static final String USER_DIR = "/sdcard/brime";
+    public static final String USER_DIR = "/sdcard/brime";
 
     private static final String[] brimeFiles = {
             "default.yaml",
@@ -45,10 +45,11 @@ public class SchemaManager {
 
     public void initializeDataDir() {
         // Check if the user dir has been initialized
+        /*
         File checkFile = new File(USER_DIR + File.separator + "symbols.yaml");
         if (checkFile.exists()) {
             return;
-        }
+        }*/
 
         // Make sure the path exists
         File brimePath = new File(USER_DIR);
