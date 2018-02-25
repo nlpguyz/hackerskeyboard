@@ -1,5 +1,6 @@
 package org.langwiki.brime.schema;
 
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.Context;
 
@@ -7,6 +8,7 @@ import org.langwiki.brime.utils.ResourceFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SchemaManager {
     private static SchemaManager sInstance;
@@ -45,8 +47,8 @@ public class SchemaManager {
 
         for (String fn : brimeFiles) {
             try {
-                String str = ResourceFile.loadFile(resources, "assets/" + fn, false);
-                ResourceFile.save(USER_DIR + File.separator + fn, str);
+                AssetManager assetMgr = context.getAssets();
+                ResourceFile.save(USER_DIR + File.separator + fn, assetMgr.open(fn));
             } catch (IOException e) {
                 e.printStackTrace();
             }
