@@ -30,7 +30,7 @@
     import org.mozilla.javascript.*;
 
     import org.langwiki.brime.schema.SchemaManager;
-    
+
     /**
      * Rime與OpenCC的Java實現
      *

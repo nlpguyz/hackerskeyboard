@@ -523,7 +523,7 @@ public class LatinIME extends InputMethodService implements
         new Thread() {
             public void run() {
                 mSchemaManager.initializeDataDir();
-                //mRime.deploy();
+                mRime.deploy();
             }
         }.start();
 
