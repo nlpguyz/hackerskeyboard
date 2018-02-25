@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -35,7 +35,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import org.pocketworkstation.pckeyboard.Keyboard.Key;
+import org.langwiki.brime.Keyboard.Key;
 
 import android.os.Handler;
 import android.os.Message;

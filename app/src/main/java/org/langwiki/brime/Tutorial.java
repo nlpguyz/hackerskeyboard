@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

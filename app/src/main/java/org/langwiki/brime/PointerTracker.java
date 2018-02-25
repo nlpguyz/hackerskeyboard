@@ -14,16 +14,16 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.pocketworkstation.pckeyboard.LatinKeyboardBaseView.OnKeyboardActionListener;
-import org.pocketworkstation.pckeyboard.LatinKeyboardBaseView.UIHandler;
+import org.langwiki.brime.LatinKeyboardBaseView.OnKeyboardActionListener;
+import org.langwiki.brime.LatinKeyboardBaseView.UIHandler;
 
 import android.content.res.Resources;
-import org.pocketworkstation.pckeyboard.Keyboard.Key;
+import org.langwiki.brime.Keyboard.Key;
 import android.util.Log;
 import android.view.MotionEvent;
 

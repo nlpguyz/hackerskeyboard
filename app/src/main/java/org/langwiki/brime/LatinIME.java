@@ -14,9 +14,9 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
-import org.pocketworkstation.pckeyboard.LatinIMEUtil.RingCharBuffer;
+import org.langwiki.brime.LatinIMEUtil.RingCharBuffer;
 import org.langwiki.alphatalk.debug.*;
 import org.langwiki.alphatalk.script.*;
 
@@ -552,7 +552,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void setNotification(boolean visible) {
-    	final String ACTION = "org.pocketworkstation.pckeyboard.SHOW";
+    	final String ACTION = "org.langwiki.brime.SHOW";
         final int ID = 1;
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);

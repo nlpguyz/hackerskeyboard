@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.content.ContentResolver;
 import android.content.Context;

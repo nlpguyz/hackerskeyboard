@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
-import org.pocketworkstation.pckeyboard.Dictionary.DataType;
+import org.langwiki.brime.Dictionary.DataType;
 
 import android.content.Context;
 import android.content.SharedPreferences;

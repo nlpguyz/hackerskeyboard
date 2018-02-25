@@ -14,9 +14,9 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
-import org.pocketworkstation.pckeyboard.Keyboard.Key;
+import org.langwiki.brime.Keyboard.Key;
 
 class MiniKeyboardKeyDetector extends KeyDetector {
     private static final int MAX_NEARBY_KEYS = 1;

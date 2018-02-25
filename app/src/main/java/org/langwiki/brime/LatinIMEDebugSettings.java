@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;

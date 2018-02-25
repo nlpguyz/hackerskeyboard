@@ -1,15 +1,27 @@
 package org.langwiki.brime.schema;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.IOException;
 import android.content.res.Resources;
 import android.content.Context;
+
+import org.langwiki.brime.utils.ResourceFile;
+
+import java.io.File;
+import java.io.IOException;
 
 public class SchemaManager {
     private static SchemaManager sInstance;
     private Context context;
     private Resources resources;
+
+    private static final String USER_DIR = "/sdcard/brime";
+
+    private static final String[] brimeFiles = {
+            "default.yaml",
+            "essay.txt",
+            "luna_pinyin.dict.yaml",
+            "luna_pinyin.schema.yaml",
+            "symbols.yaml",
+    };
 
     public static SchemaManager getInstance(Context context) {
         if (sInstance != null)
@@ -26,36 +38,18 @@ public class SchemaManager {
         resources = context.getResources();
     }
 
-    //load file from apps res/raw folder or Assets folder
-    public String loadFile(String fileName, boolean loadFromRawFolder) throws IOException
-    {
-        //Create a InputStream to read the file into
-        InputStream iS;
+    public void initializeDataDir(String userDir) {
+        // Make sure the path exists
+        File brimePath = new File(USER_DIR);
+        brimePath.mkdir();
 
-        if (loadFromRawFolder)
-        {
-            //get the resource id from the file name
-            int rID = resources.getIdentifier("fortyonepost.com.lfas:raw/" + fileName, null, null);
-            //get the file as a stream
-            iS = resources.openRawResource(rID);
-        } else {
-            //get the file as a stream
-            iS = resources.getAssets().open(fileName);
+        for (String fn : brimeFiles) {
+            try {
+                String str = ResourceFile.loadFile(resources, "assets/" + fn, false);
+                ResourceFile.save(USER_DIR + File.separator + fn, str);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        //create a buffer that has the same size as the InputStream
-        byte[] buffer = new byte[iS.available()];
-        //read the text file as a stream, into the buffer
-        iS.read(buffer);
-        //create a output stream to write the buffer into
-        ByteArrayOutputStream oS = new ByteArrayOutputStream();
-        //write this buffer to the output stream
-        oS.write(buffer);
-        //Close the Input and Output streams
-        oS.close();
-        iS.close();
-
-        //return the output stream as a String
-        return oS.toString();
     }
 }

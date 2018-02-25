@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 /**
  * Abstract base class for a dictionary that can do a fuzzy search for words based on a set of key

@@ -1,4 +1,4 @@
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import java.io.IOException;
 import java.io.InputStream;

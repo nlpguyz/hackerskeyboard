@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.text.TextUtils;
 import android.view.inputmethod.ExtractedText;

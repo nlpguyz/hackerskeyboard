@@ -1,4 +1,4 @@
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import java.util.HashMap;
 import java.util.Locale;

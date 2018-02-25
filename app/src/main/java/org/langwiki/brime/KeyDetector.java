@@ -14,9 +14,9 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
-import org.pocketworkstation.pckeyboard.Keyboard.Key;
+import org.langwiki.brime.Keyboard.Key;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +79,7 @@ abstract class KeyDetector {
      *
      * @return Allocates and returns an array that can hold all key indices returned by
      *         {@link #getKeyIndexAndNearbyCodes} method. All elements in the returned array are
-     *         initialized by {@link org.pocketworkstation.pckeyboard.LatinKeyboardBaseView#NOT_A_KEY}
+     *         initialized by {@link org.langwiki.brime.LatinKeyboardBaseView#NOT_A_KEY}
      *         value.
      */
     public int[] newCodeArray() {

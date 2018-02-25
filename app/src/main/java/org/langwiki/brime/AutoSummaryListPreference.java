@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.content.Context;
 import android.preference.ListPreference;

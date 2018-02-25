@@ -14,7 +14,7 @@
  * under the Licence.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.inputmethodservice.InputMethodService;
 import android.util.Log;

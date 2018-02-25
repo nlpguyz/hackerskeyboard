@@ -14,10 +14,10 @@
  * the License.
  */
 
-package org.pocketworkstation.pckeyboard;
+package org.langwiki.brime;
 
 import android.content.Context;
-import org.pocketworkstation.pckeyboard.Keyboard.Key;
+import org.langwiki.brime.Keyboard.Key;
 import android.text.format.DateFormat;
 import android.util.Log;
 
