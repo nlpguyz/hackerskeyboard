@@ -523,6 +523,7 @@ public class LatinIME extends InputMethodService implements
         new Thread() {
             public void run() {
                 mSchemaManager.initializeDataDir();
+                //mRime.deploy();
             }
         }.start();
 
@@ -2655,8 +2656,10 @@ public class LatinIME extends InputMethodService implements
 
             // Get first row first
             Rime.RimeCandidate[] candidates = mRime.getCandidates();
-            for (Rime.RimeCandidate c : candidates) {
-                stringList.add(c.text);
+            if (candidates != null) {
+                for (Rime.RimeCandidate c : candidates) {
+                    stringList.add(c.text);
+                }
             }
         }
 
