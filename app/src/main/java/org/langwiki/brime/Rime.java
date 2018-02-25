@@ -53,11 +53,11 @@
 
         static class Config {
             static String getSharedDataDir() {
-                return "/sdcard/rime";
+                return "/sdcard/brime";
             }
 
             static String getUserDataDir() {
-                return "/sdcard/rime";
+                return "/sdcard/brime";
             }
 
             static void deployOpencc() {
