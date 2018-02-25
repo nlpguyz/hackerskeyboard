@@ -44,7 +44,6 @@ public class SchemaManager {
     }
 
     public void initializeDataDir() {
-        Log.i(TAG, "initializeDataDir");
         // Check if the user dir has been initialized
         File checkFile = new File(USER_DIR + File.separator + "symbols.yaml");
         if (checkFile.exists()) {
@@ -58,7 +57,6 @@ public class SchemaManager {
         AssetManager assetMgr = context.getAssets();
 
         for (String fn : brimeFiles) {
-            Log.i(TAG, "initializeDataDir copying " + fn);
             try {
                 ResourceFile.save(USER_DIR + File.separator + fn, assetMgr.open(fn));
             } catch (IOException e) {

@@ -98,7 +98,9 @@ public class LatinIME extends InputMethodService implements
         ComposeSequencing,
         LatinKeyboardBaseView.OnKeyboardActionListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = "PCKeyboardIME";
+    private static final String TAG = "BRime";
+    public static final String DEFAULT_LANGS = "en,zh_CN,";
+
     private static final boolean PERF_DEBUG = false;
     static final boolean DEBUG = false;
     static final boolean TRACE = false;

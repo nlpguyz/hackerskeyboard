@@ -150,7 +150,7 @@ public class InputLanguageSelection extends PreferenceActivity {
         addPreferencesFromResource(R.xml.language_prefs);
         // Get the settings preferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String selectedLanguagePref = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, "");
+        String selectedLanguagePref = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, LatinIME.DEFAULT_LANGS);
         Log.i(TAG, "selected languages: " + selectedLanguagePref);
         String[] languageList = selectedLanguagePref.split(",");
         
