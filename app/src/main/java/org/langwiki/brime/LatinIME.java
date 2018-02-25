@@ -22,6 +22,7 @@ import org.langwiki.alphatalk.script.*;
 
 import com.google.android.voiceime.VoiceRecognitionTrigger;
 
+import org.langwiki.brime.schema.SchemaManager;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.AlertDialog;
@@ -513,6 +514,12 @@ public class LatinIME extends InputMethodService implements
 
         mRime = Rime.getInstance();
         mRime.setRimeListener(mRimeListener);
+
+        new Thread() {
+            public void run() {
+                SchemaManager.getInstance(getApplicationContext()).initializeDataDir();
+            }
+        }.start();
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");

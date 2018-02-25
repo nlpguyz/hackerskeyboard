@@ -40,7 +40,13 @@ public class SchemaManager {
         resources = context.getResources();
     }
 
-    public void initializeDataDir(String userDir) {
+    public void initializeDataDir() {
+        // Check if the user dir has been initialized
+        File checkFile = new File(USER_DIR + File.separator + "symbols.yaml");
+        if (checkFile.exists()) {
+            return;
+        }
+
         // Make sure the path exists
         File brimePath = new File(USER_DIR);
         brimePath.mkdir();
