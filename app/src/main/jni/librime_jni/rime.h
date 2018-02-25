@@ -6,7 +6,7 @@
 #define BUFSIZE 256
 
 #ifndef CLASSNAME
-#define CLASSNAME "org/pocketworkstation/pckeyboard/Rime"
+#define CLASSNAME "org/langwiki/brime/Rime"
 #endif
 
 #ifndef APP_NAME

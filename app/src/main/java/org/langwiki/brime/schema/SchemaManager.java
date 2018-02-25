@@ -3,6 +3,7 @@ package org.langwiki.brime.schema;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.Context;
+import android.util.Log;
 
 import org.langwiki.brime.utils.ResourceFile;
 
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SchemaManager {
+    private static final String TAG = "BRime";
+
     private static SchemaManager sInstance;
     private Context context;
     private Resources resources;
@@ -41,6 +44,7 @@ public class SchemaManager {
     }
 
     public void initializeDataDir() {
+        Log.i(TAG, "initializeDataDir");
         // Check if the user dir has been initialized
         File checkFile = new File(USER_DIR + File.separator + "symbols.yaml");
         if (checkFile.exists()) {
@@ -51,9 +55,11 @@ public class SchemaManager {
         File brimePath = new File(USER_DIR);
         brimePath.mkdir();
 
+        AssetManager assetMgr = context.getAssets();
+
         for (String fn : brimeFiles) {
+            Log.i(TAG, "initializeDataDir copying " + fn);
             try {
-                AssetManager assetMgr = context.getAssets();
                 ResourceFile.save(USER_DIR + File.separator + fn, assetMgr.open(fn));
             } catch (IOException e) {
                 e.printStackTrace();

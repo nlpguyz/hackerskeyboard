@@ -304,6 +304,7 @@ public class LatinIME extends InputMethodService implements
     private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
 
     public Rime mRime; // public for debugging
+    public SchemaManager mSchemaManager;
 
     private Rime.RimeListener mRimeListener = new Rime.RimeListener() {
         public void onMessage(String message_type, String message_value) {
@@ -515,9 +516,11 @@ public class LatinIME extends InputMethodService implements
         mRime = Rime.getInstance();
         mRime.setRimeListener(mRimeListener);
 
+        mSchemaManager = SchemaManager.getInstance(getApplicationContext());
+
         new Thread() {
             public void run() {
-                SchemaManager.getInstance(getApplicationContext()).initializeDataDir();
+                mSchemaManager.initializeDataDir();
             }
         }.start();
 
