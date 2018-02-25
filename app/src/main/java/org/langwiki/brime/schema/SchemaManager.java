@@ -1,20 +1,29 @@
-package org.pocketworkstation.pckeyboard.schema;
+package org.langwiki.brime.schema;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import android.content.res.Resources;
+import android.content.Context;
 
 public class SchemaManager {
     private static SchemaManager sInstance;
+    private Context context;
     private Resources resources;
 
-    public static SchemaManager getInstance() {
+    public static SchemaManager getInstance(Context context) {
         if (sInstance != null)
             return sInstance;
 
         synchronized (SchemaManager.class) {
-            sInstance = new SchemaManager();
+            sInstance = new SchemaManager(context);
             return sInstance;
         }
     }
 
-    public SchemaManager() {
+    public SchemaManager(Context context) {
+        this.context = context;
+        resources = context.getResources();
     }
 
     //load file from apps res/raw folder or Assets folder
