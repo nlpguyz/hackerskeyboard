@@ -30,6 +30,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ClipDescription;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.IBinder;
@@ -48,6 +50,8 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v13.view.inputmethod.InputConnectionCompat;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -2027,6 +2031,28 @@ public class LatinIME extends InputMethodService implements
             return true;
         }
         return false;
+    }
+
+    /**
+     * Commits a GIF image
+     *
+     * @param contentUri Content URI of the GIF image to be sent
+     * @param imageDescription Description of the GIF image to be sent
+     *
+     */
+    public void commitGifImage(Uri contentUri, String imageDescription) {
+        InputContentInfoCompat inputContentInfo = new InputContentInfoCompat(
+                contentUri,
+                new ClipDescription(imageDescription, new String[]{"image/gif"}),
+                null);
+        InputConnection inputConnection = getCurrentInputConnection();
+        EditorInfo editorInfo = getCurrentInputEditorInfo();
+        int flags = 0;
+        if (android.os.Build.VERSION.SDK_INT >= 25) {
+            flags |= InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
+        }
+        InputConnectionCompat.commitContent(
+                inputConnection, editorInfo, inputContentInfo, flags, null);
     }
 
     // Implementation of KeyboardViewListener

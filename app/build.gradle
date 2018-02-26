@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "org.langwiki.brime"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 21
 
         externalNativeBuild {
@@ -33,4 +33,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation 'com.android.support:support-v13:27.0.2'
 }

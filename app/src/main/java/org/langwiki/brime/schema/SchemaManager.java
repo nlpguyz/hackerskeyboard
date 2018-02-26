@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import android.content.Context;
 import android.util.Log;
 
-import org.langwiki.brime.utils.ResourceFile;
+import org.langwiki.brime.utils.FileHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class SchemaManager {
 
         for (String fn : brimeFiles) {
             try {
-                ResourceFile.save(USER_DIR + File.separator + fn, assetMgr.open(fn));
+                FileHelper.copyTo(assetMgr.open(fn), USER_DIR + File.separator + fn);
             } catch (IOException e) {
                 e.printStackTrace();
             }
