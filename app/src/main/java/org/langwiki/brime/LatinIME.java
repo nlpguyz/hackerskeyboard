@@ -22,6 +22,7 @@ import org.langwiki.alphatalk.script.*;
 
 import com.google.android.voiceime.VoiceRecognitionTrigger;
 
+import org.langwiki.brime.render.RenderManager;
 import org.langwiki.brime.schema.SchemaManager;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -39,6 +40,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
+import android.graphics.Typeface;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -65,7 +67,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.KeyEvent;
 import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
@@ -310,7 +311,7 @@ public class LatinIME extends InputMethodService implements
     private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
 
     // For content commit
-    private boolean commitTextAsGif = true;
+    public boolean mCommitTextAsGif = false;
 
     public Rime mRime; // public for debugging
     public SchemaManager mSchemaManager;
@@ -347,6 +348,8 @@ public class LatinIME extends InputMethodService implements
             "zh_CN",
             "zh_TW",
     };
+
+    private Typeface mTypeFace;
 
     private boolean isCJK() {
         return Arrays.asList(sCjkLocales).contains(mInputLocale);
@@ -518,6 +521,8 @@ public class LatinIME extends InputMethodService implements
         mRime.setRimeListener(mRimeListener);
 
         mSchemaManager = SchemaManager.getInstance(getApplicationContext());
+
+        mTypeFace = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 
         new Thread() {
             public void run() {
@@ -2769,6 +2774,8 @@ public class LatinIME extends InputMethodService implements
         if (ic != null) {
             ic.beginBatchEdit();
         }
+
+        // Completion
         if (mCompletionOn && mCompletions != null && index >= 0
                 && index < mCompletions.length) {
             CompletionInfo ci = mCompletions[index];
@@ -2803,8 +2810,11 @@ public class LatinIME extends InputMethodService implements
             }
             return;
         }
+
+        // Suggestion
         mJustAccepted = true;
         pickSuggestion(suggestion, correcting);
+
         // Add the word to the auto dictionary if it's not a known word
         if (index == 0) {
             addToDictionaries(suggestion, AutoDictionary.FREQUENCY_FOR_PICKED);
@@ -2871,7 +2881,19 @@ public class LatinIME extends InputMethodService implements
         InputConnection ic = getCurrentInputConnection();
         if (ic != null) {
             rememberReplacedWord(suggestion);
-            ic.commitText(suggestion, 1);
+            // insert gif
+            if (mCommitTextAsGif) {
+                try {
+                    Uri gifUri = RenderManager.getInstance(getApplicationContext())
+                            .renderGif(suggestion.toString(), getTypeFace());
+                    commitGifImage(gifUri, suggestion.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ic.commitText(suggestion, 1);
+                }
+            } else {
+                ic.commitText(suggestion, 1);
+            }
         }
         saveWordInHistory(suggestion);
         mPredicting = false;
@@ -2882,6 +2904,10 @@ public class LatinIME extends InputMethodService implements
             setNextSuggestions();
         }
         updateShiftKeyState(getCurrentInputEditorInfo());
+    }
+
+    private Typeface getTypeFace() {
+        return mTypeFace;
     }
 
     /**
