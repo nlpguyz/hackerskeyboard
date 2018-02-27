@@ -64,7 +64,7 @@ public class RenderManager {
         Log.d(TAG, "renderGif " + text);
         // Use the cache directory (files will be automatically deleted)
         File outputDir = context.getCacheDir();
-        File outputFile = File.createTempFile("text", "gif", outputDir);
+        File outputFile = File.createTempFile("text", ".gif", outputDir);
 
         Bitmap bmp = drawText(text, typeface, getTextSize());
 
