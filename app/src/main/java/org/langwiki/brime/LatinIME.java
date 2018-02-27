@@ -2041,6 +2041,7 @@ public class LatinIME extends InputMethodService implements
      *
      */
     public void commitGifImage(Uri contentUri, String imageDescription) {
+        Log.d(TAG, "commitGifImage " + contentUri);
         InputContentInfoCompat inputContentInfo = new InputContentInfoCompat(
                 contentUri,
                 new ClipDescription(imageDescription, new String[]{"image/gif"}),

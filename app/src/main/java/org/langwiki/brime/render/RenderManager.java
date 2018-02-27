@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class RenderManager {
     }
 
     public Uri renderGif(String text, Typeface typeface) throws IOException {
+        Log.d(TAG, "renderGif " + text);
         // Use the cache directory (files will be automatically deleted)
         File outputDir = context.getCacheDir();
         File outputFile = File.createTempFile("text", "gif", outputDir);
