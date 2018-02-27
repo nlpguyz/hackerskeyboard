@@ -54,6 +54,13 @@ public class AnimatedGifEncoder {
 
 	protected int sample = 10; // default sample interval for quantizer
 
+	public static void bitmapToStream(Bitmap bmp, OutputStream os) {
+		AnimatedGifEncoder enc = new AnimatedGifEncoder();
+		enc.start(os);
+		enc.addFrame(bmp);
+		enc.finish();
+	}
+	
 	/**
 	 * Sets the delay time between each frame, or changes it for subsequent frames
 	 * (applies to last frame added).
@@ -1280,12 +1287,5 @@ class LZWEncoder {
 
 			flush_char(outs);
 		}
-	}
-
-	public static void bitmapToStream(Bitmap bmp, OutputStream os) {
-		AnimatedGifEncoder enc = new AnimatedGifEncoder();
-		enc.start(os);
-		enc.addFrame(bmp);
-		enc.finish();
 	}
 }
