@@ -309,6 +309,9 @@ public class LatinIME extends InputMethodService implements
 
     private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
 
+    // For content commit
+    private boolean commitTextAsGif = true;
+
     public Rime mRime; // public for debugging
     public SchemaManager mSchemaManager;
 
@@ -340,20 +343,12 @@ public class LatinIME extends InputMethodService implements
         }
     };
 
-    // Composer logic for Asian languages. This language group is not supported in original LatinIME,
-    // or original hackerskeyboard. The extra functionalities are encapsulated in this class.
-    private class CJKComposer {
-
-    }
-
-    private CJKComposer mComposer;
-
     static final String[] sCjkLocales = new String[] {
             "zh_CN",
             "zh_TW",
     };
 
-     private boolean isCJK() {
+    private boolean isCJK() {
         return Arrays.asList(sCjkLocales).contains(mInputLocale);
     }
 
