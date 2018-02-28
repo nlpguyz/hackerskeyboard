@@ -2052,7 +2052,6 @@ public class LatinIME extends InputMethodService implements
     public void commitGifImage(File file, String imageDescription) {
         Log.d(TAG, "commitGifImage " + file);
         final EditorInfo editorInfo = getCurrentInputEditorInfo();
-        InputConnection inputConnection = getCurrentInputConnection();
 
         if (!validatePackageName(editorInfo)) {
             return;
@@ -2973,6 +2972,7 @@ public class LatinIME extends InputMethodService implements
                     File gifFile = RenderManager.getInstance(this)
                             .renderGif(suggestion.toString(), getTypeFace());
                     commitGifImage(gifFile, suggestion.toString());
+                    //gifFile.delete();
                 } catch (IOException e) {
                     e.printStackTrace();
                     ic.commitText(suggestion, 1);

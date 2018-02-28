@@ -36,6 +36,9 @@ public class RenderManager {
     private int textMaxWidth;
     private int textSize;
 
+    private int colorText;
+    private int colorBackground;
+
     public static RenderManager getInstance(Context context) {
         if (sInstance != null)
             return sInstance;
@@ -50,6 +53,9 @@ public class RenderManager {
         this.context = context;
         this.textMaxWidth = DEFAULT_TEXT_MAX_WIDTH;
         this.textSize = DEFAULT_TEXT_SIZE;
+
+        this.colorBackground = Color.WHITE;
+        this.colorText = Color.BLACK;
     }
 
     public void setTextSize(int textSize) {
@@ -63,7 +69,10 @@ public class RenderManager {
     public File renderGif(String text, Typeface typeface) throws IOException {
         Log.d(TAG, "renderGif " + text);
         // Use the cache directory (files will be automatically deleted)
-        File outputDir = context.getCacheDir();
+
+        final File outputDir = new File(context.getFilesDir(), "images");
+        outputDir.mkdirs();
+
         File outputFile = File.createTempFile("text", ".gif", outputDir);
 
         Bitmap bmp = drawText(text, typeface, getTextSize());
@@ -89,11 +98,13 @@ public class RenderManager {
         Rect rect = new Rect();
         paint.getTextBounds(text, 0, text.length(), rect);
         paint.setTextAlign(Paint.Align.LEFT);
+        paint.setColor(colorText);
 
         Bitmap bmp = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
 
         try {
             Canvas canvas = new Canvas(bmp);
+            canvas.drawColor(colorBackground);
             canvas.drawText(text, 0, paint.getTextSize(), paint);
         } catch (Exception e) {
             e.printStackTrace();
