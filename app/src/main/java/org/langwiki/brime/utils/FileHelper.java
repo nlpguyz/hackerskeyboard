@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,21 +15,43 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class FileHelper {
-    public static boolean copyTo(InputStream is, String filePath) {
-        try (
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                FileOutputStream fos = new FileOutputStream(filePath);
-                OutputStreamWriter osw = new OutputStreamWriter(fos);) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                osw.write(line);
-                osw.write("\n");
+    public static boolean copyTo(InputStream fis, String filePath) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(new File(filePath));
+            byte[] buffer = new byte[1024];
+            int noOfBytes;
+
+            System.out.println("Copying file using streams");
+
+            // read bytes from source file and write to destination file
+            while ((noOfBytes = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, noOfBytes);
             }
-            osw.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            return true;
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("File not found" + e);
             return false;
         }
-        return true;
+        catch (IOException ioe) {
+            System.out.println("Exception while copying file " + ioe);
+            return false;
+        }
+        finally {
+            // close the streams using close method
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+            }
+            catch (IOException ioe) {
+                System.out.println("Error while closing stream: " + ioe);
+            }
+        }
     }
 }

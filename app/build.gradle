@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "org.langwiki.brime"
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 21
 
         externalNativeBuild {
