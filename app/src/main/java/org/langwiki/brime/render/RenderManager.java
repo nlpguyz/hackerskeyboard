@@ -60,7 +60,7 @@ public class RenderManager {
         return textSize;
     }
 
-    public Uri renderGif(String text, Typeface typeface) throws IOException {
+    public File renderGif(String text, Typeface typeface) throws IOException {
         Log.d(TAG, "renderGif " + text);
         // Use the cache directory (files will be automatically deleted)
         File outputDir = context.getCacheDir();
@@ -71,7 +71,7 @@ public class RenderManager {
         OutputStream fos = new FileOutputStream(outputFile);
         AnimatedGifEncoder.bitmapToStream(bmp, fos);
 
-        return Uri.fromFile(outputFile);
+        return outputFile;
     }
 
     // Draw a single-line text and return the bitmap

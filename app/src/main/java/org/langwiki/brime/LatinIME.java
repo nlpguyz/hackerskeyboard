@@ -27,6 +27,7 @@ import org.langwiki.brime.schema.SchemaManager;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -37,6 +38,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
@@ -44,6 +46,7 @@ import android.graphics.Typeface;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.IBinder;
@@ -52,8 +55,10 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
+import android.support.v4.content.FileProvider;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -71,11 +76,13 @@ import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
+import android.view.inputmethod.InputBinding;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -105,6 +112,8 @@ public class LatinIME extends InputMethodService implements
         SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "BRime";
     public static final String DEFAULT_LANGS = "en,zh_CN,";
+    private static final String AUTHORITY = "org.langwiki.brime.inputcontent";
+    private static final String MIME_TYPE_GIF = "image/gif";
 
     private static final boolean PERF_DEBUG = false;
     static final boolean DEBUG = false;
@@ -2036,24 +2045,100 @@ public class LatinIME extends InputMethodService implements
     /**
      * Commits a GIF image
      *
-     * @param contentUri Content URI of the GIF image to be sent
+     * @param file File object of the GIF image to be sent
      * @param imageDescription Description of the GIF image to be sent
      *
      */
-    public void commitGifImage(Uri contentUri, String imageDescription) {
-        Log.d(TAG, "commitGifImage " + contentUri);
-        InputContentInfoCompat inputContentInfo = new InputContentInfoCompat(
-                contentUri,
-                new ClipDescription(imageDescription, new String[]{"image/gif"}),
-                null);
+    public void commitGifImage(File file, String imageDescription) {
+        Log.d(TAG, "commitGifImage " + file);
+        final EditorInfo editorInfo = getCurrentInputEditorInfo();
         InputConnection inputConnection = getCurrentInputConnection();
-        EditorInfo editorInfo = getCurrentInputEditorInfo();
-        int flags = 0;
-        if (android.os.Build.VERSION.SDK_INT >= 25) {
-            flags |= InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
+
+        if (!validatePackageName(editorInfo)) {
+            return;
         }
+
+        final Uri contentUri = FileProvider.getUriForFile(this, AUTHORITY, file);
+
+        int flag = 0;
+        if (android.os.Build.VERSION.SDK_INT >= 25) {
+            flag |= InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
+        } else {
+            // On API 24 and prior devices, we cannot rely on
+            // InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION. You as an IME author
+            // need to decide what access control is needed (or not needed) for content URIs that
+            // you are going to expose. This sample uses Context.grantUriPermission(), but you can
+            // implement your own mechanism that satisfies your own requirements.
+            flag = 0;
+            try {
+                // TODO: Use revokeUriPermission to revoke as needed.
+                grantUriPermission(
+                        editorInfo.packageName, contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } catch (Exception e){
+                Log.e(TAG, "grantUriPermission failed packageName=" + editorInfo.packageName
+                        + " contentUri=" + contentUri, e);
+            }
+        }
+
+        final InputContentInfoCompat inputContentInfoCompat = new InputContentInfoCompat(
+                contentUri,
+                new ClipDescription(imageDescription, new String[]{ MIME_TYPE_GIF }),
+                null /* linkUrl */);
         InputConnectionCompat.commitContent(
-                inputConnection, editorInfo, inputContentInfo, flags, null);
+                getCurrentInputConnection(), getCurrentInputEditorInfo(), inputContentInfoCompat,
+                flag, null);
+    }
+
+    private boolean validatePackageName(@Nullable EditorInfo editorInfo) {
+        if (editorInfo == null) {
+            return false;
+        }
+        final String packageName = editorInfo.packageName;
+        if (packageName == null) {
+            return false;
+        }
+
+        // In Android L MR-1 and prior devices, EditorInfo.packageName is not a reliable identifier
+        // of the target application because:
+        //   1. the system does not verify it [1]
+        //   2. InputMethodManager.startInputInner() had filled EditorInfo.packageName with
+        //      view.getContext().getPackageName() [2]
+        // [1]: https://android.googlesource.com/platform/frameworks/base/+/a0f3ad1b5aabe04d9eb1df8bad34124b826ab641
+        // [2]: https://android.googlesource.com/platform/frameworks/base/+/02df328f0cd12f2af87ca96ecf5819c8a3470dc8
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        final InputBinding inputBinding = getCurrentInputBinding();
+        if (inputBinding == null) {
+            // Due to b.android.com/225029, it is possible that getCurrentInputBinding() returns
+            // null even after onStartInputView() is called.
+            // TODO: Come up with a way to work around this bug....
+            Log.e(TAG, "inputBinding should not be null here. "
+                    + "You are likely to be hitting b.android.com/225029");
+            return false;
+        }
+        final int packageUid = inputBinding.getUid();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            final AppOpsManager appOpsManager =
+                    (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+            try {
+                appOpsManager.checkPackage(packageUid, packageName);
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }
+
+        final PackageManager packageManager = getPackageManager();
+        final String possiblePackageNames[] = packageManager.getPackagesForUid(packageUid);
+        for (final String possiblePackageName : possiblePackageNames) {
+            if (packageName.equals(possiblePackageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Implementation of KeyboardViewListener
@@ -2885,9 +2970,9 @@ public class LatinIME extends InputMethodService implements
             // insert gif
             if (mCommitTextAsGif) {
                 try {
-                    Uri gifUri = RenderManager.getInstance(getApplicationContext())
+                    File gifFile = RenderManager.getInstance(this)
                             .renderGif(suggestion.toString(), getTypeFace());
-                    commitGifImage(gifUri, suggestion.toString());
+                    commitGifImage(gifFile, suggestion.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                     ic.commitText(suggestion, 1);
