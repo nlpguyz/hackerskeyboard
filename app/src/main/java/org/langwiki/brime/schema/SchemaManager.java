@@ -21,6 +21,9 @@ public class SchemaManager {
     private Resources resources;
 
     public static final String USER_DIR = "/sdcard/brime";
+    public static final String DEFAULT_IMDF = "brime_basic.json";
+
+    public static final String IMDF_SERVER_URL = "";
 
     public static SchemaManager getInstance(Context context) {
         if (sInstance != null)
@@ -38,13 +41,6 @@ public class SchemaManager {
     }
 
     public void initializeDataDir() {
-        // Check if the user dir has been initialized
-        /*
-        File checkFile = new File(USER_DIR + File.separator + "symbols.yaml");
-        if (checkFile.exists()) {
-            return;
-        }*/
-
         // Make sure the path exists
         File brimePath = new File(USER_DIR);
         brimePath.mkdir();
@@ -57,7 +53,7 @@ public class SchemaManager {
             }
         };
         try {
-            InputStream is = assetMgr.open("brime_basic.json");
+            InputStream is = assetMgr.open(DEFAULT_IMDF);
             String imdfText = FileHelper.read(is);
             IMDF imdf = parseImdf(imdfText);
             deployImdf(imdf, opener);
