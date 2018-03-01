@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.langwiki.brime.utils.FileHelper;
 
 import java.io.File;
@@ -19,14 +21,6 @@ public class SchemaManager {
     private Resources resources;
 
     public static final String USER_DIR = "/sdcard/brime";
-
-    private static final String[] brimeFiles = {
-            "default.yaml",
-            "essay.txt",
-            "luna_pinyin.dict.yaml",
-            "luna_pinyin.schema.yaml",
-            "symbols.yaml",
-    };
 
     public static SchemaManager getInstance(Context context) {
         if (sInstance != null)
@@ -55,14 +49,36 @@ public class SchemaManager {
         File brimePath = new File(USER_DIR);
         brimePath.mkdir();
 
-        AssetManager assetMgr = context.getAssets();
+        final AssetManager assetMgr = context.getAssets();
+        FileOpener opener = new FileOpener() {
+            @Override
+            public InputStream open(String path) throws IOException {
+                return assetMgr.open(path);
+            }
+        };
+        try {
+            InputStream is = assetMgr.open("brime_basic.json");
+            String imdfText = FileHelper.read(is);
+            IMDF imdf = parseImdf(imdfText);
+            deployImdf(imdf, opener);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        for (String fn : brimeFiles) {
+    public void deployImdf(IMDF imdf, FileOpener opener) {
+        for (String fn : imdf.files) {
             try {
-                FileHelper.copyTo(assetMgr.open(fn), USER_DIR + File.separator + fn);
+                FileHelper.copyTo(opener.open(fn), USER_DIR + File.separator + fn);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public IMDF parseImdf(String imdfString) {
+        Gson gson = new Gson();
+        IMDF imdf = gson.fromJson(imdfString, IMDF.class);
+        return imdf;
     }
 }

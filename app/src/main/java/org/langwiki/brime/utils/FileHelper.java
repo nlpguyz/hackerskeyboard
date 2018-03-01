@@ -1,20 +1,30 @@
 package org.langwiki.brime.utils;
 
-import android.content.res.Resources;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 public class FileHelper {
+    public static String read(InputStream is) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        String line;
+        try {
+            while ((line = in.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
     public static boolean copyTo(InputStream fis, String filePath) {
         FileOutputStream fos = null;
         try {
