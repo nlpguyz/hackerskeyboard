@@ -15,3 +15,11 @@ allprojects {
         google()
     }
 }
+
+apply plugin: 'idea'
+idea {
+    module {
+        excludeDirs.add(file('app/.externalNativeBuild'))
+        excludeDirs.add(file('app/main/jni/boost'))
+    }
+}
