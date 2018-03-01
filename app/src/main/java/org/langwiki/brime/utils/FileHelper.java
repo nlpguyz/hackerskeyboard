@@ -1,15 +1,30 @@
 package org.langwiki.brime.utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
 public class FileHelper {
+    public static String loadFile(File file, String defResult) {
+        try (
+            InputStream is = new FileInputStream(file);
+        ) {
+            return read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return defResult;
+        }
+    }
+
     public static String read(InputStream is) {
         StringBuilder sb = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
@@ -62,6 +77,17 @@ public class FileHelper {
             catch (IOException ioe) {
                 System.out.println("Error while closing stream: " + ioe);
             }
+        }
+    }
+
+    public static void writeFile(File file, String text) {
+        try (
+                OutputStream os = new FileOutputStream(file);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+        ) {
+            bw.write(text);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

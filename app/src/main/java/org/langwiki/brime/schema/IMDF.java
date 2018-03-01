@@ -4,5 +4,6 @@ public class IMDF {
     public String name;
     public String description;
     public String version;
+    public String baseUrl;
     public String[] files;
 }
