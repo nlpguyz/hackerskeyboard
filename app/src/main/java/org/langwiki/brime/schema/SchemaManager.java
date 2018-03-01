@@ -66,11 +66,9 @@ public class SchemaManager {
         String versionFileName = USER_DIR + File.separator + imdf.name + ".ver";
         File versionFile = new File(versionFileName);
         String version = FileHelper.loadFile(versionFile, null);
-        version = version.trim();
-        if (version != null && version.compareTo(imdf.version) >= 0) {
+        if (version != null && version.trim().compareTo(imdf.version) >= 0) {
             return;
         }
-
         for (String fn : imdf.files) {
             try {
                 FileHelper.copyTo(opener.open(imdf.baseUrl + fn), USER_DIR + File.separator + fn);
