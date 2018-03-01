@@ -1,9 +1,14 @@
 package org.langwiki.brime.schema;
 
+import java.util.HashMap;
+
 public class IMDF {
-    public String name;
-    public String description;
+    public String id;
+    public HashMap<String,String> name;
+    public HashMap<String,String> description;
     public String version;
-    public String baseUrl;
+    public String[] authors;
+    public String homeUrl;
+    public String license;
     public String[] files;
 }

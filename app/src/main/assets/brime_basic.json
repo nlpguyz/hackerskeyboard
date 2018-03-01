@@ -1,6 +1,11 @@
 {
-  "name": "brime",
-  "description" : "Brime basic schemata",
+  "id": "brime",
+  "name": {
+    "en": "brime"
+  },
+  "description" : {
+    "en" : "Brime basic schemata"
+  },
   "version": "0.1",
   "files" : [
     "default.yaml",

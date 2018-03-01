@@ -63,7 +63,7 @@ public class SchemaManager {
     }
 
     public void deployImdf(IMDF imdf, FileOpener opener) {
-        String versionFileName = USER_DIR + File.separator + imdf.name + ".ver";
+        String versionFileName = USER_DIR + File.separator + imdf.id + ".ver";
         File versionFile = new File(versionFileName);
         String version = FileHelper.loadFile(versionFile, null);
         if (version != null && version.trim().compareTo(imdf.version) >= 0) {
@@ -71,7 +71,7 @@ public class SchemaManager {
         }
         for (String fn : imdf.files) {
             try {
-                FileHelper.copyTo(opener.open(imdf.baseUrl + fn), USER_DIR + File.separator + fn);
+                FileHelper.copyTo(opener.open(fn), USER_DIR + File.separator + fn);
             } catch (IOException e) {
                 e.printStackTrace();
             }
