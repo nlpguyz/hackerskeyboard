@@ -1,0 +1,27 @@
+[submodule "rimenative/src/main/jni/OpenCC"]
+	path = rimenative/src/main/jni/OpenCC
+	url = https://github.com/BYVoid/OpenCC.git
+[submodule "rimenative/src/main/jni/yaml-cpp"]
+	path = rimenative/src/main/jni/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "rimenative/src/main/jni/snappy"]
+	path = rimenative/src/main/jni/snappy
+	url = https://github.com/google/snappy.git
+[submodule "rimenative/src/main/jni/leveldb"]
+	path = rimenative/src/main/jni/leveldb
+	url = https://github.com/google/leveldb.git
+[submodule "rimenative/src/main/jni/marisa-trie"]
+	path = rimenative/src/main/jni/marisa-trie
+	url = https://github.com/s-yata/marisa-trie.git
+[submodule "rimenative/src/main/jni/miniglog"]
+	path = rimenative/src/main/jni/miniglog
+	url = https://github.com/osfans/miniglog.git
+[submodule "rimenative/src/main/jni/librime"]
+	path = rimenative/src/main/jni/librime
+	url = https://github.com/rime/librime.git
+[submodule "rimenative/src/main/jni/libiconv"]
+	path = rimenative/src/main/jni/libiconv
+	url = https://github.com/osfans/libiconv-gnu.git
+[submodule "rimenative/src/main/jni/boost"]
+	path = rimenative/src/main/jni/boost
+	url = https://github.com/nlpguyz/boost
