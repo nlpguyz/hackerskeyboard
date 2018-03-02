@@ -19,7 +19,6 @@ allprojects {
 apply plugin: 'idea'
 idea {
     module {
-        excludeDirs.add(file('app/.externalNativeBuild'))
-        excludeDirs.add(file('app/main/jni/boost'))
+        excludeDirs.add(file('rimenative'))
     }
 }
