@@ -13,6 +13,12 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_static", "-DANDROID_STL_FORCE_FEATURES=ON"
+                abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
+            }
+        }
     }
 
     buildTypes {
@@ -27,6 +33,11 @@ android {
         }
     }
 
+    externalNativeBuild {
+        cmake {
+            path "src/main/jni/CMakeLists.txt"
+        }
+    }
 }
 
 dependencies {
