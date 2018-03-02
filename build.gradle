@@ -15,10 +15,3 @@ allprojects {
         google()
     }
 }
-
-apply plugin: 'idea'
-idea {
-    module {
-        excludeDirs.add(file('rimenative'))
-    }
-}
