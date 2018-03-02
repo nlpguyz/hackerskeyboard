@@ -50,6 +50,7 @@ import android.os.Build;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -325,6 +326,8 @@ public class LatinIME extends InputMethodService implements
     public Rime mRime; // public for debugging
     public SchemaManager mSchemaManager;
 
+    protected Handler mRimeHandler;
+
     private Rime.RimeListener mRimeListener = new Rime.RimeListener() {
         public void onMessage(String message_type, String message_value) {
             Log.d(TAG, "onMessage(" + message_type + ", " + message_type + ")");
@@ -339,6 +342,7 @@ public class LatinIME extends InputMethodService implements
                     */
                     break;
                 case "option":
+                    showAlert(message_value);
                     /*
                     getStatus();
                     getContexts(); //切換中英文、簡繁體時更新候選
@@ -352,6 +356,33 @@ public class LatinIME extends InputMethodService implements
             }
         }
     };
+
+    public void showAlert(String msgValue) {
+        Message msg = mRimeHandler.obtainMessage(1, msgValue);
+        msg.sendToTarget();
+    }
+
+    // should be protected
+    public void alert(String msg) {
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(msg)
+                .setTitle("RIME message (dev)");
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.show();
+    }
 
     static final String[] sCjkLocales = new String[] {
             "zh_CN",
@@ -445,7 +476,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onCreate() {
-        Log.i("PCKeyboard", "onCreate(), os.version=" + System.getProperty("os.version"));
+        Log.i(TAG, "onCreate(), os.version=" + System.getProperty("os.version"));
         LatinImeLogger.init(this);
         KeyboardSwitcher.init(this);
         super.onCreate();
@@ -525,6 +556,18 @@ public class LatinIME extends InputMethodService implements
         registerReceiver(mReceiver, filter);
         prefs.registerOnSharedPreferenceChangeListener(this);
         setNotification(mKeyboardNotification);
+
+        mRimeHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 1:
+                        Log.i(TAG, "Alert to be displayed " + msg.obj);
+                        alert("Message value: " + msg.obj);
+                        break;
+                }
+            }
+        };
 
         mRime = Rime.getInstance();
         mRime.setRimeListener(mRimeListener);
@@ -745,7 +788,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onConfigurationChanged(Configuration conf) {
-        Log.i("PCKeyboard", "onConfigurationChanged()");
+        Log.i(TAG, "onConfigurationChanged()");
         // If the system locale changes and is different from the saved
         // locale (mSystemLocale), then reload the input locale list from the
         // latin ime settings (shared prefs) and reset the input locale
@@ -848,7 +891,7 @@ public class LatinIME extends InputMethodService implements
         sKeyboardSettings.editorFieldId = attribute.fieldId;
         sKeyboardSettings.editorInputType = attribute.inputType;
 
-        //Log.i("PCKeyboard", "onStartInputView " + attribute + ", inputType= " + Integer.toHexString(attribute.inputType) + ", restarting=" + restarting);
+        //Log.i(TAG, "onStartInputView " + attribute + ", inputType= " + Integer.toHexString(attribute.inputType) + ", restarting=" + restarting);
         LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
         // In landscape mode, this method gets called without the input view
         // being created.
@@ -3217,7 +3260,7 @@ public class LatinIME extends InputMethodService implements
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
             String key) {
-        Log.i("PCKeyboard", "onSharedPreferenceChanged()");
+        Log.i(TAG, "onSharedPreferenceChanged()");
         boolean needReload = false;
         Resources res = getResources();
 
@@ -3871,7 +3914,7 @@ public class LatinIME extends InputMethodService implements
 
     static int getPrefInt(SharedPreferences prefs, String prefName, int defVal) {
         String prefVal = prefs.getString(prefName, Integer.toString(defVal));
-        //Log.i("PCKeyboard", "getPrefInt " + prefName + " = " + prefVal + ", default " + defVal);
+        //Log.i(TAG, "getPrefInt " + prefName + " = " + prefVal + ", default " + defVal);
         return getIntFromString(prefVal, defVal);
     }
 

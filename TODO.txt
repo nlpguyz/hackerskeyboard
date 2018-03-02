@@ -1,0 +1,11 @@
+Hacker's Keyboard on RIME
+=========================
+
+TODO list
+---------
+- List active schemes
+  - Disable/enable schemes
+- Install schemes
+  - List what's available
+  - Install to local dir
+

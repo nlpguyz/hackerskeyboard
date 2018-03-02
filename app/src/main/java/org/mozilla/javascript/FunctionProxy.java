@@ -42,7 +42,6 @@ public class FunctionProxy {
 
         ScriptEngine engine = ScriptManager.getInstance().getEngine(ScriptManager.LANG_JAVASCRIPT);
         try {
-            // $invoke_cb is defined in JavascriptPreamble.java
             engine.eval(String.format("%s(%s)", tmpFunc, argList.toString()));
         } catch (ScriptException e) {
             e.printStackTrace();
