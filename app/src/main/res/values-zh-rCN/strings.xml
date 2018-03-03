@@ -205,38 +205,40 @@
     <string name="main_setup_get_dicts">获取字典</string>
     <string name="main_setup_input_lang">输入语言</string>
     <string name="main_body">"
-        &lt;h2>启用黑客键盘&lt;/h2>
+        <h2>启用黑客键盘</h2>
 
-        &lt;p>&lt;i>Hacker's Keyboard&lt;/i> provides a new Android input method. It is &lt;b>disabled by default&lt;/b>, and for security reasons Android doesn't allow programs to change input method settings. Please follow the following steps to activate it.&lt;p>
+        <p><i>黑客键盘</i> 提供了一种全新的输入方法。但它是 <b>默认禁用
+</b>的，由于安全原因，安卓不允许程序改变输入法。 请按照下面的步骤激活它
+<p>
 
-        &lt;h3>Add the keyboard to the system's input method list:&lt;/h3>
-        &lt;blockquote>
-        &lt;p>&amp;#8226; Open the system input settings configuration by pressing the &lt;b>Enable Keyboard&lt;/b> button above.&lt;/p>
-        &lt;p>&amp;#8226; Find &lt;i>Hacker's Keyboard&lt;/i> in the input method list, tap the checkmark to switch it on.&lt;/p>
-        &lt;p>&amp;#8226; Acknowledge the warning shown by the system. The system always shows this message when enabling a third-party input method.&lt;/p>
-        &lt;p>&amp;#8226; Press the &lt;i>Back&lt;/i> button to return to this page.&lt;/p>
-        &lt;/blockquote>
+        <h3>向系统输入法列表添加：</h3>
+        <blockquote>
+        <p>&#8226; 按上面的<b>启用键盘<b>按钮打开系统输入法设置。</p>
+        <p>&#8226; 在输入法列表找到 <i>黑客键盘</i>， 点击开关开启它。</p>
+        <p>&#8226; 确认系统显示的警告。当启用第三方输入法时系统总会显示这个信息。</p>
+        <p>&#8226; 按 <i>返回</i> 按钮返回此页面。</p>
+        </blockquote>
 
-        &lt;h3>选择刚才激活的输入法&lt;/h3>
-        &lt;blockquote>
-        &lt;p>&amp;#8226; Press the &lt;b>Set input method&lt;/b> button above.&lt;/p>
-        &lt;p>&amp;#8226; Select &lt;i>Hacker's Keyboard&lt;/i> from the list.&lt;/p>
-        &lt;/blockquote>
+        <h3>选择刚才激活的输入法</h3>
+        <blockquote>
+        <p>&#8226; 按 上面的<b>选择输入法</b> 按钮。</p>
+        <p>&#8226; 从列表选择 <i>黑客键盘</i> 。</p>
+        </blockquote>
 
-        &lt;h3>可选：选择输入法&lt;/h3>
-        &lt;blockquote>
-        &lt;p>&amp;#8226; 长按 &lt;b>Input languages&lt;/b> button above to select which keyboard layouts you want to use. You &lt;b>must&lt;/b> configure this if you want to use a language or layout other than the one corresponding to your system's default language.&lt;/p>
-        &lt;p>&amp;#8226; Press the &lt;i>Back&lt;/i> button to return to this page.&lt;/p>
-        &lt;p>&amp;#8226; When typing, slide the space bar horizontally to switch between selected layouts.
-        &lt;/blockquote>
+        <h3>可选：设置输入法</h3>
+        <blockquote>
+        <p>&#8226; 按上面的 <b>输入语言</b> 按钮选择你想使用的键盘布局。 如果你想使用一种非系统语言的语言或布局，你 <b>必须</b> 配置这个。</p>
+        <p>&#8226;  按 <i>返回</i> 按钮返回此页面。</p>
+        <p>&#8226; 输入时，水平滑动空格来切换已选择的布局。
+        </blockquote>
 
-        &lt;h3>Optional: Install completion dictionary packages:&lt;/h3>
-        &lt;blockquote>
-        &lt;p>&amp;#8226; Press the &lt;b>Get dictionaries&lt;/b> button above to do a Market search.&lt;/p>
-        &lt;/blockquote>
+        <h3>可选：安装完整的字典包:</h3>
+        <blockquote>
+        <p>&#8226; 按上面的 <b>获取字典</b> 按钮在应用市场搜索.</p>
+        </blockquote>
 
-        &lt;h2>Additional information&lt;/h2>
-        &lt;p>Please refer to the &lt;a href='http://code.google.com/p/hackerskeyboard/'>project web page&lt;/a> for more information, including the user's guide, issue tracker, and discussion group.&lt;/p>
+        <h2>额外信息</h2>
+        <p>更多信息请参考 <a href='http://code.google.com/p/hackerskeyboard/'>项目网页</a> ，包括用户向导，issue 追踪，和讨论组。</p>
         "</string>
     <string name="text_test">Test</string>
     <string name="seek_pref_0">0%</string>
