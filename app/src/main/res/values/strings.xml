@@ -678,6 +678,7 @@
     <string name="seek_pref_max">100%</string>
 
     <!-- RIME -->
+    <string name="menu_rime_settings">RIME setup</string>
     <string name="pref_rime_title">RIME settings></string>
     <string name="rime_settings">RIME schemata</string>
 </resources>
