@@ -99,5 +99,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name="RimePreference"
+            android:label="@string/pref_rime_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.langwiki.brime.PREF_RIME"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 </application>
 </manifest>

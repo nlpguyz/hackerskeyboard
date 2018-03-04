@@ -676,4 +676,8 @@
     <string name="seek_pref_0">0%</string>
     <string name="seek_pref_val">x%</string>
     <string name="seek_pref_max">100%</string>
+
+    <!-- RIME -->
+    <string name="pref_rime_title">RIME settings></string>
+    <string name="rime_settings">RIME schemata</string>
 </resources>

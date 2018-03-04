@@ -158,7 +158,6 @@ public class LatinIMESettings extends PreferenceActivity
         TEXT_VARIATIONS.put(0x000000a0, "WEB_EDIT_TEXT");
         TEXT_VARIATIONS.put(0x000000d0, "WEB_EMAIL_ADDRESS");
         TEXT_VARIATIONS.put(0x000000e0, "WEB_PASSWORD");
-
     }
     
     private static void addBit(StringBuffer buf, int bit, String str) {

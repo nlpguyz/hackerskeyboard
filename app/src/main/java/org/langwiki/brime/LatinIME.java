@@ -182,6 +182,7 @@ public class LatinIME extends InputMethodService implements
     // Contextual menu positions
     private static final int POS_METHOD = 0;
     private static final int POS_SETTINGS = 1;
+    private static final int POS_RIME_SETTINGS = 2;
 
     // private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
@@ -3731,6 +3732,10 @@ public class LatinIME extends InputMethodService implements
         launchSettings(LatinIMESettings.class);
     }
 
+    protected void launchRimeSettings() {
+        launchSettings(RimePreference.class);
+    }
+
     public void launchDebugSettings() {
         launchSettings(LatinIMEDebugSettings.class);
     }
@@ -3813,7 +3818,8 @@ public class LatinIME extends InputMethodService implements
         builder.setNegativeButton(android.R.string.cancel, null);
         CharSequence itemSettings = getString(R.string.english_ime_settings);
         CharSequence itemInputMethod = getString(R.string.selectInputMethod);
-        builder.setItems(new CharSequence[] { itemInputMethod, itemSettings },
+        CharSequence rimeSettings = getString(R.string.menu_rime_settings);
+        builder.setItems(new CharSequence[] { itemInputMethod, itemSettings, rimeSettings },
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface di, int position) {
@@ -3825,6 +3831,9 @@ public class LatinIME extends InputMethodService implements
                         case POS_METHOD:
                             ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
                                     .showInputMethodPicker();
+                            break;
+                        case POS_RIME_SETTINGS:
+                            launchRimeSettings();
                             break;
                         }
                     }

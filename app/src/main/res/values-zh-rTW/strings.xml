@@ -137,4 +137,8 @@
     <string name="keyboard_layout" msgid="437433231038683666">"鍵盤主題"</string>
     <string name="subtype_mode_keyboard" msgid="2242090416595003881">"鍵盤"</string>
     <string name="subtype_mode_voice" msgid="4394113125441627771">"語音"</string>
+
+    <!-- RIME -->
+    <string name="pref_rime_title">中州韻設置></string>
+    <string name="rime_settings">輸入方案</string>
 </resources>
