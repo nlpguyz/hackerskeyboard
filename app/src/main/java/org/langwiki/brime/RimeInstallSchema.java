@@ -10,7 +10,6 @@ import org.langwiki.brime.schema.IMDF;
 import org.langwiki.brime.schema.SchemaManager;
 
 import java.util.List;
-import java.util.Map;
 
 import jline.internal.Nullable;
 
@@ -21,6 +20,10 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.pref_rime_install_schemata);
+
+        PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
+        //schemaParent.addPreference();
+
         startDownload();
     }
 
@@ -44,9 +47,14 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
         // Add schema checkboxes
         PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
 
+        schemaParent.removeAll();
+
         for (IMDF imdf : list) {
-            // TODO get locale
-            String name = imdf.name.get("zh_CN");
+            SchemaManager sm = SchemaManager.getInstance(getApplicationContext());
+            String name = sm.getLocaleString(imdf.name);
+            if (name == null) {
+                name = imdf.id;
+            }
 
             CheckBoxPreference pref = new CheckBoxPreference(this);
             pref.setTitle(name);

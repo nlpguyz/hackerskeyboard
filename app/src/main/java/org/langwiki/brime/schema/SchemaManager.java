@@ -25,6 +25,8 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class SchemaManager {
     private static final String TAG = "BRime";
@@ -147,5 +149,21 @@ public class SchemaManager {
 
     public void removeListener(SchemaManagerListener l) {
         listeners.remove(l);
+    }
+
+    public String getLocaleString(Map<String,String> map) {
+        Locale current = resources.getConfiguration().locale;
+        String lang = current.getLanguage();
+        String value = map.get(lang);
+        if (value == null) {
+            value = map.get("default");
+        }
+        if (value == null) {
+            value = map.get("en");
+        }
+        if (value == null) {
+            value = map.get("zh");
+        }
+        return value;
     }
 }
