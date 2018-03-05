@@ -1,5 +1,20 @@
 [
     {
+        "id": "pinyin_simp",
+        "name": {
+            "en": "Mini pinyin (Simp)",
+            "zh_CN": "\u8896\u73cd\u7b80\u5316\u5b57\u62fc\u97f3",
+            "zh_TW": "\u8896\u73cd\u7c21\u5316\u5b57\u62fc\u97f3",
+            "default": "Mini pinyin (Simp)"
+        },
+        "version": "1.0",
+        "files": [
+            "pinyin_simp.schema.yaml",
+            "pinyin_simp.dict.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
+    },
+    {
         "id": "ipa_xsampa",
         "name": {
             "en": "IPA X-Sampa",
