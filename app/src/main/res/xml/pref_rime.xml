@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <PreferenceCategory
-        android:key="graphics_settings"
+        android:order="0"
+        android:key="rime_schemata"
         android:title="@string/pref_rime_schemata" >
     </PreferenceCategory>
+
+    <PreferenceScreen
+        android:order="10"
+        android:title="@string/pref_rime_install">
+        <!--
+        <intent
+            android:action="org.langwiki.brime.INPUT_LANGUAGE_SELECTION"/>
+        -->
+    </PreferenceScreen>
 </PreferenceScreen>
