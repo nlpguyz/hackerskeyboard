@@ -1,2 +1,17 @@
 [
+  {
+  "id": "ipa_xsampa",
+  "name": {
+    "en": "IPA X-Sampa",
+    "zh_CN": "国际音标 X-Sampa",
+    "zh_TW": "國際音標 X-Sampa",
+    "default": "IPA X-Sampa"
+  },
+  "version" : "1.0",
+  "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/",
+  "files" : [
+    "ipa_xsampa.schema.yaml",
+    "ipa_xsampa.dict.yaml"
+  ]
+  }
 ]
