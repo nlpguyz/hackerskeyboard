@@ -304,7 +304,6 @@ public class LatinIME extends InputMethodService implements
 
     /* package */String mWordSeparators;
     private String mSentenceSeparators;
-    private boolean mConfigurationChanging;
 
     // Keeps track of most recently inserted text (multi-character key) for
     // reverting
@@ -816,9 +815,7 @@ public class LatinIME extends InputMethodService implements
             reloadKeyboards();
             removeCandidateViewContainer();
         }
-        mConfigurationChanging = true;
         super.onConfigurationChanged(conf);
-        mConfigurationChanging = false;
     }
 
     @Override
@@ -1374,6 +1371,15 @@ public class LatinIME extends InputMethodService implements
             }
             break;
         }
+
+        if (isCJK()) {
+            char pressedKey = (char) event.getUnicodeChar();
+            if (pressedKey != '\0') {
+                onKey(pressedKey, new int[]{pressedKey}, 0, 0);
+                return true;
+            }
+        }
+
         return super.onKeyDown(keyCode, event);
     }
 
