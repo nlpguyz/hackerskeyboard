@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:order="0"
+        android:key="rime_schemata"
+        android:title="@string/pref_rime_schemata_to_install" >
+    </PreferenceCategory>
+</PreferenceScreen>

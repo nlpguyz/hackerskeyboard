@@ -108,5 +108,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name="RimeInstallSchema"
+            android:label="@string/pref_rime_install_schema">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.langwiki.brime.RIME_INSTAL_SCHEMATA"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 </application>
 </manifest>

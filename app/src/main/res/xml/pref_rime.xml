@@ -9,9 +9,7 @@
     <PreferenceScreen
         android:order="10"
         android:title="@string/pref_rime_install">
-        <!--
         <intent
-            android:action="org.langwiki.brime.INPUT_LANGUAGE_SELECTION"/>
-        -->
+            android:action="org.langwiki.brime.RIME_INSTAL_SCHEMATA"/>
     </PreferenceScreen>
 </PreferenceScreen>

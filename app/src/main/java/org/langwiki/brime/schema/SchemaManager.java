@@ -4,14 +4,27 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.Context;
 import android.util.Log;
+import android.util.Xml;
 
 import com.google.gson.Gson;
 
 import org.langwiki.brime.utils.FileHelper;
+import org.langwiki.brime.utils.NetHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SchemaManager {
     private static final String TAG = "BRime";
@@ -23,7 +36,18 @@ public class SchemaManager {
     public static final String USER_DIR = "/sdcard/brime";
     public static final String DEFAULT_IMDF = "brime_basic.json";
 
-    public static final String IMDF_SERVER_URL = "";
+    public static final String IMDF_SERVER_URL
+            = "https://raw.githubusercontent.com/nlpguyz/hackerskeyboard/gradle/remote_data/downloadable.json";
+
+    protected Object mLock;
+    protected boolean mListReady;
+    protected List<IMDF> mList;
+
+    public interface SchemaManagerListener {
+        void onSchemaList(List<IMDF> list);
+    }
+
+    protected List<SchemaManagerListener> listeners;
 
     public static SchemaManager getInstance(Context context) {
         if (sInstance != null)
@@ -35,9 +59,10 @@ public class SchemaManager {
         }
     }
 
-    public SchemaManager(Context context) {
+    private SchemaManager(Context context) {
         this.context = context;
         resources = context.getResources();
+        listeners = new ArrayList<>();
     }
 
     public void initializeDataDir() {
@@ -84,5 +109,43 @@ public class SchemaManager {
         Gson gson = new Gson();
         IMDF imdf = gson.fromJson(imdfString, IMDF.class);
         return imdf;
+    }
+
+    public void getInstallList() {
+        synchronized (mLock) {
+            if (mListReady) {
+                doListReady();
+                return;
+            }
+        }
+
+        startDownloadList();
+    }
+
+    private void startDownloadList() {
+        try {
+            String jsonText = NetHelper.getText(IMDF_SERVER_URL);
+            Gson gson = new Gson();
+            IMDF[] imdfArray = gson.fromJson(jsonText, IMDF[].class);
+            mList = Arrays.asList(imdfArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            doListReady();
+        }
+    }
+
+    private void doListReady() {
+        for (SchemaManagerListener l : listeners) {
+            l.onSchemaList(mList);
+        }
+    }
+
+    public void addListener(SchemaManagerListener l) {
+        listeners.add(l);
+    }
+
+    public void removeListener(SchemaManagerListener l) {
+        listeners.remove(l);
     }
 }

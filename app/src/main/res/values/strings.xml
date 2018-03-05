@@ -682,4 +682,6 @@
     <string name="pref_rime_title">RIME settings></string>
     <string name="rime_settings">RIME schemata</string>
     <string name="pref_rime_install">Install RIME schemata...</string>
+    <string name="pref_rime_install_schema">Install RIME Schemata</string>
+    <string name="pref_rime_schemata_to_install">Installable RIME schemata</string>
 </resources>

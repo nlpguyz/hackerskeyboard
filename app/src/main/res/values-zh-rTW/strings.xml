@@ -143,4 +143,6 @@
     <string name="pref_rime_title">中州韻設定</string>
     <string name="pref_rime_schemata">輸入法方案</string>
     <string name="pref_rime_install">安裝新方案...</string>
+    <string name="pref_rime_install_schema">安装RIME输入方案</string>
+    <string name="pref_rime_schemata_to_install">可安装的RIME输入方案</string>
 </resources>
