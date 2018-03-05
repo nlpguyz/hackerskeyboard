@@ -1,27 +1,18 @@
 package org.langwiki.brime.schema;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.content.Context;
-import android.util.Log;
-import android.util.Xml;
 
 import com.google.gson.Gson;
 
 import org.langwiki.brime.utils.FileHelper;
 import org.langwiki.brime.utils.NetHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +32,7 @@ public class SchemaManager {
     public static final String IMDF_SERVER_URL
             = "https://raw.githubusercontent.com/nlpguyz/hackerskeyboard/gradle/remote_data/downloadable.json";
 
-    protected Object mLock;
+    protected Object mLock = new Object();
     protected boolean mListReady;
     protected List<IMDF> mList;
 
@@ -89,22 +80,57 @@ public class SchemaManager {
         }
     }
 
-    public void deployImdf(IMDF imdf, FileOpener opener) {
+    public boolean deployImdf(IMDF imdf, FileOpener opener) {
         String versionFileName = USER_DIR + File.separator + imdf.id + ".ver";
         File versionFile = new File(versionFileName);
         String version = FileHelper.loadFile(versionFile, null);
         if (version != null && version.trim().compareTo(imdf.version) >= 0) {
-            return;
+            return true;
         }
+
+        boolean fail = false;
         for (String fn : imdf.files) {
             try {
                 FileHelper.copyTo(opener.open(fn), USER_DIR + File.separator + fn);
             } catch (IOException e) {
                 e.printStackTrace();
+                fail = true;
             }
         }
 
         FileHelper.writeFile(versionFile, imdf.version);
+
+        return !fail;
+    }
+
+    public boolean installOnlineImdf(IMDF imdf) {
+        final String homeUrl = imdf.homeUrl;
+        if (homeUrl == null || homeUrl.isEmpty()) {
+            return false;
+        }
+
+        FileOpener opener = new FileOpener() {
+            @Override
+            public InputStream open(String path) throws IOException {
+                InputStream input = new URL(homeUrl + path).openStream();
+                return input;
+            }
+        };
+
+        return deployImdf(imdf, opener);
+    }
+
+    public void installSchema(String id) {
+        if (mList == null) {
+            return;
+        }
+
+        for (IMDF im : mList) {
+            if (id.equals(im.id)) {
+                installOnlineImdf(im);
+                return;
+            }
+        }
     }
 
     public IMDF parseImdf(String imdfString) {
@@ -153,11 +179,20 @@ public class SchemaManager {
 
     public String getLocaleString(Map<String,String> map) {
         Locale current = resources.getConfiguration().locale;
-        String lang = current.getLanguage();
+        String lang = current.toString();
+
+        // remove _#HAN
+        int pos = lang.indexOf("_#");
+        if (pos >= 0) {
+            lang = lang.substring(0, pos);
+        }
+
         String value = map.get(lang);
         if (value == null) {
             value = map.get("default");
         }
+
+        // Below are defaults
         if (value == null) {
             value = map.get("en");
         }

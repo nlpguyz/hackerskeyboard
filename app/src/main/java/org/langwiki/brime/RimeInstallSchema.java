@@ -2,6 +2,7 @@ package org.langwiki.brime;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
@@ -58,6 +59,17 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
 
             CheckBoxPreference pref = new CheckBoxPreference(this);
             pref.setTitle(name);
+            pref.setKey(imdf.id);
+
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    String id = preference.getKey();
+                    SchemaManager.getInstance(getApplicationContext()).installSchema(id);
+                    return false;
+                }
+            });
+
             schemaParent.addPreference(pref);
         }
     }
