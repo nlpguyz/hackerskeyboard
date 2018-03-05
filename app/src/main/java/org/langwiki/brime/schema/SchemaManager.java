@@ -3,6 +3,8 @@ package org.langwiki.brime.schema;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.os.Handler;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -36,6 +38,8 @@ public class SchemaManager {
     protected boolean mListReady;
     protected List<IMDF> mList;
 
+    protected Handler mHandler;
+
     public interface SchemaManagerListener {
         void onSchemaList(List<IMDF> list);
     }
@@ -56,6 +60,7 @@ public class SchemaManager {
         this.context = context;
         resources = context.getResources();
         listeners = new ArrayList<>();
+        mHandler = new Handler();
     }
 
     public void initializeDataDir() {
@@ -103,10 +108,19 @@ public class SchemaManager {
         return !fail;
     }
 
-    public boolean installOnlineImdf(IMDF imdf) {
+    public boolean installOnlineImdf(final IMDF imdf, boolean showToast) {
         final String homeUrl = imdf.homeUrl;
         if (homeUrl == null || homeUrl.isEmpty()) {
             return false;
+        }
+
+        if (showToast) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Installing " + getLocaleString(imdf.name), Toast.LENGTH_LONG);
+                }
+            });
         }
 
         FileOpener opener = new FileOpener() {
@@ -120,14 +134,14 @@ public class SchemaManager {
         return deployImdf(imdf, opener);
     }
 
-    public void installSchema(String id) {
+    public void installSchema(String id, boolean showToast) {
         if (mList == null) {
             return;
         }
 
         for (IMDF im : mList) {
             if (id.equals(im.id)) {
-                installOnlineImdf(im);
+                installOnlineImdf(im, showToast);
                 return;
             }
         }

@@ -20,7 +20,6 @@ public class FileHelper {
         ) {
             return read(is);
         } catch (IOException e) {
-            e.printStackTrace();
             return defResult;
         }
     }
