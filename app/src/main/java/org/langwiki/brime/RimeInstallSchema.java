@@ -1,11 +1,12 @@
 package org.langwiki.brime;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.util.Log;
+import android.view.View;
 
 import org.langwiki.brime.schema.IMDF;
 import org.langwiki.brime.schema.SchemaManager;
@@ -14,7 +15,7 @@ import java.util.List;
 
 import jline.internal.Nullable;
 
-public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener {
+public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener, View.OnClickListener {
     private static final String TAG = "BRime-Pref";
 
     @Override
@@ -77,5 +78,14 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
 
             schemaParent.addPreference(pref);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    public void refresh(View view) {
+        Log.d(TAG, "refresh");
     }
 }

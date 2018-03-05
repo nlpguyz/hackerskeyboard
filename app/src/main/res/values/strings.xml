@@ -272,10 +272,10 @@
     <!-- Short hint shown in candidate view to explain that user can speak punctuation. -->
     <string name="voice_punctuation_hint"><b>Hint:</b> Next time, try speaking punctuation like \"period\", \"comma\", or \"question mark\".</string>
 
-    <!-- Label on button to stop recognition. Must be short to fit on button. -->
+    <!-- Labellayout_buttontton to stop recognition. Must be short to fitlayout_buttontton. -->
     <string name="cancel">Cancel</string>
 
-    <!-- Label on button when an error occurs -->
+    <!-- Labellayout_buttontton when an error occurs -->
     <string name="ok">OK</string>
 
     <!-- Preferences item for enabling speech input -->
@@ -318,7 +318,7 @@
     <!-- appears above image showing the user to click on a TextView to show the IME -->
     <string name="open_the_keyboard"><font size="17"><b>Open the keyboard\n</b></font><font size="3">\n</font>Touch any text field.</string>
 
-    <!-- appears above the image showing the back button used to close the keyboard -->
+    <!-- appears above the image showing the blayout_buttontton used to close the keyboard -->
     <string name="close_the_keyboard"><font size="17"><b>Close the keyboard\n</b></font><font size="3">\n</font>Press the Back key.</string>
 
     <!-- appears above image showing how to use touch and hold -->
@@ -684,4 +684,5 @@
     <string name="pref_rime_install">Install RIME schemata...</string>
     <string name="pref_rime_install_schema">Install RIME Schemata</string>
     <string name="pref_rime_schemata_to_install">Installable RIME schemata</string>
+    <string name="refresh">Refresh</string>
 </resources>

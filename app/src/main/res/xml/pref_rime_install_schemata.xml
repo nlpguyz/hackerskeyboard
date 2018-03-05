@@ -5,4 +5,9 @@
         android:key="rime_schemata"
         android:title="@string/pref_rime_schemata_to_install" >
     </PreferenceCategory>
+
+    <Preference
+        android:key="resetBD"
+        android:widgetLayout="@layout/layout_button">
+    </Preference>
 </PreferenceScreen>

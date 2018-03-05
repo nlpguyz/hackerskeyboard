@@ -165,7 +165,7 @@ public class KeyboardSwitcher implements
      *
      * @param locale
      *            the current input locale, or null for default locale with no
-     *            locale button.
+     *            locale layout_button.
      */
     public void setLanguageSwitcher(LanguageSwitcher languageSwitcher) {
         mLanguageSwitcher = languageSwitcher;

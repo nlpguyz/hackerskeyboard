@@ -140,7 +140,7 @@ public class LatinIME extends InputMethodService implements
     // shown for a
     // given text field. For instance this is specified by the search dialog
     // when the
-    // dialog is already showing a voice search button.
+    // dialog is already showing a voice search layout_button.
     private static final String IME_OPTION_NO_MICROPHONE = "nm";
 
     public static final String PREF_SELECTED_LANGUAGES = "selected_languages";
@@ -373,7 +373,7 @@ public class LatinIME extends InputMethodService implements
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
+                // User clicked OK layout_button
             }
         });
 
@@ -908,7 +908,7 @@ public class LatinIME extends InputMethodService implements
 
         // Most such things we decide below in the switch statement, but we need to know
         // now whether this is a password text field, because we need to know now (before
-        // the switch statement) whether we want to enable the voice button.
+        // the switch statement) whether we want to enable the voice layout_button.
         mPasswordText = false;
         int variation = attribute.inputType & EditorInfo.TYPE_MASK_VARIATION;
         if (variation == EditorInfo.TYPE_TEXT_VARIATION_PASSWORD
@@ -2269,7 +2269,7 @@ public class LatinIME extends InputMethodService implements
             if (mVoiceRecognitionTrigger.isInstalled()) {
                 mVoiceRecognitionTrigger.startVoiceRecognition();
             }
-            //startListening(false /* was a button press, was not a swipe */);
+            //startListening(false /* was a layout_button press, was not a swipe */);
             break;
         case 9 /* Tab */:
             if (processMultiKey(primaryCode)) {
