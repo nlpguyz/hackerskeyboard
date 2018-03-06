@@ -121,6 +121,8 @@ public class LatinIME extends InputMethodService implements
     static final boolean TRACE = false;
     static final boolean JS_DEBUG_SERVER = true;
 
+    private static Context sContext;
+
     static Map<Integer, String> ESC_SEQUENCES;
     static Map<Integer, Integer> CTRL_SEQUENCES;
 
@@ -474,6 +476,10 @@ public class LatinIME extends InputMethodService implements
         }
     };
 
+    public static Context getContext() {
+        return sInstance;
+    }
+
     @Override
     public void onCreate() {
         Log.i(TAG, "onCreate(), os.version=" + System.getProperty("os.version"));
@@ -572,7 +578,7 @@ public class LatinIME extends InputMethodService implements
         mRime = Rime.getInstance();
         mRime.setRimeListener(mRimeListener);
 
-        mSchemaManager = SchemaManager.getInstance(getApplicationContext());
+        mSchemaManager = SchemaManager.getInstance();
 
         mTypeFace = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 

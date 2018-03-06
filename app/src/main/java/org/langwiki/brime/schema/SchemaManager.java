@@ -1,5 +1,6 @@
 package org.langwiki.brime.schema;
 
+import org.langwiki.brime.LatinIME;
 import org.langwiki.brime.R;
 
 import android.content.Context;
@@ -54,12 +55,12 @@ public class SchemaManager {
 
     protected List<SchemaManagerListener> listeners;
 
-    public static SchemaManager getInstance(Context context) {
+    public static SchemaManager getInstance() {
         if (sInstance != null)
             return sInstance;
 
         synchronized (SchemaManager.class) {
-            sInstance = new SchemaManager(context);
+            sInstance = new SchemaManager(LatinIME.getContext());
             return sInstance;
         }
     }
