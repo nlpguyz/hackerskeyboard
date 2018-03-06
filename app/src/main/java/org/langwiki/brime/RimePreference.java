@@ -54,6 +54,7 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
                 pref.setOnPreferenceChangeListener(this);
                 mSchemaPrefs.add(pref);
                 schemaParent.addPreference(pref);
+                pref.setChecked(false);
             }
         }
 
@@ -66,15 +67,6 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         if (selected != null) {
             selected.setChecked(true);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        // Change schema on exit
-        SchemaManager.getInstance().selectSchema(
-                SettingManager.getInstance().getCurrentRimeSchemaId()
-        );
-        super.onDestroy();
     }
 
     @Override
@@ -96,6 +88,9 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
 
             // Save
             SettingManager.getInstance().setCurrentRimeSchemaId(preference.getKey());
+
+            // Enable
+            SchemaManager.getInstance().selectSchema(preference.getKey());
         }
 
         return true;
