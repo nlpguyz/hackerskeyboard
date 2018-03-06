@@ -18,8 +18,6 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
 
     private List<CheckBoxPreference> mSchemaPrefs = new ArrayList<>();
 
-    private String selected;
-
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -32,9 +30,10 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
 
         String selectedId = SettingManager.getInstance().getCurrentRimeSchemaId();
+        CheckBoxPreference first = null;
+        boolean enabledOne = false;
 
         if (schemas != null) {
-            boolean first = true;
             for (Map<String, String> schema : schemas) {
                 String name = schema.get("name");
                 String id = schema.get("schema_id");
@@ -44,16 +43,23 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
                 pref.setKey(id);
                 pref.setOnPreferenceChangeListener(this);
 
-                // select previous schema or first
-                if (selectedId == null && first || selectedId != null && selectedId.equals(id)) {
-                    pref.setChecked(true);
+                if (first == null) {
+                    first = pref;
                 }
 
-                first = false;
+                // select previous schema or first
+                if (!enabledOne && selectedId != null && selectedId.equals(id)) {
+                    pref.setChecked(true);
+                    enabledOne = true;
+                }
 
                 mSchemaPrefs.add(pref);
                 schemaParent.addPreference(pref);
             }
+        }
+
+        if (!enabledOne && first != null) {
+            first.setChecked(true);
         }
     }
 
@@ -77,7 +83,6 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
 
         // Enforce one selection
         if (value) {
-            selected = preference.getKey();
             for (CheckBoxPreference p : mSchemaPrefs) {
                 if (p != preference) {
                     p.setChecked(false);
