@@ -31,7 +31,7 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
 
         String selectedId = SettingManager.getInstance().getCurrentRimeSchemaId();
         CheckBoxPreference first = null;
-        boolean enabledOne = false;
+        CheckBoxPreference selected = null;
 
         if (schemas != null) {
             for (Map<String, String> schema : schemas) {
@@ -41,25 +41,30 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
                 CheckBoxPreference pref = new CheckBoxPreference(this);
                 pref.setTitle(name);
                 pref.setKey(id);
-                pref.setOnPreferenceChangeListener(this);
 
                 if (first == null) {
                     first = pref;
                 }
 
                 // select previous schema or first
-                if (!enabledOne && selectedId != null && selectedId.equals(id)) {
-                    pref.setChecked(true);
-                    enabledOne = true;
+                if (selected == null && selectedId != null && selectedId.equals(id)) {
+                    selected = pref;
                 }
 
+                pref.setOnPreferenceChangeListener(this);
                 mSchemaPrefs.add(pref);
                 schemaParent.addPreference(pref);
             }
         }
 
-        if (!enabledOne && first != null) {
-            first.setChecked(true);
+        // Selected is gone. Use first.
+        if (selected == null && first != null) {
+            selected = first;
+        }
+
+        // Toggle here to avoid invoking listeners before all prefs are added
+        if (selected != null) {
+            selected.setChecked(true);
         }
     }
 
