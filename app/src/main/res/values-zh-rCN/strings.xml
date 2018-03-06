@@ -35,7 +35,7 @@
     <string name="auto_cap_summary">句首大写</string>
     <string name="auto_punctuate">自动加入标点</string>
     <string name="auto_punctuate_summary" />
-    <string name="quick_fixes">Quick fixes</string>
+    <string name="quick_fixes">快速修正</string>
     <string name="quick_fixes_summary">纠正常用输入错误</string>
     <string name="show_suggestions">显示建议</string>
     <string name="show_suggestions_summary">输入时显示字词建议</string>
@@ -193,7 +193,7 @@
     <string name="default_swipe_right">无</string>
     <string name="default_vol_up">无</string>
     <string name="default_vol_down">无</string>
-    <string name="title_popup_content">Popup mini-keyboard contents</string>
+    <string name="title_popup_content">弹出迷你键盘内容</string>
     <string name="default_popup_content">1</string>
     <string name="voice_not_enabled_warning">语音输入在此版本不可用</string>
     <string name="recorrect_warning">FYI: recorrection does not work correctly on pre-Gingerbread devices due to missing operating system support.</string>
@@ -251,5 +251,8 @@
     <string name="pref_rime_install">安装新方案...</string>
     <string name="pref_rime_install_schema">安装RIME输入方案</string>
     <string name="pref_rime_schemata_to_install">可安装的RIME输入方案</string>
-    <string name="refresh">Refresh</string>
+    <string name="text_installing_rime_schema">正在安装 %s...</string>
+    <string name="refresh">刷新列表</string>
+    <string name="rime_install_schema_failed">%s安装失败</string>
+    <string name="rime_install_schema_successful">%s安装成功</string>
 </resources>

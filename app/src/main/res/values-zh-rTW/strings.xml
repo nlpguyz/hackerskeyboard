@@ -145,5 +145,7 @@
     <string name="pref_rime_install">安裝新方案...</string>
     <string name="pref_rime_install_schema">安装RIME输入方案</string>
     <string name="pref_rime_schemata_to_install">可安装的RIME输入方案</string>
-    <string name="refresh">Refresh</string>
+    <string name="refresh">刷新列表</string>
+    <string name="rime_install_schema_failed">%s安裝失敗</string>
+    <string name="rime_install_schema_successful">%s安装成功</string>
 </resources>

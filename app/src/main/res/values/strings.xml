@@ -685,4 +685,7 @@
     <string name="pref_rime_install_schema">Install RIME Schemata</string>
     <string name="pref_rime_schemata_to_install">Installable RIME schemata</string>
     <string name="refresh">Refresh</string>
+    <string name="text_installing_rime_schema">Installing %s...</string>
+    <string name="rime_install_schema_failed">Failed to install %s</string>
+    <string name="rime_install_schema_successful">Successfully installed %s!</string>
 </resources>

@@ -1,5 +1,7 @@
 package org.langwiki.brime.schema;
 
+import org.langwiki.brime.R;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -130,8 +132,11 @@ public class SchemaManager {
             return false;
         }
 
+        Resources res = context.getResources();
+
         if (showToast) {
-            showToast("Installing " + getLocaleString(imdf.name));
+            showToast(String.format(res.getString(R.string.text_installing_rime_schema),
+                    getLocaleString(imdf.name)));
         }
 
         FileOpener opener = new FileOpener() {
@@ -145,11 +150,12 @@ public class SchemaManager {
         boolean successful = deployImdf(imdf, opener);
 
         if (showToast) {
-            if (successful) {
-                showToast(getLocaleString(imdf.name) + " is successfully installed");
-            } else {
-                showToast(getLocaleString(imdf.name) + " failed to install");
-            }
+            String msg = successful
+                    ? String.format(res.getString(R.string.rime_install_schema_successful),
+                        getLocaleString(imdf.name))
+                    : String.format(res.getString(R.string.rime_install_schema_failed),
+                        getLocaleString(imdf.name));
+            showToast(msg);
         }
 
         return successful;
