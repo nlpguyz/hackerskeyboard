@@ -30,6 +30,9 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         PreferenceGroup parent = getPreferenceScreen();
         PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
 
+        String selectedId = SettingManager.getInstance().getCurrentRimeSchemaId();
+
+        boolean first = true;
         for (Map<String, String> schema : schemas) {
             String name = schema.get("name");
             String id = schema.get("schema_id");
@@ -38,15 +41,27 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
             pref.setTitle(name);
             pref.setKey(id);
             pref.setOnPreferenceChangeListener(this);
-            mSchemaPrefs.add(pref);
 
+            // select previous schema or first
+            if (selectedId == null && first || selectedId != null && selectedId.equals(id)) {
+                pref.setChecked(true);
+            }
+
+            first = false;
+
+            mSchemaPrefs.add(pref);
             schemaParent.addPreference(pref);
         }
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        boolean value= ((Boolean)newValue).booleanValue();
+        boolean value = ((Boolean)newValue).booleanValue();
+
+        // Cannot deselect last schema
+        if (value == false && preference.getKey().equals(SettingManager.getInstance().getCurrentRimeSchemaId())) {
+            return false;
+        }
 
         // Enforce one selection
         if (value) {
@@ -57,6 +72,9 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
                 }
             }
         }
+
+        // Save
+        SettingManager.getInstance().setCurrentRimeSchemaId(preference.getKey());
 
         return true;
     }
