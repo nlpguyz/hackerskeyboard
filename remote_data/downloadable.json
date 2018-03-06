@@ -15,6 +15,23 @@
         "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
     },
     {
+        "id": "wubi_pinyin",
+        "name": {
+            "en": "Wubi/Pinyin",
+            "zh_CN": "\u4e94\u7b14\u00b7\u62fc\u97f3",
+            "zh_TW": "\u4e94\u7b46\u00b7\u62fc\u97f3",
+            "default": "Mini pinyin (Simp)"
+        },
+        "version": "1.0",
+        "files": [
+            "wubi_pinyin.schema.yaml",
+            "wubi86.dict.yaml",
+            "pinyin_simp.schema.yaml",
+            "pinyin_simp.dict.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
+    },
+    {
         "id": "ipa_xsampa",
         "name": {
             "en": "IPA X-Sampa",
