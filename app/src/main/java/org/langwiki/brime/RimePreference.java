@@ -33,25 +33,27 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
 
         String selectedId = SettingManager.getInstance().getCurrentRimeSchemaId();
 
-        boolean first = true;
-        for (Map<String, String> schema : schemas) {
-            String name = schema.get("name");
-            String id = schema.get("schema_id");
+        if (schemas != null) {
+            boolean first = true;
+            for (Map<String, String> schema : schemas) {
+                String name = schema.get("name");
+                String id = schema.get("schema_id");
 
-            CheckBoxPreference pref = new CheckBoxPreference(this);
-            pref.setTitle(name);
-            pref.setKey(id);
-            pref.setOnPreferenceChangeListener(this);
+                CheckBoxPreference pref = new CheckBoxPreference(this);
+                pref.setTitle(name);
+                pref.setKey(id);
+                pref.setOnPreferenceChangeListener(this);
 
-            // select previous schema or first
-            if (selectedId == null && first || selectedId != null && selectedId.equals(id)) {
-                pref.setChecked(true);
+                // select previous schema or first
+                if (selectedId == null && first || selectedId != null && selectedId.equals(id)) {
+                    pref.setChecked(true);
+                }
+
+                first = false;
+
+                mSchemaPrefs.add(pref);
+                schemaParent.addPreference(pref);
             }
-
-            first = false;
-
-            mSchemaPrefs.add(pref);
-            schemaParent.addPreference(pref);
         }
     }
 
