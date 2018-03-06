@@ -20,9 +20,9 @@
             "en": "Wubi/Pinyin",
             "zh_CN": "\u4e94\u7b14\u00b7\u62fc\u97f3",
             "zh_TW": "\u4e94\u7b46\u00b7\u62fc\u97f3",
-            "default": "Mini pinyin (Simp)"
+            "default": "Wubi/Pinyin"
         },
-        "version": "1.0",
+        "version": "0.9",
         "files": [
             "wubi_pinyin.schema.yaml",
             "wubi86.dict.yaml",
