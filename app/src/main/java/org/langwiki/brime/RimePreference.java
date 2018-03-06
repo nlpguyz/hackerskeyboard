@@ -89,14 +89,14 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         // Enforce one selection
         if (value) {
             for (CheckBoxPreference p : mSchemaPrefs) {
-                if (p != preference) {
+                if (!p.getKey().equals(preference.getKey())) {
                     p.setChecked(false);
                 }
             }
-        }
 
-        // Save
-        SettingManager.getInstance().setCurrentRimeSchemaId(preference.getKey());
+            // Save
+            SettingManager.getInstance().setCurrentRimeSchemaId(preference.getKey());
+        }
 
         return true;
     }
