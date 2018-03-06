@@ -17,14 +17,17 @@ import jline.internal.Nullable;
 
 public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener {
     private static final String TAG = "BRime-Pref";
+    PreferenceCategory schemaParent;
+    SchemaManager sm;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.pref_rime_install_schemata);
 
-        PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
-        //schemaParent.addPreference();
+        schemaParent = (PreferenceCategory)findPreference("rime_schemata");
+        sm = SchemaManager.getInstance(getApplicationContext());
+        sm.addListener(RimeInstallSchema.this);
 
         startDownload(false);
     }
@@ -33,8 +36,6 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
         new Thread() {
             @Override
             public void run() {
-                SchemaManager sm = SchemaManager.getInstance(getApplicationContext());
-                sm.addListener(RimeInstallSchema.this);
                 if (refresh) {
                     sm.clearCache();
                 }
@@ -50,10 +51,6 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
         }
 
         // Add schema checkboxes
-        PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
-
-        schemaParent.removeAll();
-
         for (IMDF imdf : list) {
             SchemaManager sm = SchemaManager.getInstance(getApplicationContext());
             String name = sm.getLocaleString(imdf.name);
@@ -85,6 +82,7 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
 
     public void refresh(View view) {
         Log.d(TAG, "refresh");
+        schemaParent.removeAll();
         startDownload(true);
     }
 }

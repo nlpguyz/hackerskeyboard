@@ -197,6 +197,7 @@ public class SchemaManager {
             Gson gson = new Gson();
             IMDF[] imdfArray = gson.fromJson(jsonText, IMDF[].class);
             mList = Arrays.asList(imdfArray);
+            mListReady = true;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
