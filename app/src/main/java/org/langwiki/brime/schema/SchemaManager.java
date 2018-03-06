@@ -39,6 +39,7 @@ public class SchemaManager {
     protected List<IMDF> mList;
 
     protected Handler mHandler;
+    protected Toast mToast;
 
     public void clearCache() {
         mListReady = false;
@@ -113,6 +114,16 @@ public class SchemaManager {
         return !fail;
     }
 
+    private void showToast(final String msg) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mToast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+                mToast.show();
+            }
+        });
+    }
+
     public boolean installOnlineImdf(final IMDF imdf, boolean showToast) {
         final String homeUrl = imdf.homeUrl;
         if (homeUrl == null || homeUrl.isEmpty()) {
@@ -120,13 +131,7 @@ public class SchemaManager {
         }
 
         if (showToast) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(context,
-                            "Installing " + getLocaleString(imdf.name), Toast.LENGTH_LONG).show();
-                }
-            });
+            showToast("Installing " + getLocaleString(imdf.name));
         }
 
         FileOpener opener = new FileOpener() {
@@ -137,7 +142,17 @@ public class SchemaManager {
             }
         };
 
-        return deployImdf(imdf, opener);
+        boolean successful = deployImdf(imdf, opener);
+
+        if (showToast) {
+            if (successful) {
+                showToast(getLocaleString(imdf.name) + " is successfully installed");
+            } else {
+                showToast(getLocaleString(imdf.name) + " failed to install");
+            }
+        }
+
+        return successful;
     }
 
     public void installSchema(String id, boolean showToast) {
