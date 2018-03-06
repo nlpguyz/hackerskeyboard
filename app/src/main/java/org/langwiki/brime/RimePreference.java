@@ -2,11 +2,12 @@ package org.langwiki.brime;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
+
+import org.langwiki.brime.schema.SchemaManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,15 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
             mSchemaPrefs.add(pref);
             schemaParent.addPreference(pref);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Change schema on exit
+        SchemaManager.getInstance().selectSchema(
+                SettingManager.getInstance().getCurrentRimeSchemaId()
+        );
+        super.onDestroy();
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.langwiki.brime.Rime;
 import org.langwiki.brime.utils.FileHelper;
 import org.langwiki.brime.utils.NetHelper;
 
@@ -47,6 +48,11 @@ public class SchemaManager {
     public void clearCache() {
         mListReady = false;
         mList = null;
+    }
+
+    public void selectSchema(final String schemaId) {
+        Rime rime = Rime.getInstance();
+        rime.select_schemas(new String[] {schemaId});
     }
 
     public interface SchemaManagerListener {

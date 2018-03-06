@@ -497,7 +497,14 @@
             return mStatus.schema_name;
         }
 
-        private boolean selectSchema(String schema_id) {
+        public boolean selectSchema(String id) {
+            if (id.equals(getSchemaId()))
+                return false;
+
+            return selectSchemaInternal(id);
+        }
+
+        private boolean selectSchemaInternal(String schema_id) {
             boolean b = select_schema(schema_id);
             getContexts();
             return b;
