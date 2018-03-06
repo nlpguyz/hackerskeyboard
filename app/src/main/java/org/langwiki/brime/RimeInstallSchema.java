@@ -15,7 +15,7 @@ import java.util.List;
 
 import jline.internal.Nullable;
 
-public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener, View.OnClickListener {
+public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener {
     private static final String TAG = "BRime-Pref";
 
     @Override
@@ -26,15 +26,18 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
         PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
         //schemaParent.addPreference();
 
-        startDownload();
+        startDownload(false);
     }
 
-    protected void startDownload() {
+    protected void startDownload(final boolean refresh) {
         new Thread() {
             @Override
             public void run() {
                 SchemaManager sm = SchemaManager.getInstance(getApplicationContext());
                 sm.addListener(RimeInstallSchema.this);
+                if (refresh) {
+                    sm.clearCache();
+                }
                 sm.getInstallList();
             }
         }.start();
@@ -80,12 +83,8 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
         }
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
     public void refresh(View view) {
         Log.d(TAG, "refresh");
+        startDownload(true);
     }
 }

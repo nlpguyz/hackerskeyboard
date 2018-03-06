@@ -40,6 +40,11 @@ public class SchemaManager {
 
     protected Handler mHandler;
 
+    public void clearCache() {
+        mListReady = false;
+        mList = null;
+    }
+
     public interface SchemaManagerListener {
         void onSchemaList(List<IMDF> list);
     }
@@ -118,7 +123,8 @@ public class SchemaManager {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(context, "Installing " + getLocaleString(imdf.name), Toast.LENGTH_LONG);
+                    Toast.makeText(context,
+                            "Installing " + getLocaleString(imdf.name), Toast.LENGTH_LONG).show();
                 }
             });
         }
