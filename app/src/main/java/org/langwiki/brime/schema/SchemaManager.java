@@ -53,6 +53,10 @@ public class SchemaManager {
     public void selectSchema(final String schemaId) {
         Rime rime = Rime.getInstance();
         rime.select_schemas(new String[] {schemaId});
+        rime.selectSchema(schemaId);
+
+        // TODO fix selection
+        showToast("Selected " + schemaId + " Current: " + rime.getSchemaName());
     }
 
     public interface SchemaManagerListener {
