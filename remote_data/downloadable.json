@@ -45,5 +45,22 @@
             "ipa_xsampa.dict.yaml"
         ],
         "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
+    },
+    {
+        "id": "jap_poly",
+        "name": {
+            "en": "Japanese Kana",
+            "zh_CN": "\u65e5\u8bed\u00b7\u5047\u540d",
+            "zh_TW": "\u65e5\u8a9e\u00b7\u5047\u540d",
+            "jp": "\u65e5\u672c\u8a9e\u00b7\u4eee\u540d",
+            "default": "\u65e5\u672c\u8a9e\u00b7\u4eee\u540d"
+        },
+        "version": "2013.10.08",
+        "author": "polyhedron <polyhedron@gmail.com>",
+        "files": [
+            "jap_poly.schema.yaml",
+            "jap_poly.dict.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/"
     }
 ]
