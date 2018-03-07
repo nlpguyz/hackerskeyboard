@@ -59,8 +59,6 @@ public class SchemaManager {
                 rime.deploy();
                 rime.cleanup_all_sessions();
                 rime.create_session();
-                // TODO fix selection
-                //showToast("Selected " + schemaId + " Current: " + rime.get_current_schema());
             }
         });
     }
