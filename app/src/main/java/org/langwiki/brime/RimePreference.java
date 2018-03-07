@@ -22,12 +22,17 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.pref_rime);
+    }
 
+    private void refresh() {
         // Add schema checkboxes
         List<Map<String, String>> schemas = Rime.getInstance().get_available_schema_list();
 
         PreferenceGroup parent = getPreferenceScreen();
         PreferenceCategory schemaParent = (PreferenceCategory)findPreference("rime_schemata");
+
+        schemaParent.removeAll();
+        mSchemaPrefs.clear();
 
         String selectedId = SettingManager.getInstance().getCurrentRimeSchemaId();
         CheckBoxPreference first = null;
@@ -67,6 +72,12 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         if (selected != null) {
             selected.setChecked(true);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refresh();
     }
 
     @Override
