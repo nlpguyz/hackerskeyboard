@@ -290,12 +290,14 @@ public class CandidateView extends View {
         }
     }
 
-    public void sendFirstSuggestion() {
+    public boolean sendFirstSuggestion() {
         if (mSuggestions.isEmpty())
-            return;
+            return false;
 
         CharSequence suggestion = mSuggestions.get(0);
         mService.pickSuggestionManually(0, suggestion);
+
+        return true;
     }
 
     private void scrollToTarget() {

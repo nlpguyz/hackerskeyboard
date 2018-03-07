@@ -2638,12 +2638,13 @@ public class LatinIME extends InputMethodService implements
         if (isCJK()) {
             if (inHandleSeparator > 1)
                 return;
+
             // This is temporary. Better use existing logic to do it.
             // Commit first candidate
-            commitFirstCandidate();
+            boolean committedSomething = commitFirstCandidate();
 
             // If the key is SPACE, do not add the separator.
-            if (primaryCode == ASCII_SPACE) {
+            if (committedSomething && primaryCode == ASCII_SPACE) {
                 return;
             }
         } else if (mPredicting) {
@@ -2699,9 +2700,11 @@ public class LatinIME extends InputMethodService implements
         }
     }
 
-    private void commitFirstCandidate() {
+    private boolean commitFirstCandidate() {
         if (mCandidateView != null) {
-            mCandidateView.sendFirstSuggestion();
+            return mCandidateView.sendFirstSuggestion();
+        } else {
+            return false;
         }
     }
 
