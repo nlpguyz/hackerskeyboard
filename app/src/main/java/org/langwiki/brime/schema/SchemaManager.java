@@ -56,9 +56,10 @@ public class SchemaManager {
             public void run() {
                 rime.select_schemas(new String[] {schemaId});
                 //rime.selectSchema(schemaId);
-                rime.deploy();
-                rime.cleanup_all_sessions();
-                rime.create_session();
+//                rime.deploy();
+//                rime.cleanup_all_sessions();
+//                rime.create_session();
+                rime.restartEngine();
             }
         }.start();
     }

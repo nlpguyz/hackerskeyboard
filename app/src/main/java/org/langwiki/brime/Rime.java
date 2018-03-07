@@ -352,6 +352,12 @@
             self = null;
         }
 
+        // Called after selecting new schemata
+        public void restartEngine() {
+            destroy();
+            get(true);
+        }
+
         public String getCommitText() {
             return mCommit.text;
         }
@@ -593,6 +599,9 @@
             get();
             return b;
         }
+
+        // See here for API usage
+        // https://github.com/rime/librime/blob/master/tools/rime_api_console.cc
 
         // init
         public native void setup(String shared_data_dir, String user_data_dir);
