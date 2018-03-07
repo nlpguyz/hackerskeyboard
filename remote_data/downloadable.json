@@ -80,5 +80,19 @@
             "korean_rome2.dict.yaml"
         ],
         "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/korean/"
+    },
+    {
+        "id": "manchu_direct",
+        "name": {
+            "en": "Korean Roma",
+            "zh_CN": "\u6ee1\u6587\u5feb\u6253",
+            "zh_TW": "\u6eff\u6587\u5feb\u6253",
+            "default": "\u6ee1\u6587\u5feb\u6253"
+        },
+        "version": "1.0",
+        "files": [
+            "manchu_direct.schema.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/manchu/"
     }
 ]
