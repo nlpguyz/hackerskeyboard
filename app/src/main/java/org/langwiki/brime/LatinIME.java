@@ -586,8 +586,8 @@ public class LatinIME extends InputMethodService implements
             public void run() {
                 Log.i(TAG, "Starting to copy schema files");
                 mSchemaManager.initializeDataDir();
-                mRime.deploy();
-                mRime.syncUserData();
+                //mRime.deploy();
+                //mRime.syncUserData();
             }
         }.start();
 
@@ -2641,8 +2641,8 @@ public class LatinIME extends InputMethodService implements
 
             // This is temporary. Better use existing logic to do it.
             // Check if user entered anything
-            String composing = Rime.getInstance().getComposingText();
-            boolean isComposing = composing != null && !composing.isEmpty();
+            CharSequence composing = mWord.getTypedWord();
+            boolean isComposing = composing != null && composing.length() > 0;
 
             // Commit first candidate
             if (isComposing) {
@@ -2653,7 +2653,9 @@ public class LatinIME extends InputMethodService implements
             if (isComposing && primaryCode == ASCII_SPACE) {
                 return;
             }
-        } else if (mPredicting) {
+        }
+
+        if (mPredicting) {
             // In certain languages where single quote is a separator, it's
             // better
             // not to auto correct, but accept the typed word. For instance,

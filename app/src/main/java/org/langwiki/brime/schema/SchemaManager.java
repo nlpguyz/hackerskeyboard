@@ -54,10 +54,10 @@ public class SchemaManager {
         final Rime rime = Rime.getInstance();
         new Thread() {
             public void run() {
-                rime.select_schemas(new String[] {schemaId});
-                rime.deploy();
-                rime.cleanup_all_sessions();
-                rime.create_session();
+                rime.selectSchema(schemaId);
+//                rime.deploy();
+//                rime.cleanup_all_sessions();
+//                rime.create_session();
             }
         }.start();
     }
@@ -105,6 +105,20 @@ public class SchemaManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        selectAllSchemata();
+    }
+
+    public void selectAllSchemata() {
+        List<Map<String, String>> schemaList = Rime.getInstance().get_available_schema_list();
+        String[] ids = new String[schemaList.size()];
+
+        int i = 0;
+        for (Map<String, String> schema : schemaList) {
+            ids[i++] = schema.get("schema_id");
+        }
+
+        Rime.getInstance().select_schemas(ids);
     }
 
     public boolean deployImdf(IMDF imdf, FileOpener opener) {
@@ -116,9 +130,14 @@ public class SchemaManager {
         }
 
         boolean fail = false;
+        String schemaFilepath = null;
         for (String fn : imdf.files) {
             try {
-                FileHelper.copyTo(opener.open(fn), USER_DIR + File.separator + fn);
+                String dstPath = USER_DIR + File.separator + fn;
+                if (fn.endsWith("schema.yaml"))
+                    schemaFilepath = dstPath;
+
+                FileHelper.copyTo(opener.open(fn), dstPath);
             } catch (IOException e) {
                 e.printStackTrace();
                 fail = true;
@@ -126,6 +145,10 @@ public class SchemaManager {
         }
 
         FileHelper.writeFile(versionFile, imdf.version);
+
+        if (schemaFilepath != null) {
+            fail |= !Rime.getInstance().deploy_schema(schemaFilepath);
+        }
 
         return !fail;
     }
@@ -182,7 +205,10 @@ public class SchemaManager {
 
         for (IMDF im : mList) {
             if (id.equals(im.id)) {
-                installOnlineImdf(im, showToast);
+                boolean succ = installOnlineImdf(im, showToast);
+                if (succ) {
+                    selectAllSchemata();
+                }
                 return;
             }
         }
