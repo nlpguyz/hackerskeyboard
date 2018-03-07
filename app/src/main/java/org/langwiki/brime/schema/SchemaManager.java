@@ -54,6 +54,7 @@ public class SchemaManager {
         Rime rime = Rime.getInstance();
         rime.select_schemas(new String[] {schemaId});
         rime.selectSchema(schemaId);
+        rime.deploy();
 
         // TODO fix selection
         showToast("Selected " + schemaId + " Current: " + rime.getSchemaName());
