@@ -2604,7 +2604,6 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void handleSeparator(int primaryCode) {
-
         // Should dismiss the "Touch again to save" message when handling
         // separator
         if (mCandidateView != null
@@ -2612,14 +2611,34 @@ public class LatinIME extends InputMethodService implements
             postUpdateSuggestions();
         }
 
-        boolean pickedDefault = false;
         // Handle separator
         InputConnection ic = getCurrentInputConnection();
         if (ic != null) {
             ic.beginBatchEdit();
             abortCorrection(false);
         }
-        if (mPredicting) {
+
+        handleSeparatorInternal(primaryCode, ic);
+
+        updateShiftKeyState(getCurrentInputEditorInfo());
+        if (ic != null) {
+            ic.endBatchEdit();
+        }
+    }
+
+    private void handleSeparatorInternal(int primaryCode, InputConnection ic) {
+        boolean pickedDefault = false;
+
+        if (isCJK()) {
+            // This is temporary. Better use existing logic to do it.
+            // Commit first candidate
+            commitFirstCandidate();
+
+            // If the key is SPACE, do not add the separator.
+            if (primaryCode == ASCII_SPACE) {
+                return;
+            }
+        } else if (mPredicting) {
             // In certain languages where single quote is a separator, it's
             // better
             // not to auto correct, but accept the typed word. For instance,
@@ -2629,8 +2648,8 @@ public class LatinIME extends InputMethodService implements
             if (mAutoCorrectOn
                     && primaryCode != '\''
                     && (mJustRevertedSeparator == null
-                            || mJustRevertedSeparator.length() == 0
-                            || mJustRevertedSeparator.charAt(0) != primaryCode)) {
+                    || mJustRevertedSeparator.length() == 0
+                    || mJustRevertedSeparator.charAt(0) != primaryCode)) {
                 pickedDefault = pickDefaultSuggestion();
                 // Picked the suggestion by the space key. We consider this
                 // as "added an auto space" in autocomplete mode, but as manually
@@ -2646,6 +2665,7 @@ public class LatinIME extends InputMethodService implements
                 commitTyped(ic, true);
             }
         }
+
         if (mJustAddedAutoSpace && primaryCode == ASCII_ENTER) {
             removeTrailingSpace();
             mJustAddedAutoSpace = false;
@@ -2669,9 +2689,11 @@ public class LatinIME extends InputMethodService implements
         if (pickedDefault) {
             TextEntryState.backToAcceptedDefault(mWord.getTypedWord());
         }
-        updateShiftKeyState(getCurrentInputEditorInfo());
-        if (ic != null) {
-            ic.endBatchEdit();
+    }
+
+    private void commitFirstCandidate() {
+        if (mCandidateView != null) {
+            mCandidateView.sendFirstSuggestion();
         }
     }
 
