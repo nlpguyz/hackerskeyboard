@@ -62,5 +62,23 @@
             "jap_poly.dict.yaml"
         ],
         "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/"
+    },
+    {
+        "id": "korean_rome2",
+        "name": {
+            "en": "Korean Roma",
+            "zh_CN": "\u97e9\u8bed\u00b7\u7f57\u9a6c\u5b57",
+            "zh_TW": "\u97d3\u8a9e\u00b7\u7f85\u99ac\u5b57",
+            "jp": "\u97d3\u56fd\u8a9e\u30ed\u30fc\u30de\u5b57",
+            "kr": "\ud55c\uad6d\uc5b4 \ub85c\ub9c8",
+            "default": "\ud55c\uad6d\uc5b4 \ub85c\ub9c8"
+        },
+        "version": "2.1",
+        "author": "ziloeng",
+        "files": [
+            "korean_rome2.schema.yaml",
+            "korean_rome2.dict.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/korean/"
     }
 ]
