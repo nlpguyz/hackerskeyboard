@@ -49,11 +49,11 @@
     {
         "id": "jap_poly",
         "name": {
-            "en": "Japanese Kana",
-            "zh_CN": "\u65e5\u8bed\u00b7\u5047\u540d",
-            "zh_TW": "\u65e5\u8a9e\u00b7\u5047\u540d",
-            "jp": "\u65e5\u672c\u8a9e\u00b7\u4eee\u540d",
-            "default": "\u65e5\u672c\u8a9e\u00b7\u4eee\u540d"
+            "en": "Japanese Romaji",
+            "zh_CN": "\u65e5\u8bed\u00b7\u7f57\u9a6c\u5b57",
+            "zh_TW": "\u65e5\u8a9e\u00b7\u7f85\u99ac\u5b57",
+            "jp": "\u65e5\u672c\u8a9e\u30ed\u30fc\u30de\u5b57",
+            "default": "\u65e5\u672c\u8a9e\u30ed\u30fc\u30de\u5b57"
         },
         "version": "2013.10.08",
         "author": "polyhedron <polyhedron@gmail.com>",
