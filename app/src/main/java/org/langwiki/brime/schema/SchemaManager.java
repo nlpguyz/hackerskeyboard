@@ -54,10 +54,11 @@ public class SchemaManager {
         final Rime rime = Rime.getInstance();
         new Thread() {
             public void run() {
-                rime.selectSchema(schemaId);
-//                rime.deploy();
-//                rime.cleanup_all_sessions();
-//                rime.create_session();
+                rime.select_schemas(new String[] {schemaId});
+                //rime.selectSchema(schemaId);
+                rime.deploy();
+                rime.cleanup_all_sessions();
+                rime.create_session();
             }
         }.start();
     }
@@ -105,8 +106,6 @@ public class SchemaManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        selectAllSchemata();
     }
 
     public void selectAllSchemata() {
@@ -148,6 +147,7 @@ public class SchemaManager {
 
         if (schemaFilepath != null) {
             fail |= !Rime.getInstance().deploy_schema(schemaFilepath);
+            Rime.getInstance().initSchema();
         }
 
         return !fail;
@@ -205,10 +205,7 @@ public class SchemaManager {
 
         for (IMDF im : mList) {
             if (id.equals(im.id)) {
-                boolean succ = installOnlineImdf(im, showToast);
-                if (succ) {
-                    selectAllSchemata();
-                }
+                installOnlineImdf(im, showToast);
                 return;
             }
         }

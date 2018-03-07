@@ -586,7 +586,9 @@ public class LatinIME extends InputMethodService implements
             public void run() {
                 Log.i(TAG, "Starting to copy schema files");
                 mSchemaManager.initializeDataDir();
-                //mRime.deploy();
+                mRime.initSchema();
+                mRime.deploy();
+                //mSchemaManager.selectAllSchemata();
                 //mRime.syncUserData();
             }
         }.start();
