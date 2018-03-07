@@ -588,8 +588,7 @@ public class LatinIME extends InputMethodService implements
                 mSchemaManager.initializeDataDir();
                 mRime.initSchema();
                 mRime.deploy();
-                //mSchemaManager.selectAllSchemata();
-                //mRime.syncUserData();
+                mRime.syncUserData();
             }
         }.start();
 
