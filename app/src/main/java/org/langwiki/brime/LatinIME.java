@@ -2604,6 +2604,8 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void handleSeparator(int primaryCode) {
+        inHandleSeparator++;
+
         // Should dismiss the "Touch again to save" message when handling
         // separator
         if (mCandidateView != null
@@ -2624,12 +2626,18 @@ public class LatinIME extends InputMethodService implements
         if (ic != null) {
             ic.endBatchEdit();
         }
+
+        inHandleSeparator--;
     }
+
+    int inHandleSeparator;
 
     private void handleSeparatorInternal(int primaryCode, InputConnection ic) {
         boolean pickedDefault = false;
 
         if (isCJK()) {
+            if (inHandleSeparator > 1)
+                return;
             // This is temporary. Better use existing logic to do it.
             // Commit first candidate
             commitFirstCandidate();

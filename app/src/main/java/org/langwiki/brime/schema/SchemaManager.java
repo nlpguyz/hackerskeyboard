@@ -52,15 +52,14 @@ public class SchemaManager {
 
     public void selectSchema(final String schemaId) {
         final Rime rime = Rime.getInstance();
-        mHandler.post(new Runnable() {
-            @Override
+        new Thread() {
             public void run() {
                 rime.select_schemas(new String[] {schemaId});
                 rime.deploy();
                 rime.cleanup_all_sessions();
                 rime.create_session();
             }
-        });
+        }.start();
     }
 
     public interface SchemaManagerListener {
