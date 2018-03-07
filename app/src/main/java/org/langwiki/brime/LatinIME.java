@@ -2640,11 +2640,17 @@ public class LatinIME extends InputMethodService implements
                 return;
 
             // This is temporary. Better use existing logic to do it.
+            // Check if user entered anything
+            String composing = Rime.getInstance().getComposingText();
+            boolean isComposing = composing != null && !composing.isEmpty();
+
             // Commit first candidate
-            boolean committedSomething = commitFirstCandidate();
+            if (isComposing) {
+                commitFirstCandidate();
+            }
 
             // If the key is SPACE, do not add the separator.
-            if (committedSomething && primaryCode == ASCII_SPACE) {
+            if (isComposing && primaryCode == ASCII_SPACE) {
                 return;
             }
         } else if (mPredicting) {
