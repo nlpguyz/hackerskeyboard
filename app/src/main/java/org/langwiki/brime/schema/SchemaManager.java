@@ -51,13 +51,18 @@ public class SchemaManager {
     }
 
     public void selectSchema(final String schemaId) {
-        Rime rime = Rime.getInstance();
-        rime.select_schemas(new String[] {schemaId});
-        rime.selectSchema(schemaId);
-        rime.deploy();
-
-        // TODO fix selection
-        showToast("Selected " + schemaId + " Current: " + rime.getSchemaName());
+        final Rime rime = Rime.getInstance();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                rime.select_schemas(new String[] {schemaId});
+                rime.deploy();
+                rime.cleanup_all_sessions();
+                rime.create_session();
+                // TODO fix selection
+                //showToast("Selected " + schemaId + " Current: " + rime.get_current_schema());
+            }
+        });
     }
 
     public interface SchemaManagerListener {
