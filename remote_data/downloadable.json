@@ -64,6 +64,23 @@
         "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/"
     },
     {
+        "id": "KappaJP_keitai",
+        "name": {
+            "en": "KappaJP",
+            "zh_CN": "\u65e5\u8bed\u00b7\u6cb3\u7ae5\u4e94\u7b14",
+            "zh_TW": "\u65e5\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
+            "jp": "\u65e5\u672c\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
+            "default": "\u65e5\u672c\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46"
+        },
+        "version": "2018.2.25",
+        "author": "Momijineko <momijineko@foxmail.com>",
+        "files": [
+            "KappaJP_keitai.schema.yaml",
+            "KappaJP.dict.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/"
+    },
+    {
         "id": "korean_rome2",
         "name": {
             "en": "Korean Roma",
@@ -80,5 +97,19 @@
             "korean_rome2.dict.yaml"
         ],
         "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/korean/"
+    },
+    {
+        "id": "manchu_direct",
+        "name": {
+            "en": "Korean Roma",
+            "zh_CN": "\u6ee1\u6587\u5feb\u6253",
+            "zh_TW": "\u6eff\u6587\u5feb\u6253",
+            "default": "\u6ee1\u6587\u5feb\u6253"
+        },
+        "version": "1.0",
+        "files": [
+            "manchu_direct.schema.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/manchu/"
     }
 ]
