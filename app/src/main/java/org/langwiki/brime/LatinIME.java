@@ -185,6 +185,7 @@ public class LatinIME extends InputMethodService implements
     private static final int POS_METHOD = 0;
     private static final int POS_SETTINGS = 1;
     private static final int POS_RIME_SETTINGS = 2;
+    private static final int POS_DEBUG_SETTINGS = 9;
 
     // private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
@@ -3873,7 +3874,13 @@ public class LatinIME extends InputMethodService implements
         CharSequence itemSettings = getString(R.string.english_ime_settings);
         CharSequence itemInputMethod = getString(R.string.selectInputMethod);
         CharSequence rimeSettings = getString(R.string.menu_rime_settings);
-        builder.setItems(new CharSequence[] { itemInputMethod, itemSettings, rimeSettings },
+        CharSequence debugSettings = "Debug settings";
+        List<CharSequence> menuItems = new ArrayList<>();
+        menuItems.addAll(Arrays.asList(new CharSequence[] { itemInputMethod, itemSettings, rimeSettings }));
+        if (DEBUG) {
+            menuItems.add(debugSettings);
+        }
+        builder.setItems(menuItems.toArray(new CharSequence[0]),
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface di, int position) {
@@ -3888,6 +3895,9 @@ public class LatinIME extends InputMethodService implements
                             break;
                         case POS_RIME_SETTINGS:
                             launchRimeSettings();
+                            break;
+                        case POS_DEBUG_SETTINGS:
+                            launchDebugSettings();
                             break;
                         }
                     }
