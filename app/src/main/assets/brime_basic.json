@@ -6,11 +6,13 @@
   "description" : {
     "en" : "Brime basic schemata"
   },
-  "version": "0.1",
+  "version": "0.2",
   "files" : [
     "default.yaml",
     "essay.txt",
     "luna_pinyin.dict.yaml",
-    "luna_pinyin.schema.yaml"
+    "luna_pinyin.schema.yaml",
+    "symbols.yaml",
+    "custom_phrase.txt"
   ]
 }

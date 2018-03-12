@@ -1,8 +1,7 @@
 # Rime default settings
-# vim: set sw=2 sts=2 et:
 # encoding: utf-8
 
-config_version: "0.15.minimal"
+config_version: "0.36"
 
 schema_list:
   - schema: luna_pinyin
@@ -39,9 +38,9 @@ punctuator:
     '''' : { pair: [ '‘', '’' ] }
     '"' : { pair: [ '“', '”' ] }
     '\' : [ 、, ＼ ]
-    '|' : [ ・, ｜, '§', '¦' ]
+    '|' : [ ·, ｜, '§', '¦' ]
     '`' : ｀
-    '~' : [ 〜, ～, 〰 ]
+    '~' : ～
     '!' : { commit: ！ }
     '@' : [ ＠, ☯ ]
     '#' : [ ＃, ⌘ ]
@@ -49,7 +48,7 @@ punctuator:
     '$' : [ ￥, '$', '€', '£', '¥', '¢', '¤' ]
     '^' : { commit: …… }
     '&' : ＆
-    '*' : [ ＊, ・, ·, ×, ※, ❂ ]
+    '*' : [ ＊, ·, ・, ×, ※, ❂ ]
     '(' : （
     ')' : ）
     '-' : －
@@ -72,9 +71,9 @@ punctuator:
     '''' : { pair: [ '‘', '’' ] }
     '"' : { pair: [ '“', '”' ] }
     '\' : [ 、, '\', ＼ ]
-    '|' : [ ・, '|', ｜, '§', '¦' ]
+    '|' : [ ·, '|', ｜, '§', '¦' ]
     '`' : '`'
-    '~' : [ '~', 〜, ～, 〰 ]
+    '~' : [ '~', ～ ]
     '!' : { commit: ！ }
     '@' : '@'
     '#' : '#'
@@ -82,7 +81,7 @@ punctuator:
     '$' : [ ￥, '$', '€', '£', '¥', '¢', '¤' ]
     '^' : { commit: …… }
     '&' : '&'
-    '*' : [ '*', ＊, ・, ·, ×, ※, ❂ ]
+    '*' : [ '*', ＊, ·, ・, ×, ※, ❂ ]
     '(' : （
     ')' : ）
     '-' : '-'
@@ -105,7 +104,9 @@ key_binder:
     - { when: composing, accept: Control+e, send: End }
     - { when: composing, accept: Control+d, send: Delete }
     - { when: composing, accept: Control+k, send: Shift+Delete }
+    - { when: composing, accept: Control+h, send: BackSpace }
     - { when: composing, accept: Control+g, send: Escape }
+    - { when: composing, accept: Control+bracketleft, send: Escape }
     - { when: composing, accept: Alt+v, send: Page_Up }
     - { when: composing, accept: Control+v, send: Page_Down }
     # move by word
@@ -113,7 +114,7 @@ key_binder:
     - { when: composing, accept: Shift+Tab, send: Shift+Left }
     - { when: composing, accept: Tab, send: Shift+Right }
     # flip page
-    - { when: paging, accept: minus, send: Page_Up }
+    - { when: has_menu, accept: minus, send: Page_Up }
     - { when: has_menu, accept: equal, send: Page_Down }
     - { when: paging, accept: comma, send: Page_Up }
     - { when: has_menu, accept: period, send: Page_Down }
@@ -123,18 +124,26 @@ key_binder:
     - { when: always, accept: Control+Shift+3, toggle: full_shape }
     - { when: always, accept: Control+Shift+4, toggle: simplification }
     - { when: always, accept: Control+Shift+5, toggle: extended_charset }
+    - { when: always, accept: Control+Shift+exclam, select: .next }
+    - { when: always, accept: Control+Shift+at, toggle: ascii_mode }
+    - { when: always, accept: Control+Shift+numbersign, toggle: full_shape }
+    - { when: always, accept: Control+Shift+dollar, toggle: simplification }
+    - { when: always, accept: Control+Shift+percent, toggle: extended_charset }
     - { when: always, accept: Shift+space, toggle: full_shape }
     - { when: always, accept: Control+period, toggle: ascii_punct }
 
 recognizer:
   patterns:
-    email: "^[a-z][-_.0-9a-z]*@.*$"
+    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
     uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
-    url: "^(www[.]|https?:|ftp:|mailto:).*$|^[a-z]+[.].+$"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
 
 ascii_composer:
+  good_old_caps_lock: true
   switch_key:
     Shift_L: inline_ascii
     Shift_R: commit_text
     Control_L: noop
     Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear
