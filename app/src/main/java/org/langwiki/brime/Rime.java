@@ -355,6 +355,14 @@
             return mBusyCount == 0;
         }
 
+        public List<RimeCandidate> getAllCandidates() {
+            List<RimeCandidate> cands = new ArrayList<>();
+
+            // TODO Use onKey to navigate and get all candidates
+
+            return cands;
+        }
+
         private void init(boolean full_check) {
             mOnMessage = false;
             initialize(Config.getSharedDataDir(), Config.getUserDataDir());
@@ -422,7 +430,8 @@
         }
 
         public RimeCandidate[] getCandidates() {
-            if (!isComposing() && showSwitches) return mSchema.getCandidates();
+            // TODO: do not confuse users with schema switches
+            //if (!isComposing() && showSwitches) return mSchema.getCandidates();
             return mContext.getCandidates();
         }
 
