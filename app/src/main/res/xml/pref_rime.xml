@@ -12,4 +12,9 @@
         <intent
             android:action="org.langwiki.brime.RIME_INSTAL_SCHEMATA"/>
     </PreferenceScreen>
+
+    <Preference
+        android:order="20"
+        android:widgetLayout="@layout/layout_button_deploy">
+    </Preference>
 </PreferenceScreen>

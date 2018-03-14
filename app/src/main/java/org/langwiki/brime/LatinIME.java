@@ -589,17 +589,7 @@ public class LatinIME extends InputMethodService implements
 
         mTypeFace = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 
-        new Thread() {
-            public void run() {
-                Log.i(TAG, "Starting to copy schema files");
-                mSchemaManager.initializeDataDir();
-                mRime.initSchema();
-                mRime.incrementBusy();
-                mRime.deploy();
-                mRime.syncUserData();
-                mRime.decrementBusy();
-            }
-        }.start();
+        mSchemaManager.redeploy(true, true);
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");

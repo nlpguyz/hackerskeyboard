@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -58,6 +59,34 @@ public class SchemaManager {
                 rime.restartEngine();
             }
         }.start();
+    }
+
+    public void redeploy(final boolean initial, boolean background) {
+        final Rime rime = Rime.getInstance();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (initial) {
+                    Log.i(TAG, "Starting to copy schema files");
+                    initializeDataDir();
+                    rime.initSchema();
+                }
+                rime.incrementBusy();
+                rime.deploy();
+                rime.syncUserData();
+                rime.decrementBusy();
+            }
+        };
+
+        if (background) {
+            new Thread() {
+                public void run() {
+                    runnable.run();
+                }
+            }.start();
+        } else {
+            runnable.run();
+        }
     }
 
     public interface SchemaManagerListener {
