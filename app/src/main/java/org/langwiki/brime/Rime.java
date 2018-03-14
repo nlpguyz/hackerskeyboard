@@ -20,6 +20,7 @@
 
     import java.io.File;
     import java.util.ArrayList;
+    import java.util.Arrays;
     import java.util.Map;
     import java.util.HashMap;
     import java.util.Iterator;
@@ -276,7 +277,7 @@
         }
 
         public boolean hasMenu() {
-            return isComposing() && mContext.menu.num_candidates != 0;
+            return isComposing() && mContext.menu != null && mContext.menu.num_candidates != 0;
         }
 
         public boolean hasLeft() {
@@ -356,11 +357,37 @@
         }
 
         public List<RimeCandidate> getAllCandidates() {
-            List<RimeCandidate> cands = new ArrayList<>();
+            List<RimeCandidate> allCands = new ArrayList<>();
 
-            // TODO Use onKey to navigate and get all candidates
+            if (mContext == null || !hasMenu())
+                return allCands;
 
-            return cands;
+            final int pageUp = 65365;
+            final int pageDown = 65366;
+            final int maxCands = 200;
+
+            // Rewind
+            //while (hasLeft()) {
+            //    onKey(pageUp, 0);
+            //}
+
+            RimeCandidate[] cands;
+            boolean done = false;
+            while (!done && allCands.size() < maxCands) {
+                cands = getCandidates();
+                if (cands != null) {
+                    allCands.addAll(Arrays.asList(cands));
+                    if (hasRight()) {
+                        onKey(pageDown, 0);
+                    } else {
+                        done = true;
+                    }
+                } else {
+                    done = true;
+                }
+            }
+
+            return allCands;
         }
 
         private void init(boolean full_check) {

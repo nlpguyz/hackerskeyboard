@@ -2875,7 +2875,7 @@ public class LatinIME extends InputMethodService implements
             }
 
             // Get first row first
-            Rime.RimeCandidate[] candidates = mRime.getCandidates();
+            List<Rime.RimeCandidate> candidates = mRime.getAllCandidates();
             if (candidates != null) {
                 for (Rime.RimeCandidate c : candidates) {
                     stringList.add(c.text);
