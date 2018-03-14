@@ -255,4 +255,5 @@
     <string name="refresh">刷新列表</string>
     <string name="rime_install_schema_failed">%s安装失败</string>
     <string name="rime_install_schema_successful">%s安装成功</string>
+    <string name="deploy">重新部署</string>
 </resources>

@@ -20,6 +20,7 @@
 
     import java.io.File;
     import java.util.ArrayList;
+    import java.util.Arrays;
     import java.util.Map;
     import java.util.HashMap;
     import java.util.Iterator;
@@ -51,6 +52,7 @@
 
         public interface RimeListener {
             void onMessage(String message_type, String message_value);
+            void onEngineStateChanged(boolean busy);
         }
 
         static class Config {
@@ -256,6 +258,8 @@
         private FunctionProxy mOnMessageFunc;
         private RimeListener mRimeListener;
 
+        private int mBusyCount;
+
         static {
             System.loadLibrary("opencc");
             System.loadLibrary("rime");
@@ -273,7 +277,7 @@
         }
 
         public boolean hasMenu() {
-            return isComposing() && mContext.menu.num_candidates != 0;
+            return isComposing() && mContext.menu != null && mContext.menu.num_candidates != 0;
         }
 
         public boolean hasLeft() {
@@ -332,6 +336,60 @@
             return get_status(mStatus);
         }
 
+        public void incrementBusy() {
+            mBusyCount++;
+
+            if (mRimeListener != null) {
+                mRimeListener.onEngineStateChanged(mBusyCount != 0);
+            }
+        }
+
+        public void decrementBusy() {
+            mBusyCount--;
+
+            if (mRimeListener != null) {
+                mRimeListener.onEngineStateChanged(mBusyCount != 0);
+            }
+        }
+
+        public boolean isBusy() {
+            return mBusyCount == 0;
+        }
+
+        public List<RimeCandidate> getAllCandidates() {
+            List<RimeCandidate> allCands = new ArrayList<>();
+
+            if (mContext == null || !hasMenu())
+                return allCands;
+
+            final int pageUp = 65365;
+            final int pageDown = 65366;
+            final int maxCands = 200;
+
+            // Rewind
+            //while (hasLeft()) {
+            //    onKey(pageUp, 0);
+            //}
+
+            RimeCandidate[] cands;
+            boolean done = false;
+            while (!done && allCands.size() < maxCands) {
+                cands = getCandidates();
+                if (cands != null) {
+                    allCands.addAll(Arrays.asList(cands));
+                    if (hasRight()) {
+                        onKey(pageDown, 0);
+                    } else {
+                        done = true;
+                    }
+                } else {
+                    done = true;
+                }
+            }
+
+            return allCands;
+        }
+
         private void init(boolean full_check) {
             mOnMessage = false;
             initialize(Config.getSharedDataDir(), Config.getUserDataDir());
@@ -350,6 +408,12 @@
             destroy_session();
             finalize1();
             self = null;
+        }
+
+        // Called after selecting new schemata
+        public void restartEngine() {
+            destroy();
+            get(true);
         }
 
         public String getCommitText() {
@@ -393,7 +457,8 @@
         }
 
         public RimeCandidate[] getCandidates() {
-            if (!isComposing() && showSwitches) return mSchema.getCandidates();
+            // TODO: do not confuse users with schema switches
+            //if (!isComposing() && showSwitches) return mSchema.getCandidates();
             return mContext.getCandidates();
         }
 
@@ -593,6 +658,9 @@
             get();
             return b;
         }
+
+        // See here for API usage
+        // https://github.com/rime/librime/blob/master/tools/rime_api_console.cc
 
         // init
         public native void setup(String shared_data_dir, String user_data_dir);

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -55,12 +56,37 @@ public class SchemaManager {
         new Thread() {
             public void run() {
                 rime.select_schemas(new String[] {schemaId});
-                //rime.selectSchema(schemaId);
-                rime.deploy();
-                rime.cleanup_all_sessions();
-                rime.create_session();
+                rime.restartEngine();
             }
         }.start();
+    }
+
+    public void redeploy(final boolean initial, boolean background) {
+        final Rime rime = Rime.getInstance();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (initial) {
+                    Log.i(TAG, "Starting to copy schema files");
+                    initializeDataDir();
+                    rime.initSchema();
+                }
+                rime.incrementBusy();
+                rime.deploy();
+                rime.syncUserData();
+                rime.decrementBusy();
+            }
+        };
+
+        if (background) {
+            new Thread() {
+                public void run() {
+                    runnable.run();
+                }
+            }.start();
+        } else {
+            runnable.run();
+        }
     }
 
     public interface SchemaManagerListener {
@@ -129,25 +155,31 @@ public class SchemaManager {
         }
 
         boolean fail = false;
-        String schemaFilepath = null;
-        for (String fn : imdf.files) {
-            try {
-                String dstPath = USER_DIR + File.separator + fn;
-                if (fn.endsWith("schema.yaml"))
-                    schemaFilepath = dstPath;
 
-                FileHelper.copyTo(opener.open(fn), dstPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-                fail = true;
+        try {
+            Rime.getInstance().incrementBusy();
+            String schemaFilepath = null;
+            for (String fn : imdf.files) {
+                try {
+                    String dstPath = USER_DIR + File.separator + fn;
+                    if (fn.endsWith("schema.yaml"))
+                        schemaFilepath = dstPath;
+
+                    FileHelper.copyTo(opener.open(fn), dstPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    fail = true;
+                }
             }
-        }
 
-        FileHelper.writeFile(versionFile, imdf.version);
+            FileHelper.writeFile(versionFile, imdf.version);
 
-        if (schemaFilepath != null) {
-            fail |= !Rime.getInstance().deploy_schema(schemaFilepath);
-            Rime.getInstance().initSchema();
+            if (schemaFilepath != null) {
+                fail |= !Rime.getInstance().deploy_schema(schemaFilepath);
+                Rime.getInstance().initSchema();
+            }
+        } finally {
+            Rime.getInstance().decrementBusy();
         }
 
         return !fail;

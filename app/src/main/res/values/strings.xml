@@ -688,4 +688,5 @@
     <string name="text_installing_rime_schema">Installing %s...</string>
     <string name="rime_install_schema_failed">Failed to install %s</string>
     <string name="rime_install_schema_successful">Successfully installed %s!</string>
+    <string name="deploy">Deploy</string>
 </resources>

@@ -185,6 +185,7 @@ public class LatinIME extends InputMethodService implements
     private static final int POS_METHOD = 0;
     private static final int POS_SETTINGS = 1;
     private static final int POS_RIME_SETTINGS = 2;
+    private static final int POS_DEBUG_SETTINGS = 9;
 
     // private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
@@ -356,6 +357,12 @@ public class LatinIME extends InputMethodService implements
                     */
                     break;
             }
+        }
+
+        @Override
+        public void onEngineStateChanged(boolean busy) {
+            // Crash if not initialized. fix it later.
+            //postUpdateSuggestions();
         }
     };
 
@@ -582,15 +589,7 @@ public class LatinIME extends InputMethodService implements
 
         mTypeFace = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 
-        new Thread() {
-            public void run() {
-                Log.i(TAG, "Starting to copy schema files");
-                mSchemaManager.initializeDataDir();
-                mRime.initSchema();
-                mRime.deploy();
-                mRime.syncUserData();
-            }
-        }.start();
+        mSchemaManager.redeploy(true, true);
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");
@@ -2866,12 +2865,17 @@ public class LatinIME extends InputMethodService implements
             }
 
             // Get first row first
-            Rime.RimeCandidate[] candidates = mRime.getCandidates();
+            List<Rime.RimeCandidate> candidates = mRime.getAllCandidates();
             if (candidates != null) {
                 for (Rime.RimeCandidate c : candidates) {
                     stringList.add(c.text);
                 }
             }
+        }
+
+        // Engine busy case: if no suggestions, show "engine busy"
+        if (stringList.isEmpty() && mRime.isBusy()) {
+            stringList.add("Engine busy...");
         }
 
         // TODO check the values
@@ -3873,7 +3877,13 @@ public class LatinIME extends InputMethodService implements
         CharSequence itemSettings = getString(R.string.english_ime_settings);
         CharSequence itemInputMethod = getString(R.string.selectInputMethod);
         CharSequence rimeSettings = getString(R.string.menu_rime_settings);
-        builder.setItems(new CharSequence[] { itemInputMethod, itemSettings, rimeSettings },
+        CharSequence debugSettings = "Debug settings";
+        List<CharSequence> menuItems = new ArrayList<>();
+        menuItems.addAll(Arrays.asList(new CharSequence[] { itemInputMethod, itemSettings, rimeSettings }));
+        if (DEBUG) {
+            menuItems.add(debugSettings);
+        }
+        builder.setItems(menuItems.toArray(new CharSequence[0]),
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface di, int position) {
@@ -3888,6 +3898,9 @@ public class LatinIME extends InputMethodService implements
                             break;
                         case POS_RIME_SETTINGS:
                             launchRimeSettings();
+                            break;
+                        case POS_DEBUG_SETTINGS:
+                            launchDebugSettings();
                             break;
                         }
                     }

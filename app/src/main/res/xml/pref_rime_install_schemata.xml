@@ -8,6 +8,6 @@
 
     <Preference
         android:key="resetBD"
-        android:widgetLayout="@layout/layout_button">
+        android:widgetLayout="@layout/layout_button_reset">
     </Preference>
 </PreferenceScreen>

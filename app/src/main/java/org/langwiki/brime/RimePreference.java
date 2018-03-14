@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
+import android.view.View;
 
 import org.langwiki.brime.schema.SchemaManager;
 
@@ -72,6 +73,10 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         if (selected != null) {
             selected.setChecked(true);
         }
+    }
+
+    public void onDeployButton(View v) {
+        SchemaManager.getInstance().redeploy(false, true);
     }
 
     @Override

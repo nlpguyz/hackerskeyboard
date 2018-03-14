@@ -1,101 +1,101 @@
 [
     {
-        "id": "pinyin_simp",
-        "name": {
-            "en": "Mini pinyin (Simp)",
-            "zh_CN": "\u8896\u73cd\u7b80\u5316\u5b57\u62fc\u97f3",
-            "zh_TW": "\u8896\u73cd\u7c21\u5316\u5b57\u62fc\u97f3",
-            "default": "Mini pinyin (Simp)"
-        },
-        "version": "1.0",
         "files": [
             "pinyin_simp.schema.yaml",
             "pinyin_simp.dict.yaml"
         ],
-        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/",
+        "version": "1.0",
+        "id": "pinyin_simp",
+        "name": {
+            "default": "Mini pinyin (Simp)",
+            "zh_TW": "\u8896\u73cd\u7c21\u5316\u5b57\u62fc\u97f3",
+            "en": "Mini pinyin (Simp)",
+            "zh_CN": "\u8896\u73cd\u7b80\u5316\u5b57\u62fc\u97f3"
+        }
     },
     {
-        "id": "wubi_pinyin",
-        "name": {
-            "en": "Wubi/Pinyin",
-            "zh_CN": "\u4e94\u7b14\u00b7\u62fc\u97f3",
-            "zh_TW": "\u4e94\u7b46\u00b7\u62fc\u97f3",
-            "default": "Wubi/Pinyin"
-        },
-        "version": "0.9",
         "files": [
             "wubi_pinyin.schema.yaml",
             "wubi86.dict.yaml",
             "pinyin_simp.schema.yaml",
             "pinyin_simp.dict.yaml"
         ],
-        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/",
+        "version": "0.9",
+        "id": "wubi_pinyin",
+        "name": {
+            "default": "Wubi/Pinyin",
+            "zh_TW": "\u4e94\u7b46\u00b7\u62fc\u97f3",
+            "en": "Wubi/Pinyin",
+            "zh_CN": "\u4e94\u7b14\u00b7\u62fc\u97f3"
+        }
     },
     {
-        "id": "ipa_xsampa",
-        "name": {
-            "en": "IPA X-Sampa",
-            "zh_CN": "\u56fd\u9645\u97f3\u6807 X-Sampa",
-            "zh_TW": "\u570b\u969b\u97f3\u6a19 X-Sampa",
-            "default": "IPA X-Sampa"
-        },
-        "version": "1.0",
         "files": [
             "ipa_xsampa.schema.yaml",
             "ipa_xsampa.dict.yaml"
         ],
-        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/"
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/files/",
+        "version": "1.0",
+        "id": "ipa_xsampa",
+        "name": {
+            "default": "IPA X-Sampa",
+            "zh_TW": "\u570b\u969b\u97f3\u6a19 X-Sampa",
+            "en": "IPA X-Sampa",
+            "zh_CN": "\u56fd\u9645\u97f3\u6807 X-Sampa"
+        }
     },
     {
-        "id": "jap_poly",
-        "name": {
-            "en": "Japanese Romaji",
-            "zh_CN": "\u65e5\u8bed\u00b7\u7f57\u9a6c\u5b57",
-            "zh_TW": "\u65e5\u8a9e\u00b7\u7f85\u99ac\u5b57",
-            "jp": "\u65e5\u672c\u8a9e\u30ed\u30fc\u30de\u5b57",
-            "default": "\u65e5\u672c\u8a9e\u30ed\u30fc\u30de\u5b57"
-        },
-        "version": "2013.10.08",
-        "author": "polyhedron <polyhedron@gmail.com>",
         "files": [
             "jap_poly.schema.yaml",
             "jap_poly.dict.yaml"
         ],
-        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/"
+        "name": {
+            "default": "\u65e5\u672c\u8a9e\u30ed\u30fc\u30de\u5b57",
+            "zh_TW": "\u65e5\u8a9e\u00b7\u7f85\u99ac\u5b57",
+            "en": "Japanese Romaji",
+            "jp": "\u65e5\u672c\u8a9e\u30ed\u30fc\u30de\u5b57",
+            "zh_CN": "\u65e5\u8bed\u00b7\u7f57\u9a6c\u5b57"
+        },
+        "author": "polyhedron <polyhedron@gmail.com>",
+        "version": "2013.10.08",
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/",
+        "id": "jap_poly"
     },
     {
-        "id": "KappaJP_keitai",
-        "name": {
-            "en": "KappaJP",
-            "zh_CN": "\u65e5\u8bed\u00b7\u6cb3\u7ae5\u4e94\u7b14",
-            "zh_TW": "\u65e5\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
-            "jp": "\u65e5\u672c\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
-            "default": "\u65e5\u672c\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46"
-        },
-        "version": "2018.2.25",
-        "author": "Momijineko <momijineko@foxmail.com>",
         "files": [
             "KappaJP_keitai.schema.yaml",
             "KappaJP.dict.yaml"
         ],
-        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/"
+        "name": {
+            "default": "\u65e5\u672c\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
+            "zh_TW": "\u65e5\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
+            "en": "KappaJP",
+            "jp": "\u65e5\u672c\u8a9e\u00b7\u6cb3\u7ae5\u4e94\u7b46",
+            "zh_CN": "\u65e5\u8bed\u00b7\u6cb3\u7ae5\u4e94\u7b14"
+        },
+        "author": "Momijineko <momijineko@foxmail.com>",
+        "version": "2018.2.25",
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/japanese/",
+        "id": "KappaJP_keitai"
     },
     {
-        "id": "korean_rome2",
-        "name": {
-            "en": "Korean Roma",
-            "zh_CN": "\u97e9\u8bed\u00b7\u7f57\u9a6c\u5b57",
-            "zh_TW": "\u97d3\u8a9e\u00b7\u7f85\u99ac\u5b57",
-            "jp": "\u97d3\u56fd\u8a9e\u30ed\u30fc\u30de\u5b57",
-            "kr": "\ud55c\uad6d\uc5b4 \ub85c\ub9c8",
-            "default": "\ud55c\uad6d\uc5b4 \ub85c\ub9c8"
-        },
-        "version": "2.1",
-        "author": "ziloeng",
         "files": [
-            "korean_rome2.schema.yaml",
-            "korean_rome2.dict.yaml"
+            "roma_kr.schema.yaml",
+            "roma_kr.dict.yaml"
         ],
-        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/korean/"
+        "name": {
+            "en": "Korean Roma Large",
+            "zh_CN": "\u97e9\u8bed\u00b7\u7f57\u9a6c\u5b57\uff08\u5927\uff09",
+            "default": "\ud55c\uad6d\uc5b4 \ub85c\ub9c8\uff08\ud070\uff09",
+            "zh_TW": "\u97d3\u8a9e\u00b7\u7f85\u99ac\u5b57\uff08\u5927\uff09",
+            "jp": "\u97d3\u56fd\u8a9e\u30ed\u30fc\u30de\u5b57\uff08\u5927\uff09",
+            "kr": "\ud55c\uad6d\uc5b4 \ub85c\ub9c8\uff08\ud070\uff09"
+        },
+        "author": "sgqy <https://github.com/sgqy>",
+        "version": "0.1",
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/korean/",
+        "id": "roma_kr"
     }
 ]
