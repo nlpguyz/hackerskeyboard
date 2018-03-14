@@ -55,10 +55,6 @@ public class SchemaManager {
         new Thread() {
             public void run() {
                 rime.select_schemas(new String[] {schemaId});
-                //rime.selectSchema(schemaId);
-//                rime.deploy();
-//                rime.cleanup_all_sessions();
-//                rime.create_session();
                 rime.restartEngine();
             }
         }.start();
@@ -130,25 +126,31 @@ public class SchemaManager {
         }
 
         boolean fail = false;
-        String schemaFilepath = null;
-        for (String fn : imdf.files) {
-            try {
-                String dstPath = USER_DIR + File.separator + fn;
-                if (fn.endsWith("schema.yaml"))
-                    schemaFilepath = dstPath;
 
-                FileHelper.copyTo(opener.open(fn), dstPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-                fail = true;
+        try {
+            Rime.getInstance().incrementBusy();
+            String schemaFilepath = null;
+            for (String fn : imdf.files) {
+                try {
+                    String dstPath = USER_DIR + File.separator + fn;
+                    if (fn.endsWith("schema.yaml"))
+                        schemaFilepath = dstPath;
+
+                    FileHelper.copyTo(opener.open(fn), dstPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    fail = true;
+                }
             }
-        }
 
-        FileHelper.writeFile(versionFile, imdf.version);
+            FileHelper.writeFile(versionFile, imdf.version);
 
-        if (schemaFilepath != null) {
-            fail |= !Rime.getInstance().deploy_schema(schemaFilepath);
-            Rime.getInstance().initSchema();
+            if (schemaFilepath != null) {
+                fail |= !Rime.getInstance().deploy_schema(schemaFilepath);
+                Rime.getInstance().initSchema();
+            }
+        } finally {
+            Rime.getInstance().decrementBusy();
         }
 
         return !fail;

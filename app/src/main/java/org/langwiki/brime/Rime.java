@@ -51,6 +51,7 @@
 
         public interface RimeListener {
             void onMessage(String message_type, String message_value);
+            void onEngineStateChanged(boolean busy);
         }
 
         static class Config {
@@ -256,6 +257,8 @@
         private FunctionProxy mOnMessageFunc;
         private RimeListener mRimeListener;
 
+        private int mBusyCount;
+
         static {
             System.loadLibrary("opencc");
             System.loadLibrary("rime");
@@ -330,6 +333,26 @@
         private boolean getStatus() {
             mSchema.getValue();
             return get_status(mStatus);
+        }
+
+        public void incrementBusy() {
+            mBusyCount++;
+
+            if (mRimeListener != null) {
+                mRimeListener.onEngineStateChanged(mBusyCount != 0);
+            }
+        }
+
+        public void decrementBusy() {
+            mBusyCount--;
+
+            if (mRimeListener != null) {
+                mRimeListener.onEngineStateChanged(mBusyCount != 0);
+            }
+        }
+
+        public boolean isBusy() {
+            return mBusyCount == 0;
         }
 
         private void init(boolean full_check) {

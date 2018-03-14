@@ -358,6 +358,12 @@ public class LatinIME extends InputMethodService implements
                     break;
             }
         }
+
+        @Override
+        public void onEngineStateChanged(boolean busy) {
+            // Crash if not initialized. fix it later.
+            //postUpdateSuggestions();
+        }
     };
 
     public void showAlert(String msgValue) {
@@ -588,8 +594,10 @@ public class LatinIME extends InputMethodService implements
                 Log.i(TAG, "Starting to copy schema files");
                 mSchemaManager.initializeDataDir();
                 mRime.initSchema();
+                mRime.incrementBusy();
                 mRime.deploy();
                 mRime.syncUserData();
+                mRime.decrementBusy();
             }
         }.start();
 
@@ -2873,6 +2881,11 @@ public class LatinIME extends InputMethodService implements
                     stringList.add(c.text);
                 }
             }
+        }
+
+        // Engine busy case: if no suggestions, show "engine busy"
+        if (stringList.isEmpty() && mRime.isBusy()) {
+            stringList.add("Engine busy...");
         }
 
         // TODO check the values
