@@ -1,2 +1,2 @@
-include ':app', ':rimenative-debug'
+include ':app', ':rimenative-release'
 

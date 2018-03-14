@@ -47,9 +47,6 @@
     <string name="settings_key_mode_always_hide_name">总是隐藏</string>
     <string name="bigram_suggestion">大内存建议</string>
     <string name="bigram_suggestion_summary">使用以前的字词以提高建议</string>
-    <string name="prediction_none">0</string>
-    <string name="prediction_basic">1</string>
-    <string name="prediction_full">2</string>
     <string name="added_word">%s: 已保存</string>
     <string name="tip_long_press">Hold a key down to see accents (ø, ö, etc.)</string>
     <string name="tip_dismiss">Press the back key ↶ to close the keyboard at any point</string>
@@ -93,9 +90,6 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="voice_input">"语音输入"</string>
-    <string name="voice_mode_main">0</string>
-    <string name="voice_mode_symbols">1</string>
-    <string name="voice_mode_off">2</string>
     <string name="auto_submit">说完后自动提交</string>
     <string name="auto_submit_summary">"搜索或转到下一字段时自动按 Enter。"</string>
     <string name="open_the_keyboard" msgid="2215920976029260466"><font size="17"><b>"打开键盘"\n</b></font><font size="3">\n</font>"触摸任意文本字段。"</string>

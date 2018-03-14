@@ -8,7 +8,6 @@
 <string-array name="voice_input_modes_values"><item>@string/voice_mode_main</item><item>@string/voice_mode_symbols</item><item>@string/voice_mode_off</item></string-array>
 <string-array name="voice_input_modes_summary"><item>在主键盘显示麦克风键</item><item>在符号键盘显示麦克风键</item><item>禁用语音输入</item></string-array>
 <string-array name="keyboard_layout_modes"><item>@string/layout_ics</item><item>@string/layout_gingerbread</item><item>@string/layout_stone_bold</item><item>@string/layout_trans_neon</item></string-array>
-<string-array name="keyboard_layout_modes_values"><item>0</item><item>1</item><item>2</item><item>3</item></string-array>
 <string-array name="keyboard_mode_entries"><item>4排 Gingerbread 布局</item><item>小型的5排布局 (仅US QWERTY ！)</item><item>完整的5排布局</item></string-array>
 <string-array name="keyboard_mode_values"><item>0</item><item>1</item><item>2</item></string-array>
 <string-array name="ctrl_a_override_entries"><item>禁用 Ctrl-A, 使用 Ctrl-Alt-A 来代替</item><item>"完全禁用 Ctrl-A "</item><item>使用 Ctrl-A (不重写)</item></string-array>
