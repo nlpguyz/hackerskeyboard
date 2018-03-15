@@ -315,6 +315,25 @@
             return mContext.commit_text_preview;
         }
 
+        public void setComposition(CharSequence typedWord) {
+            String current = getCommitText();
+            if (current != null) {
+                // Optimized for the case of one more key
+                if (typedWord.length() == getCommitText().length() + 1 &&
+                        typedWord.toString().startsWith(getCommitText())) {
+                    onKey(new int[]{typedWord.charAt(typedWord.length() - 1), 0});
+                    return;
+                }
+            }
+
+            // General case: clear and simulate key sequence
+            clearComposition();
+            for (int i = 0; i < typedWord.length(); i++) {
+                char ch = Character.toLowerCase(typedWord.charAt(i));
+                onKey(new int[]{ch, 0});
+            }
+        }
+
         private Rime() {
             this(false);
         }

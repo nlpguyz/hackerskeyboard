@@ -2845,16 +2845,10 @@ public class LatinIME extends InputMethodService implements
         // TODO CJK
         CharSequence typedWord = word.getTypedWord();
 
-        // TMP: Feed to Rime
-        mRime.clearComposition();
-
         List<CharSequence> stringList = new ArrayList<>();
 
         if (typedWord != null) {
-            for (int i = 0; i < typedWord.length(); i++) {
-                char ch = Character.toLowerCase(typedWord.charAt(i));
-                mRime.onKey(new int[]{ch, 0});
-            }
+            mRime.setComposition(typedWord);
 
             // Get first row first
             List<Rime.RimeCandidate> candidates = mRime.getAllCandidates();
