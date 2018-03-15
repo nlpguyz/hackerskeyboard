@@ -353,7 +353,7 @@
         }
 
         public boolean isBusy() {
-            return mBusyCount == 0;
+            return mBusyCount != 0;
         }
 
         public List<RimeCandidate> getAllCandidates() {
