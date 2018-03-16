@@ -318,8 +318,11 @@ public class LatinIME extends InputMethodService implements
     // For content commit
     public boolean mCommitTextAsGif = false;
 
+    // If false, use internal composing buffer. If true, use Rime for composing
+    private final boolean useRimeForOnKey = true;
     public Rime mRime; // public for debugging
     public SchemaManager mSchemaManager;
+    private List<Rime.RimeCandidate> mRimeCandidates;
 
     protected Handler mRimeHandler;
 
@@ -1370,6 +1373,7 @@ public class LatinIME extends InputMethodService implements
             break;
         }
 
+        // Handle hard keys as soft keys for CJK
         if (isCJK()) {
             char pressedKey = (char) event.getUnicodeChar();
             if (pressedKey != '\0') {
@@ -2076,6 +2080,7 @@ public class LatinIME extends InputMethodService implements
         }
     }
 
+    // Processes the multikey, returns true if it is handled
     private boolean processMultiKey(int primaryCode) {
         if (mDeadAccentBuffer.composeBuffer.length() > 0) {
             //Log.i(TAG, "processMultiKey: pending DeadAccent, length=" + mDeadAccentBuffer.composeBuffer.length());
@@ -2192,6 +2197,7 @@ public class LatinIME extends InputMethodService implements
 
     public void onKey(int primaryCode, int[] keyCodes, int x, int y) {
         long when = SystemClock.uptimeMillis();
+
         if (primaryCode != Keyboard.KEYCODE_DELETE
                 || when > mLastKeyTime + QUICK_PRESS) {
             mDeleteCount = 0;
@@ -2627,6 +2633,7 @@ public class LatinIME extends InputMethodService implements
     private void handleSeparatorInternal(int primaryCode, InputConnection ic) {
         boolean pickedDefault = false;
 
+        // CJK mode: commit default suggestion for SPACE
         if (isCJK()) {
             if (inHandleSeparator > 1)
                 return;
@@ -2638,6 +2645,7 @@ public class LatinIME extends InputMethodService implements
 
             // Commit first candidate
             if (isComposing) {
+                // TODO try pickDefaultSuggestion
                 commitFirstCandidate();
             }
 
@@ -2774,7 +2782,7 @@ public class LatinIME extends InputMethodService implements
                         ((ViewGroup) p).removeView(view);
                     }
                     setInputView(mKeyboardSwitcher.getInputView());
-                }
+
                 setCandidatesViewShown(true);
                 updateInputViewShown();
                 postUpdateSuggestions();
@@ -2842,7 +2850,6 @@ public class LatinIME extends InputMethodService implements
     private void showSuggestionsCJK(WordComposer word) {
         Log.d(TAG, "showSuggestionsCJK " + word.getTypedWord());
 
-        // TODO CJK
         CharSequence typedWord = word.getTypedWord();
 
         List<CharSequence> stringList = new ArrayList<>();
@@ -2850,10 +2857,10 @@ public class LatinIME extends InputMethodService implements
         if (typedWord != null) {
             mRime.setComposition(typedWord);
 
-            // Get first row first
-            List<Rime.RimeCandidate> candidates = mRime.getAllCandidates();
-            if (candidates != null) {
-                for (Rime.RimeCandidate c : candidates) {
+            // Get all candidates frome Rime engine
+            mRimeCandidates = mRime.getAllCandidates();
+            if (mRimeCandidates != null) {
+                for (Rime.RimeCandidate c : mRimeCandidates) {
                     stringList.add(c.text);
                 }
             }
@@ -3033,6 +3040,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void rememberReplacedWord(CharSequence suggestion) {
+        // TODO: send selected word to Rime engine
     }
 
     /**
@@ -3070,14 +3078,27 @@ public class LatinIME extends InputMethodService implements
             }
         }
         saveWordInHistory(suggestion);
-        mPredicting = false;
+        if (isCJK()) {
+            updateComposingAfterPickingSuggestion(suggestion);
+        } else {
+            // Reset predicting state in Latin mode
+            mPredicting = false;
+        }
         mCommittedLength = suggestion.length();
+
         ((LatinKeyboard) inputView.getKeyboard()).setPreferredLetters(null);
         // If we just corrected a word, then don't show punctuations
         if (!correcting) {
             setNextSuggestions();
         }
         updateShiftKeyState(getCurrentInputEditorInfo());
+    }
+
+    private void updateComposingAfterPickingSuggestion(CharSequence suggestion) {
+        if (!isCJK())
+            return;
+        // Select the suggestion in the engine
+        // Get back the composing text
     }
 
     private Typeface getTypeFace() {
