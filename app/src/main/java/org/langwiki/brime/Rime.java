@@ -375,20 +375,15 @@
             return mBusyCount != 0;
         }
 
+        final int pageUp = 65365;
+        final int pageDown = 65366;
+        final int maxCands = 200;
+
         public List<RimeCandidate> getAllCandidates() {
             List<RimeCandidate> allCands = new ArrayList<>();
 
             if (mContext == null || !hasMenu())
                 return allCands;
-
-            final int pageUp = 65365;
-            final int pageDown = 65366;
-            final int maxCands = 200;
-
-            // Rewind
-            //while (hasLeft()) {
-            //    onKey(pageUp, 0);
-            //}
 
             RimeCandidate[] cands;
             boolean done = false;
@@ -407,6 +402,33 @@
             }
 
             return allCands;
+        }
+
+
+        public boolean selectCandidateFromBeginning(int index) {
+            // Rewind
+            while (hasLeft()) {
+                onKey(pageUp, 0);
+            }
+
+            RimeCandidate[] cands;
+            boolean done = false;
+            while (!done) {
+                cands = getCandidates();
+                if (index < cands.length) {
+                    selectCandidate(index);
+                    return true;
+                }
+
+                if (hasRight()) {
+                    index -= cands.length;
+                    onKey(pageDown, 0);
+                } else {
+                    done = true;
+                }
+            }
+
+            return false;
         }
 
         private void init(boolean full_check) {

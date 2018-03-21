@@ -2783,9 +2783,10 @@ public class LatinIME extends InputMethodService implements
                     }
                     setInputView(mKeyboardSwitcher.getInputView());
 
-                setCandidatesViewShown(true);
-                updateInputViewShown();
-                postUpdateSuggestions();
+                    setCandidatesViewShown(true);
+                    updateInputViewShown();
+                    postUpdateSuggestions();
+                }
             }
         });
     }
@@ -3095,10 +3096,31 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void updateComposingAfterPickingSuggestion(CharSequence suggestion) {
+        Log.d(TAG, "updateComposingAfterPickingSuggestion " + suggestion.toString());
         if (!isCJK())
             return;
-        // Select the suggestion in the engine
-        // Get back the composing text
+        // Select the suggestion in the engine. TODO multipage.
+        int i = 0, sel = -1;
+        for (Rime.RimeCandidate cand : mRimeCandidates) {
+            if (cand.text.equals(suggestion)) {
+                sel = i;
+                break;
+            }
+            i++;
+        }
+
+        if (sel == -1)
+            return;
+
+        String prevCompositionText = mRime.getComposition().getText();
+        mRime.selectCandidateFromBeginning(sel);
+        String newCompositionText = mRime.getComposition().getText();
+        Log.e(TAG, prevCompositionText + " --> " + newCompositionText);
+        /*mWord.reset();
+        for (i = 0; i < updatedInput.length(); i++) {
+            char ch = updatedInput.charAt(i);
+            mWord.add(ch, new int[]{ ch });
+        }*/
     }
 
     private Typeface getTypeFace() {
