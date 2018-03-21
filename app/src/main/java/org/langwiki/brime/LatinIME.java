@@ -320,9 +320,14 @@ public class LatinIME extends InputMethodService implements
 
     // If false, use internal composing buffer. If true, use Rime for composing
     private final boolean useRimeForOnKey = true;
-    public Rime mRime; // public for debugging
+    public Rime mRime = Rime.getInstance(); // public for debugging
     public SchemaManager mSchemaManager;
     private List<Rime.RimeCandidate> mRimeCandidates;
+    // Delay commit until composition is done
+    private boolean mRimeFullCompositionCommit = true;
+    // Rime is doing composition
+    private boolean mRimeInComposition = false;
+    private StringBuilder mRimeSelection = new StringBuilder();
 
     protected Handler mRimeHandler;
 
@@ -577,7 +582,6 @@ public class LatinIME extends InputMethodService implements
             }
         };
 
-        mRime = Rime.getInstance();
         mRime.setRimeListener(mRimeListener);
 
         mSchemaManager = SchemaManager.getInstance();
@@ -2336,6 +2340,8 @@ public class LatinIME extends InputMethodService implements
             if (primaryCode != ASCII_ENTER) {
                 mJustAddedAutoSpace = false;
             }
+            mRimeInComposition = false; // reset when a new char is received
+            mRimeSelection.setLength(0);
             RingCharBuffer.getInstance().push((char) primaryCode, x, y);
             LatinImeLogger.logOnInputChar();
             if (isWordSeparator(primaryCode)) {
@@ -2812,6 +2818,10 @@ public class LatinIME extends InputMethodService implements
 
     private void updateSuggestions() {
         LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
+        if (inputView == null) {
+            return;
+        }
+
         ((LatinKeyboard) inputView.getKeyboard()).setPreferredLetters(null);
 
         // Check if we have a suggestion engine attached.
@@ -2849,6 +2859,9 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void showSuggestionsCJK(WordComposer word) {
+        // Handle two cases
+        // 1. A new word is typed
+        // 2. A partial selection is made.
         Log.d(TAG, "showSuggestionsCJK " + word.getTypedWord());
 
         CharSequence typedWord = word.getTypedWord();
@@ -2856,9 +2869,11 @@ public class LatinIME extends InputMethodService implements
         List<CharSequence> stringList = new ArrayList<>();
 
         if (typedWord != null) {
-            mRime.setComposition(typedWord);
+            if (!mRimeInComposition) {
+                mRime.setComposition(typedWord);
+            }
 
-            // Get all candidates frome Rime engine
+            // Get all candidates from Rime engine
             mRimeCandidates = mRime.getAllCandidates();
             if (mRimeCandidates != null) {
                 for (Rime.RimeCandidate c : mRimeCandidates) {
@@ -3041,7 +3056,6 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void rememberReplacedWord(CharSequence suggestion) {
-        // TODO: send selected word to Rime engine
     }
 
     /**
@@ -3055,44 +3069,100 @@ public class LatinIME extends InputMethodService implements
      *            whether this is due to a correction of an existing word.
      */
     private void pickSuggestion(CharSequence suggestion, boolean correcting) {
-        LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
-        int shiftState = getShiftState();
-        if (shiftState == Keyboard.SHIFT_LOCKED || shiftState == Keyboard.SHIFT_CAPS_LOCKED) {
-            suggestion = suggestion.toString().toUpperCase(); // all UPPERCASE
+        // Intercept for engine composition
+        if (rimeIntercept()) {
+            suggestion = updateSuggestionByRime(suggestion);
+            // if suggestion == null, only update the suggestions, but not commit the text
         }
-        InputConnection ic = getCurrentInputConnection();
-        if (ic != null) {
-            rememberReplacedWord(suggestion);
-            // insert gif
-            if (mCommitTextAsGif) {
-                try {
-                    File gifFile = RenderManager.getInstance(this)
-                            .renderGif(suggestion.toString(), getTypeFace());
-                    commitGifImage(gifFile, suggestion.toString());
-                    //gifFile.delete();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    ic.commitText(suggestion, 1);
-                }
-            } else {
-                ic.commitText(suggestion, 1);
+
+        if (suggestion != null) {
+            LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
+            int shiftState = getShiftState();
+            if (shiftState == Keyboard.SHIFT_LOCKED || shiftState == Keyboard.SHIFT_CAPS_LOCKED) {
+                suggestion = suggestion.toString().toUpperCase(); // all UPPERCASE
             }
-        }
-        saveWordInHistory(suggestion);
-        if (isCJK()) {
-            updateComposingAfterPickingSuggestion(suggestion);
-        } else {
+
+            commitText(suggestion);
+            saveWordInHistory(suggestion);
+
+            // Old way of handling CJK
+            // updateComposingAfterPickingSuggestion(suggestion);
+
             // Reset predicting state in Latin mode
             mPredicting = false;
-        }
-        mCommittedLength = suggestion.length();
 
-        ((LatinKeyboard) inputView.getKeyboard()).setPreferredLetters(null);
-        // If we just corrected a word, then don't show punctuations
-        if (!correcting) {
-            setNextSuggestions();
+            mCommittedLength = suggestion.length();
+
+            ((LatinKeyboard) inputView.getKeyboard()).setPreferredLetters(null);
+            // TODO -- this seems duplicated
+            // If we just corrected a word, then don't show punctuations
+            if (!correcting) {
+                setNextSuggestions();
+            }
+        } else {
+            mCommittedLength = 0;
         }
+
         updateShiftKeyState(getCurrentInputEditorInfo());
+    }
+
+    private boolean rimeIntercept() {
+        return isCJK() && mRimeFullCompositionCommit;
+    }
+
+    /*
+      Select the candidate in rime, and see if it is complete.
+     */
+    private CharSequence updateSuggestionByRime(CharSequence suggestion) {
+        // Select the suggestion in the engine. TODO multipage.
+        int i = 0, sel = -1;
+        for (Rime.RimeCandidate cand : mRimeCandidates) {
+            if (cand.text.equals(suggestion)) {
+                sel = i;
+                break;
+            }
+            i++;
+        }
+
+        if (sel == -1) {
+            // Shouldn't happen. But if it does, just commit the text.
+            return suggestion;
+        }
+
+        mRimeSelection.append(suggestion);
+
+        String prevCompositionText = mRime.getComposition().getText();
+        mRime.selectCandidateFromBeginning(sel);
+        String newCompositionText = mRime.getComposition().getText();
+
+        // TODO check completion logic
+        if (newCompositionText.isEmpty()) {
+            mRimeInComposition = false;
+            return mRimeSelection.toString();
+        }
+
+        mRimeInComposition = true;
+        return null;
+    }
+
+    private void commitText(CharSequence suggestion) {
+        InputConnection ic = getCurrentInputConnection();
+        rememberReplacedWord(suggestion);
+        // insert gif
+        if (mCommitTextAsGif) {
+            try {
+                File gifFile = RenderManager.getInstance(this)
+                        .renderGif(suggestion.toString(), getTypeFace());
+                commitGifImage(gifFile, suggestion.toString());
+                //gifFile.delete();
+            } catch (IOException e) {
+                e.printStackTrace();
+                ic.commitText(suggestion, 1);
+            }
+        } else {
+            // Commit text to OS
+            ic.commitText(suggestion, 1);
+        }
     }
 
     private void updateComposingAfterPickingSuggestion(CharSequence suggestion) {
@@ -3116,6 +3186,9 @@ public class LatinIME extends InputMethodService implements
         mRime.selectCandidateFromBeginning(sel);
         String newCompositionText = mRime.getComposition().getText();
         Log.e(TAG, prevCompositionText + " --> " + newCompositionText);
+
+        // Find the maximum suffix and inject back to the UI
+
         /*mWord.reset();
         for (i = 0; i < updatedInput.length(); i++) {
             char ch = updatedInput.charAt(i);
@@ -3201,7 +3274,11 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void setNextSuggestions() {
-        setSuggestions(mSuggestPuncList, false, false, false);
+        if (mRimeInComposition) {
+            showSuggestions(mWord);
+        } else {
+            setSuggestions(mSuggestPuncList, false, false, false);
+        }
     }
 
     private void addToDictionaries(CharSequence suggestion, int frequencyDelta) {
