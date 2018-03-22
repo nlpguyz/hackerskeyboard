@@ -2340,8 +2340,6 @@ public class LatinIME extends InputMethodService implements
             if (primaryCode != ASCII_ENTER) {
                 mJustAddedAutoSpace = false;
             }
-            mRimeInComposition = false; // reset when a new char is received
-            mRimeSelection.setLength(0);
             RingCharBuffer.getInstance().push((char) primaryCode, x, y);
             LatinImeLogger.logOnInputChar();
             if (isWordSeparator(primaryCode)) {
@@ -2585,6 +2583,8 @@ public class LatinIME extends InputMethodService implements
                 // could be either auto-caps or manual shift.
                 mWord.setFirstCharCapitalized(true);
             }
+            mRimeInComposition = false; // reset when a new char is received
+            mRimeSelection.setLength(0);
             mComposing.append((char) primaryCode);
             mWord.add(primaryCode, keyCodes);
             InputConnection ic = getCurrentInputConnection();
@@ -2647,12 +2647,12 @@ public class LatinIME extends InputMethodService implements
             // This is temporary. Better use existing logic to do it.
             // Check if user entered anything
             CharSequence composing = mWord.getTypedWord();
-            boolean isComposing = composing != null && composing.length() > 0;
+            boolean isComposing = mPredicting && composing != null && composing.length() > 0;
 
             // Commit first candidate
             if (isComposing) {
-                // TODO try pickDefaultSuggestion
-                commitFirstCandidate();
+                pickFirstSuggestion();
+                //commitFirstCandidate();
             }
 
             // If the key is SPACE, do not add the separator.
@@ -2960,6 +2960,12 @@ public class LatinIME extends InputMethodService implements
 
         }
         return false;
+    }
+
+    private void pickFirstSuggestion() {
+        List<CharSequence> suggestions = mCandidateView.getSuggestions();
+        if (suggestions != null && !suggestions.isEmpty())
+            pickSuggestionManually(0, suggestions.get(0));
     }
 
     public void pickSuggestionManually(int index, CharSequence suggestion) {
