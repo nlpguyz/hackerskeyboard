@@ -2652,7 +2652,6 @@ public class LatinIME extends InputMethodService implements
             // Commit first candidate
             if (isComposing) {
                 pickFirstSuggestion();
-                //commitFirstCandidate();
             }
 
             // If the key is SPACE, do not add the separator.
@@ -2711,14 +2710,6 @@ public class LatinIME extends InputMethodService implements
         }
         if (pickedDefault) {
             TextEntryState.backToAcceptedDefault(mWord.getTypedWord());
-        }
-    }
-
-    private boolean commitFirstCandidate() {
-        if (mCandidateView != null) {
-            return mCandidateView.sendFirstSuggestion();
-        } else {
-            return false;
         }
     }
 
