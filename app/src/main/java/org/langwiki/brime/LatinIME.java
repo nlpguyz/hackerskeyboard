@@ -326,7 +326,7 @@ public class LatinIME extends InputMethodService implements
     // Delay commit until composition is done
     private boolean mRimeFullCompositionCommit = true;
     // Rime is doing composition
-    private boolean mRimeInComposition = false;
+    private boolean mRimeInSelection = false;
     private StringBuilder mRimeSelection = new StringBuilder();
 
     protected Handler mRimeHandler;
@@ -2583,10 +2583,9 @@ public class LatinIME extends InputMethodService implements
                 // could be either auto-caps or manual shift.
                 mWord.setFirstCharCapitalized(true);
             }
-            mRimeInComposition = false; // reset when a new char is received
-            mRimeSelection.setLength(0);
             mComposing.append((char) primaryCode);
             mWord.add(primaryCode, keyCodes);
+            handleCharacterCJK(primaryCode);
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
                 // If it's the first letter, make note of auto-caps state
@@ -2605,6 +2604,14 @@ public class LatinIME extends InputMethodService implements
             measureCps();
         TextEntryState.typedCharacter((char) primaryCode,
                 isWordSeparator(primaryCode));
+    }
+
+    private void handleCharacterCJK(int primaryCode) {
+        if (!isCJK())
+            return;
+        mRimeInSelection = false; // reset when a new char is received
+        mRimeSelection.setLength(0);
+        //mKeyboardSwitcher.setTemporaryKeyboardMode(true);
     }
 
     private void handleSeparator(int primaryCode) {
@@ -2805,6 +2812,11 @@ public class LatinIME extends InputMethodService implements
             mCandidateView.setSuggestions(suggestions, completions,
                     typedWordValid, haveMinimalSuggestion);
         }
+
+        // This is a good place to update the button state
+        if (isCJK()) {
+            mKeyboardSwitcher.setTemporaryKeyboardMode(mPredicting);
+        }
     }
 
     private void updateSuggestions() {
@@ -2860,7 +2872,7 @@ public class LatinIME extends InputMethodService implements
         List<CharSequence> stringList = new ArrayList<>();
 
         if (typedWord != null) {
-            if (!mRimeInComposition) {
+            if (!mRimeInSelection) {
                 mRime.setComposition(typedWord);
             }
 
@@ -3134,11 +3146,11 @@ public class LatinIME extends InputMethodService implements
 
         // TODO check completion logic
         if (newCompositionText.isEmpty()) {
-            mRimeInComposition = false;
+            mRimeInSelection = false;
             return mRimeSelection.toString();
         }
 
-        mRimeInComposition = true;
+        mRimeInSelection = true;
         return null;
     }
 
@@ -3271,7 +3283,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void setNextSuggestions() {
-        if (mRimeInComposition) {
+        if (mRimeInSelection) {
             showSuggestions(mWord);
         } else {
             setSuggestions(mSuggestPuncList, false, false, false);

@@ -20,8 +20,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.InflateException;
+import android.view.inputmethod.EditorInfo;
 
 import java.lang.ref.SoftReference;
 import java.util.Arrays;
@@ -159,6 +159,14 @@ public class KeyboardSwitcher implements
         sInstance.mSymbolsShiftedId = sInstance.makeSymbolsShiftedId(false);
     }
 
+    class KeyboardMode {
+        public int mode;
+        public int imeOptions;
+        public boolean enableVoice;
+    }
+
+    KeyboardMode mLastKeyboardMode = new KeyboardMode();
+
     /**
      * Sets the input locale, when there are multiple locales for input. If no
      * locale switching is required, then the locale should be set to null.
@@ -274,6 +282,13 @@ public class KeyboardSwitcher implements
     }
 
     public void setKeyboardMode(int mode, int imeOptions, boolean enableVoice) {
+        mLastKeyboardMode.mode = mode;
+        mLastKeyboardMode.imeOptions = imeOptions;
+        mLastKeyboardMode.enableVoice = enableVoice;
+        setKeyboardModeInternal(mode, imeOptions, enableVoice);
+    }
+
+    private void setKeyboardModeInternal(int mode, int imeOptions, boolean enableVoice) {
         mAutoModeSwitchState = AUTO_MODE_SWITCH_STATE_ALPHA;
         mPreferSymbols = mode == MODE_SYMBOLS;
         if (mode == MODE_SYMBOLS) {
@@ -284,6 +299,20 @@ public class KeyboardSwitcher implements
         } catch (RuntimeException e) {
             LatinImeLogger.logOnException(mode + "," + imeOptions + ","
                     + mPreferSymbols, e);
+        }
+    }
+
+    public void setTemporaryKeyboardMode(boolean showEnter) {
+        if (showEnter) {
+            int imeOptions = mLastKeyboardMode.imeOptions & ~EditorInfo.IME_MASK_ACTION
+                    | EditorInfo.IME_ACTION_UNSPECIFIED;
+            setKeyboardModeInternal(mLastKeyboardMode.mode,
+                    imeOptions,
+                    mLastKeyboardMode.enableVoice);
+        } else {
+            setKeyboardModeInternal(mLastKeyboardMode.mode,
+                    mLastKeyboardMode.imeOptions,
+                    mLastKeyboardMode.enableVoice);
         }
     }
 
