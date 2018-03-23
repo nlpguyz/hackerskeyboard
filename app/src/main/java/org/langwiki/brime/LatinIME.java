@@ -2611,7 +2611,6 @@ public class LatinIME extends InputMethodService implements
             return;
         mRimeInSelection = false; // reset when a new char is received
         mRimeSelection.setLength(0);
-        //mKeyboardSwitcher.setTemporaryKeyboardMode(true);
     }
 
     private void handleSeparator(int primaryCode) {
@@ -2658,11 +2657,15 @@ public class LatinIME extends InputMethodService implements
 
             // Commit first candidate
             if (isComposing) {
+                if (primaryCode == ASCII_ENTER) {
+                    pickSuggestion(composing, false);
+                    return;
+                }
                 pickFirstSuggestion();
             }
 
             // If the key is SPACE, do not add the separator.
-            if (isComposing && primaryCode == ASCII_SPACE) {
+            if (isComposing && (primaryCode == ASCII_SPACE)) {
                 return;
             }
         }
