@@ -2661,7 +2661,7 @@ public class LatinIME extends InputMethodService implements
                     pickSuggestion(composing, false);
                     return;
                 }
-                pickFirstSuggestion();
+                pickFirstSuggestionOrTypedText();
             }
 
             // If the key is SPACE, do not add the separator.
@@ -2968,10 +2968,13 @@ public class LatinIME extends InputMethodService implements
         return false;
     }
 
-    private void pickFirstSuggestion() {
+    private void pickFirstSuggestionOrTypedText() {
         List<CharSequence> suggestions = mCandidateView.getSuggestions();
-        if (suggestions != null && !suggestions.isEmpty())
+        if (suggestions != null && !suggestions.isEmpty()) {
             pickSuggestionManually(0, suggestions.get(0));
+        } else {
+            pickSuggestion(mWord.getTypedWord(), false);
+        }
     }
 
     public void pickSuggestionManually(int index, CharSequence suggestion) {
