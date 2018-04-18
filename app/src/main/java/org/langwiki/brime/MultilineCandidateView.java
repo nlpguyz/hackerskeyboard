@@ -265,23 +265,12 @@ public class MultilineCandidateView extends View {
 
         int x = 0;
         int y = sy;
+
+        // measure pass
         for (int i = 0; i < count; i++) {
             CharSequence suggestion = mSuggestions.get(i);
             if (suggestion == null) continue;
             final int wordLength = suggestion.length();
-
-            // Handle color
-            paint.setColor(mColorNormal);
-            if (mHaveMinimalSuggestion 
-                    && ((i == 1 && !typedWordValid) || (i == 0 && typedWordValid))) {
-                paint.setTypeface(Typeface.DEFAULT_BOLD);
-                paint.setColor(mColorRecommended);
-                existsAutoCompletion = true;
-            } else if (i != 0 || (wordLength == 1 && count > 1)) {
-                // HACK: even if i == 0, we use mColorOther when this suggestion's length is 1 and
-                // there are multiple suggestions, such as the default punctuation list.
-                paint.setColor(mColorOther);
-            }
 
             // Measure word width
             int wordWidth;
@@ -301,7 +290,35 @@ public class MultilineCandidateView extends View {
             mWordX[i] = x;
             mWordY[i] = y;
 
+            mTotalWidth = Math.max(mTotalWidth, x);
+            mTotalHeight = Math.max(mTotalHeight, y); // Add the line height
+        }
+
+        // draw pass
+        for (int i = 0; i < count; i++) {
+            x = mWordX[i];
+            y = mWordY[i];
+
+            CharSequence suggestion = mSuggestions.get(i);
+            if (suggestion == null) continue;
+            final int wordLength = suggestion.length();
+            final int wordWidth = mWordWidth[i];
+
+            // Handle color
+            paint.setColor(mColorNormal);
+            if (mHaveMinimalSuggestion 
+                    && ((i == 1 && !typedWordValid) || (i == 0 && typedWordValid))) {
+                paint.setTypeface(Typeface.DEFAULT_BOLD);
+                paint.setColor(mColorRecommended);
+                existsAutoCompletion = true;
+            } else if (i != 0 || (wordLength == 1 && count > 1)) {
+                // HACK: even if i == 0, we use mColorOther when this suggestion's length is 1 and
+                // there are multiple suggestions, such as the default punctuation list.
+                paint.setColor(mColorOther);
+            }
+
             // Draw the highlight
+            // TODO process touchY
             if (touchX != OUT_OF_BOUNDS_X_COORD && !scrolled
                     && touchX + scrollX >= x && touchX + scrollX < x + wordWidth) {
                 if (canvas != null && !mShowingAddToDictionary) {
@@ -315,7 +332,6 @@ public class MultilineCandidateView extends View {
             }
 
             // Draw the text
-            // TODO: change this to two passes, measure and draw, because the canvas needs to be
             // resized
             if (canvas != null) {
                 canvas.drawText(suggestion, 0, wordLength, x + wordWidth / 2, y, paint);
@@ -328,12 +344,11 @@ public class MultilineCandidateView extends View {
                 canvas.translate(-x - wordWidth, 0);
             }
             paint.setTypeface(Typeface.DEFAULT);
-            x += wordWidth;
         }
+
         if (!isInEditMode())
             mService.onAutoCompletionStateChanged(existsAutoCompletion);
-        mTotalWidth = Math.max(mTotalWidth, x);
-        mTotalHeight = Math.max(mTotalHeight, y); // Add the line height
+
         if (mTargetScrollX != scrollX || mTargetScrollY != scrollY) {
             scrollToTarget();
         }

@@ -331,6 +331,7 @@ public class CandidateView extends View {
         mTargetScrollX = 0;
         mHaveMinimalSuggestion = haveMinimalSuggestion;
         // Compute the total width
+        // FIXME don't call ondraw
         onDraw(null);
         invalidate();
         requestLayout();
