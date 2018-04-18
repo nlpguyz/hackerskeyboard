@@ -181,7 +181,7 @@ public class LatinIME extends InputMethodService implements
 
     // private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
-    private CandidateView mCandidateView;
+    private MultilineCandidateView mCandidateView;
     private Suggest mSuggest;
     private CompletionInfo[] mCompletions;
 
@@ -857,7 +857,7 @@ public class LatinIME extends InputMethodService implements
         if (mCandidateViewContainer == null) {
             mCandidateViewContainer = (LinearLayout) getLayoutInflater().inflate(
                     R.layout.candidates, null);
-            mCandidateView = (CandidateView) mCandidateViewContainer
+            mCandidateView = mCandidateViewContainer
             .findViewById(R.id.candidates);
             mCandidateView.setPadding(0, 0, 0, 0);
             mCandidateView.setService(this);
