@@ -38,10 +38,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/*
+   Make this view wrap after a width limit.
+
+   TODO
+     1. two pass drawing
+     2. add an expand button on top-right corner
+ */
 public class MultilineCandidateView extends View {
 
     private static final int OUT_OF_BOUNDS_WORD_INDEX = -1;
     private static final int OUT_OF_BOUNDS_X_COORD = -1;
+    private static final int OUT_OF_BOUNDS_Y_COORD = -1;
 
     private LatinIME mService;
     private final ArrayList<CharSequence> mSuggestions = new ArrayList<CharSequence>();
@@ -49,6 +57,7 @@ public class MultilineCandidateView extends View {
     private CharSequence mSelectedString;
     private int mSelectedIndex;
     private int mTouchX = OUT_OF_BOUNDS_X_COORD;
+    private int mTouchY = OUT_OF_BOUNDS_Y_COORD;
     private final Drawable mSelectionHighlight;
     private boolean mTypedWordValid;
 
@@ -66,10 +75,13 @@ public class MultilineCandidateView extends View {
 
     private final int[] mWordWidth = new int[MAX_SUGGESTIONS];
     private final int[] mWordX = new int[MAX_SUGGESTIONS];
+    private final int[] mWordY = new int[MAX_SUGGESTIONS]; // NEW
+
     private int mPopupPreviewX;
     private int mPopupPreviewY;
 
     private static final int X_GAP = 10;
+    private static final int X_RIGHT_MARGIN = 0;
 
     private final int mColorNormal;
     private final int mColorRecommended;
@@ -81,6 +93,7 @@ public class MultilineCandidateView extends View {
     private CharSequence mAddToDictionaryHint;
 
     private int mTargetScrollX;
+    private int mTargetScrollY; // NEW
 
     private final int mMinTouchableWidth;
 
@@ -173,6 +186,7 @@ public class MultilineCandidateView extends View {
             final int width = getWidth();
             mScrolled = true;
             int scrollX = getScrollX();
+            int scrollY = getScrollY();
             scrollX += (int) distanceX;
             if (scrollX < 0) {
                 scrollX = 0;
@@ -181,6 +195,7 @@ public class MultilineCandidateView extends View {
                 scrollX -= (int) distanceX;
             }
             mTargetScrollX = scrollX;
+            mTargetScrollY = scrollY;
             scrollTo(scrollX, getScrollY());
             hidePreview();
             invalidate();
@@ -209,6 +224,8 @@ public class MultilineCandidateView extends View {
     /**
      * If the canvas is null, then only touch calculations are performed to pick the target
      * candidate.
+     *
+     * Draw the view and determine its total size. Apply X_LIMIT
      */
     @Override
     protected void onDraw(Canvas canvas) {
@@ -216,8 +233,13 @@ public class MultilineCandidateView extends View {
             super.onDraw(canvas);
         }
         mTotalWidth = 0;
-        
+        int xLimit = getWidth() - X_RIGHT_MARGIN; // NEW
+
+        // The default height. The needed height for enclosing all candidates is computed when the
+        // method finishes.
         final int height = getHeight();
+
+        // Create background padding (the padding between drawable and the text)
         if (mBgPadding == null) {
             mBgPadding = new Rect(0, 0, 0, 0);
             if (getBackground() != null) {
@@ -231,19 +253,24 @@ public class MultilineCandidateView extends View {
         final Rect bgPadding = mBgPadding;
         final Paint paint = mPaint;
         final int touchX = mTouchX;
+        final int touchY = mTouchY; // NEW
         final int scrollX = getScrollX();
+        final int scrollY = getScrollY(); // NEW
         final boolean scrolled = mScrolled;
         final boolean typedWordValid = mTypedWordValid;
-        final int y = (int) (height + mPaint.getTextSize() - mDescent) / 2;
+        // The start y for drawing text
+        final int sy = (int) (height + mPaint.getTextSize() - mDescent) / 2;
 
         boolean existsAutoCompletion = false;
 
         int x = 0;
+        int y = sy;
         for (int i = 0; i < count; i++) {
             CharSequence suggestion = mSuggestions.get(i);
             if (suggestion == null) continue;
             final int wordLength = suggestion.length();
 
+            // Handle color
             paint.setColor(mColorNormal);
             if (mHaveMinimalSuggestion 
                     && ((i == 1 && !typedWordValid) || (i == 0 && typedWordValid))) {
@@ -255,6 +282,8 @@ public class MultilineCandidateView extends View {
                 // there are multiple suggestions, such as the default punctuation list.
                 paint.setColor(mColorOther);
             }
+
+            // Measure word width
             int wordWidth;
             if ((wordWidth = mWordWidth[i]) == 0) {
                 float textWidth =  paint.measureText(suggestion, 0, wordLength);
@@ -262,8 +291,17 @@ public class MultilineCandidateView extends View {
                 mWordWidth[i] = wordWidth;
             }
 
-            mWordX[i] = x;
+            // Determine the position of the word
+            boolean newLine = x + wordWidth >= xLimit;
+            if (newLine) {
+                x = 0;
+                y += height; // TODO make sure this is the line height
+            }
 
+            mWordX[i] = x;
+            mWordY[i] = y;
+
+            // Draw the highlight
             if (touchX != OUT_OF_BOUNDS_X_COORD && !scrolled
                     && touchX + scrollX >= x && touchX + scrollX < x + wordWidth) {
                 if (canvas != null && !mShowingAddToDictionary) {
@@ -276,6 +314,9 @@ public class MultilineCandidateView extends View {
                 mSelectedIndex = i;
             }
 
+            // Draw the text
+            // TODO: change this to two passes, measure and draw, because the canvas needs to be
+            // resized
             if (canvas != null) {
                 canvas.drawText(suggestion, 0, wordLength, x + wordWidth / 2, y, paint);
                 paint.setColor(mColorOther);
@@ -291,13 +332,15 @@ public class MultilineCandidateView extends View {
         }
         if (!isInEditMode())
             mService.onAutoCompletionStateChanged(existsAutoCompletion);
-        mTotalWidth = x;
-        if (mTargetScrollX != scrollX) {
+        mTotalWidth = Math.max(mTotalWidth, x);
+        mTotalHeight = Math.max(mTotalHeight, y); // Add the line height
+        if (mTargetScrollX != scrollX || mTargetScrollY != scrollY) {
             scrollToTarget();
         }
     }
 
     private void scrollToTarget() {
+        // TODO Handle Y scroll
         int scrollX = getScrollX();
         if (mTargetScrollX > scrollX) {
             scrollX += SCROLL_PIXELS;
@@ -370,6 +413,7 @@ public class MultilineCandidateView extends View {
         // in LatinIME.pickSuggestionManually().
         mSuggestions.clear();
         mTouchX = OUT_OF_BOUNDS_X_COORD;
+        mTouchY = OUT_OF_BOUNDS_Y_COORD;
         mSelectedString = null;
         mSelectedIndex = -1;
         mShowingAddToDictionary = false;
@@ -389,6 +433,7 @@ public class MultilineCandidateView extends View {
         int x = (int) me.getX();
         int y = (int) me.getY();
         mTouchX = x;
+        mTouchY = y;
 
         switch (action) {
         case MotionEvent.ACTION_DOWN:
@@ -396,6 +441,7 @@ public class MultilineCandidateView extends View {
             break;
         case MotionEvent.ACTION_MOVE:
             if (y <= 0) {
+                // TODO: For fling up, check delta instead of absolute pos
                 // Fling up!?
                 if (mSelectedString != null) {
                     // If there are completions from the application, we don't change the state to
@@ -413,6 +459,7 @@ public class MultilineCandidateView extends View {
             }
             break;
         case MotionEvent.ACTION_UP:
+            // TODO: support clicking on all rows
             if (!mScrolled) {
                 if (mSelectedString != null) {
                     if (mShowingAddToDictionary) {
@@ -439,6 +486,7 @@ public class MultilineCandidateView extends View {
 
     private void hidePreview() {
         mTouchX = OUT_OF_BOUNDS_X_COORD;
+        mTouchY = OUT_OF_BOUNDS_Y_COORD;
         mCurrentWordIndex = OUT_OF_BOUNDS_WORD_INDEX;
         mPreviewPopup.dismiss();
     }
