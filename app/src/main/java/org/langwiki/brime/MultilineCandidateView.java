@@ -30,7 +30,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -104,6 +106,8 @@ public class MultilineCandidateView extends View {
     private int mTotalHeight;
 
     private final GestureDetector mGestureDetector;
+    private boolean mExpanded;
+    private int defaultHeight;
 
     /**
      * Construct a CandidateView for showing suggested words for completion.
@@ -146,6 +150,9 @@ public class MultilineCandidateView extends View {
         setHorizontalScrollBarEnabled(false);
         setVerticalScrollBarEnabled(false);
         scrollTo(0, getScrollY());
+
+        mExpanded = false;
+        defaultHeight = -1;
     }
 
     private class CandidateStripGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -241,6 +248,9 @@ public class MultilineCandidateView extends View {
         // The default height. The needed height for enclosing all candidates is computed when the
         // method finishes.
         final int height = getHeight();
+        if (defaultHeight == -1) {
+            defaultHeight = getHeight();
+        }
 
         // Create background padding (the padding between drawable and the text)
         if (mBgPadding == null) {
@@ -559,5 +569,26 @@ public class MultilineCandidateView extends View {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         hidePreview();
+    }
+
+    public int[] getExpandedSize() {
+        int w = mTotalWidth;
+        int h = mTotalHeight;
+        h = Math.min(h, 300); // TODO use the right height limit
+        return new int[] {w, h};
+    }
+
+    public boolean isExpanded() {
+        return mExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        int[] fullSize;
+        if (expanded) {
+            fullSize = getExpandedSize();
+        } else {
+            fullSize = new int[] {getWidth(), defaultHeight};
+        }
+        setLayoutParams(new LinearLayout.LayoutParams(fullSize[0], fullSize[1]));
     }
 }

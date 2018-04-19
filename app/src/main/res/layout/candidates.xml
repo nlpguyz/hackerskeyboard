@@ -36,6 +36,7 @@
         />
 
     <ImageButton
+        android:id="@+id/candidate_expand_button"
         android:layout_width="40dip"
         android:layout_height="40dip"
         android:src="@drawable/down_arrow"

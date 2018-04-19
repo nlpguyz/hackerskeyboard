@@ -79,6 +79,7 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputBinding;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -182,6 +183,7 @@ public class LatinIME extends InputMethodService implements
     // private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
     private MultilineCandidateView mCandidateView;
+    private ImageButton mCandidateExpandButton;
     private Suggest mSuggest;
     private CompletionInfo[] mCompletions;
 
@@ -857,13 +859,24 @@ public class LatinIME extends InputMethodService implements
         if (mCandidateViewContainer == null) {
             mCandidateViewContainer = (LinearLayout) getLayoutInflater().inflate(
                     R.layout.candidates, null);
-            mCandidateView = mCandidateViewContainer
-            .findViewById(R.id.candidates);
+            mCandidateView = mCandidateViewContainer.findViewById(R.id.candidates);
             mCandidateView.setPadding(0, 0, 0, 0);
             mCandidateView.setService(this);
             setCandidatesView(mCandidateViewContainer);
+
+            mCandidateExpandButton = mCandidateViewContainer.findViewById(R.id.candidate_expand_button);
+            mCandidateExpandButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleCandidateExpansion();
+                }
+            });
         }
         return mCandidateViewContainer;
+    }
+
+    private void toggleCandidateExpansion() {
+        mCandidateView.setExpanded(!mCandidateView.isExpanded());
     }
 
     private void removeCandidateViewContainer() {
