@@ -84,7 +84,7 @@ public class MultilineCandidateView extends View {
     private int mPopupPreviewY;
 
     private static final int X_GAP = 10;
-    private static final int X_RIGHT_MARGIN = 100; // XXX
+    private static final int X_RIGHT_MARGIN = 50;
 
     private final int mColorNormal;
     private final int mColorRecommended;
