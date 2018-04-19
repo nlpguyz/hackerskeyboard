@@ -26,13 +26,20 @@
         android:background="@drawable/keyboard_suggest_strip"
         >
 
-    <org.langwiki.brime.CandidateView
+    <org.langwiki.brime.MultilineCandidateView
         android:id="@+id/candidates"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="@dimen/candidate_strip_height"
         android:layout_weight="1"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="@dimen/candidate_strip_fading_edge_length"
         />
-        
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/down_arrow"
+        android:layout_marginLeft="10dip"
+        />
+
 </LinearLayout>

@@ -42,8 +42,11 @@ import java.util.List;
    Make this view wrap after a width limit.
 
    TODO
-     1. two pass drawing
+     1. two pass drawing (d)
      2. add an expand button on top-right corner
+        a. expand candidate view to full size when clicked on
+        b. shrinks the view when clicked on again
+     3. handle selection
  */
 public class MultilineCandidateView extends View {
 
@@ -81,7 +84,7 @@ public class MultilineCandidateView extends View {
     private int mPopupPreviewY;
 
     private static final int X_GAP = 10;
-    private static final int X_RIGHT_MARGIN = 0;
+    private static final int X_RIGHT_MARGIN = 100; // XXX
 
     private final int mColorNormal;
     private final int mColorRecommended;
@@ -289,6 +292,8 @@ public class MultilineCandidateView extends View {
 
             mWordX[i] = x;
             mWordY[i] = y;
+
+            x += wordWidth;
 
             mTotalWidth = Math.max(mTotalWidth, x);
             mTotalHeight = Math.max(mTotalHeight, y); // Add the line height
