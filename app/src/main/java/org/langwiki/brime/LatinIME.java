@@ -65,6 +65,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.PrintWriterPrinter;
 import android.util.Printer;
+import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.View;
@@ -81,6 +82,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import java.io.File;
@@ -182,7 +184,9 @@ public class LatinIME extends InputMethodService implements
 
     // private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
+    private View mCandidateViewPlaceholder;
     private MultilineCandidateView mCandidateView;
+    private PopupWindow mCandidatePopupWindow;
     private ImageButton mCandidateExpandButton;
     private Suggest mSuggest;
     private CompletionInfo[] mCompletions;
@@ -859,18 +863,37 @@ public class LatinIME extends InputMethodService implements
         if (mCandidateViewContainer == null) {
             mCandidateViewContainer = (LinearLayout) getLayoutInflater().inflate(
                     R.layout.candidates, null);
-            mCandidateView = mCandidateViewContainer.findViewById(R.id.candidates);
+
+            View candidateWindow = getLayoutInflater().inflate(R.layout.candidate_window,null);
+            mCandidateView = candidateWindow.findViewById(R.id.candidates);
+
             mCandidateView.setPadding(0, 0, 0, 0);
             mCandidateView.setService(this);
+            mCandidateViewPlaceholder = mCandidateViewContainer.findViewById(R.id.candidates_placeholder);
             setCandidatesView(mCandidateViewContainer);
 
-            mCandidateExpandButton = mCandidateViewContainer.findViewById(R.id.candidate_expand_button);
+            mCandidateExpandButton = candidateWindow.findViewById(R.id.candidate_expand_button);
             mCandidateExpandButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleCandidateExpansion();
                 }
             });
+
+            mCandidatePopupWindow = new PopupWindow(
+                    candidateWindow,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            // Set an elevation value for popup window
+            // Call requires API level 21
+            if(Build.VERSION.SDK_INT>=21){
+                mCandidatePopupWindow.setElevation(5.0f);
+            }
+
+            // Finally, show the popup window at the center location of root relative layout
+            mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.CENTER,0,0);
         }
         return mCandidateViewContainer;
     }
