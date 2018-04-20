@@ -888,12 +888,12 @@ public class LatinIME extends InputMethodService implements
 
             // Set an elevation value for popup window
             // Call requires API level 21
-            if(Build.VERSION.SDK_INT>=21){
+            if(Build.VERSION.SDK_INT >= 21){
                 mCandidatePopupWindow.setElevation(5.0f);
             }
 
             // Finally, show the popup window at the center location of root relative layout
-            mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.CENTER,0,0);
+            mCandidatePopupWindow.showAtLocation(mCandidateViewPlaceholder, Gravity.START,0,0);
         }
         return mCandidateViewContainer;
     }
