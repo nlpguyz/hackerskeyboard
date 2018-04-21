@@ -892,10 +892,14 @@ public class LatinIME extends InputMethodService implements
                 mCandidatePopupWindow.setElevation(5.0f);
             }
 
-            // Finally, show the popup window at the center location of root relative layout
-            mCandidatePopupWindow.showAtLocation(mCandidateViewPlaceholder, Gravity.START,0,0);
+            showCandidates();
         }
         return mCandidateViewContainer;
+    }
+
+    private void showCandidates() {
+        // Finally, show the popup window at the center location of root relative layout
+        mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.START,0,0);
     }
 
     private void toggleCandidateExpansion() {
@@ -2898,6 +2902,7 @@ public class LatinIME extends InputMethodService implements
         } else {
             showSuggestionsLatin(word);
         }
+        showCandidates();
     }
 
     private void showSuggestionsCJK(WordComposer word) {
