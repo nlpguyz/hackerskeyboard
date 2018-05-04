@@ -10,3 +10,4 @@ TODO list
   - Install to local dir
 - Fine control the IME key
   - Change to enter while composing (setImeOptions)
+- Add jav8 integration

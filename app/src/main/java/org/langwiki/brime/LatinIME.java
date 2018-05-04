@@ -183,7 +183,10 @@ public class LatinIME extends InputMethodService implements
     private static final int POS_DEBUG_SETTINGS = 9;
 
     // private LatinKeyboardView mInputView;
+
+    // The candidate view layout
     private LinearLayout mCandidateViewContainer;
+    // The placeholder for showing candidates. The real candidates are shown in popup aligned to this view
     private View mCandidateViewPlaceholder;
     private MultilineCandidateView mCandidateView;
     private PopupWindow mCandidatePopupWindow;
@@ -861,6 +864,7 @@ public class LatinIME extends InputMethodService implements
         //Log.i(TAG, "onCreateCandidatesView(), mCandidateViewContainer=" + mCandidateViewContainer);
         //mKeyboardSwitcher.makeKeyboards(true);
         if (mCandidateViewContainer == null) {
+            // This is the candidate view layout
             mCandidateViewContainer = (LinearLayout) getLayoutInflater().inflate(
                     R.layout.candidates, null);
 
@@ -888,9 +892,9 @@ public class LatinIME extends InputMethodService implements
 
             // Set an elevation value for popup window
             // Call requires API level 21
-            if(Build.VERSION.SDK_INT >= 21){
+            //if (Build.VERSION.SDK_INT >= 21){
                 mCandidatePopupWindow.setElevation(5.0f);
-            }
+            //}
 
             showCandidates();
         }
@@ -899,7 +903,14 @@ public class LatinIME extends InputMethodService implements
 
     private void showCandidates() {
         // Finally, show the popup window at the center location of root relative layout
-        mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.START,0,0);
+        // popupWindow.showAtLocation(anyViewOnlyNeededForWindowToken, Gravity.CENTER, 0, 0);
+        // mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.TOP | Gravity.START,0,0);
+        mCandidatePopupWindow.showAtLocation(mCandidateViewPlaceholder, Gravity.NO_GRAVITY,20,20);
+
+        // Update location of the popup
+        int pos[] = new int[2];
+        mCandidateViewPlaceholder.getLocationInWindow(pos);
+        Log.i(TAG, String.format("CandidateViewPlaceholder getLocationInWindow (%d, %d)", pos[0], pos[1]));
     }
 
     private void toggleCandidateExpansion() {

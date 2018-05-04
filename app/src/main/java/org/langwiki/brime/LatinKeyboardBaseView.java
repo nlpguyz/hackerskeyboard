@@ -79,7 +79,7 @@ import java.util.WeakHashMap;
  * @attr ref R.styleable#LatinKeyboardBaseView_popupLayout
  */
 public class LatinKeyboardBaseView extends View implements PointerTracker.UIProxy {
-    private static final String TAG = "HK/LatinKbdBaseView";
+    private static final String TAG = "BRime";
     private static final boolean DEBUG = false;
 
     public static final int NOT_A_TOUCH_COORDINATE = -1;
@@ -1260,11 +1260,15 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
 
         if (mPreviewPopup.isShowing()) {
             mPreviewPopup.update(popupPreviewX, popupPreviewY, popupWidth, popupHeight);
+            Log.i(TAG, String.format("mPreviewPopup update %d,%d,%d,%d", popupPreviewX,
+                    popupPreviewY, popupWidth, popupHeight));
         } else {
             mPreviewPopup.setWidth(popupWidth);
             mPreviewPopup.setHeight(popupHeight);
             mPreviewPopup.showAtLocation(mMiniKeyboardParent, Gravity.NO_GRAVITY,
                     popupPreviewX, popupPreviewY);
+            Log.i(TAG, String.format("mPreviewPopup show@loc %d,%d,%d,%d", popupPreviewX,
+                    popupPreviewY, popupWidth, popupHeight));
         }
         // Record popup preview position to display mini-keyboard later at the same positon
         mPopupPreviewDisplayedY = popupPreviewY;
