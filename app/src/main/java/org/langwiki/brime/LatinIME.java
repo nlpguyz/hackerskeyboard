@@ -190,6 +190,7 @@ public class LatinIME extends InputMethodService implements
     private View mCandidateViewPlaceholder;
     private MultilineCandidateView mCandidateView;
     private PopupWindow mCandidatePopupWindow;
+    private PopupWindow mImagePopopWindow; // For testing
     private ImageButton mCandidateExpandButton;
     private Suggest mSuggest;
     private CompletionInfo[] mCompletions;
@@ -896,21 +897,37 @@ public class LatinIME extends InputMethodService implements
                 mCandidatePopupWindow.setElevation(5.0f);
             //}
 
+            // For testing popup windows
+            View simpleImageView = getLayoutInflater().inflate(R.layout.simple_image_view,null);
+            mImagePopopWindow = new PopupWindow(
+                    simpleImageView,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            mImagePopopWindow.setElevation(5.0f);
+
             showCandidates();
         }
         return mCandidateViewContainer;
     }
 
     private void showCandidates() {
+        View window = mKeyboardSwitcher.getInputView();
+
         // Finally, show the popup window at the center location of root relative layout
         // popupWindow.showAtLocation(anyViewOnlyNeededForWindowToken, Gravity.CENTER, 0, 0);
         // mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.TOP | Gravity.START,0,0);
-        mCandidatePopupWindow.showAtLocation(mCandidateViewPlaceholder, Gravity.NO_GRAVITY,20,20);
+        mCandidatePopupWindow.showAtLocation(
+                window, // FIXME needs a view in the main hierarchy
+                Gravity.NO_GRAVITY,20,20);
 
         // Update location of the popup
         int pos[] = new int[2];
         mCandidateViewPlaceholder.getLocationInWindow(pos);
         Log.i(TAG, String.format("CandidateViewPlaceholder getLocationInWindow (%d, %d)", pos[0], pos[1]));
+
+        // Test popup
+        mImagePopopWindow.showAtLocation(window, Gravity.NO_GRAVITY,20,20);
     }
 
     private void toggleCandidateExpansion() {

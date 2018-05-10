@@ -35,5 +35,4 @@
         android:fadingEdgeLength="@dimen/candidate_strip_fading_edge_length"
         />
 
-
 </LinearLayout>
