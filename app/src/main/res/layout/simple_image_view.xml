@@ -7,7 +7,7 @@
         android:id="@+id/candidate_expand_button"
         android:layout_width="40dip"
         android:layout_height="40dip"
-        android:src="@drawable/down_arrow"
+        android:src="@drawable/sym_keyboard_shift_lock"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="5dp"

@@ -918,7 +918,7 @@ public class LatinIME extends InputMethodService implements
         // popupWindow.showAtLocation(anyViewOnlyNeededForWindowToken, Gravity.CENTER, 0, 0);
         // mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.TOP | Gravity.START,0,0);
         mCandidatePopupWindow.showAtLocation(
-                window, // FIXME needs a view in the main hierarchy
+                window,
                 Gravity.NO_GRAVITY,20,20);
 
         // Update location of the popup
@@ -927,7 +927,7 @@ public class LatinIME extends InputMethodService implements
         Log.i(TAG, String.format("CandidateViewPlaceholder getLocationInWindow (%d, %d)", pos[0], pos[1]));
 
         // Test popup
-        mImagePopopWindow.showAtLocation(window, Gravity.NO_GRAVITY,20,20);
+        mImagePopopWindow.showAtLocation(window, Gravity.NO_GRAVITY,0,0);
     }
 
     private void toggleCandidateExpansion() {
