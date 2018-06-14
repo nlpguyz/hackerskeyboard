@@ -11,6 +11,7 @@
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="@dimen/candidate_strip_fading_edge_length"
         />
+    <!-- TODO move this to unexpanded view
     <ImageButton
         android:id="@+id/candidate_expand_button"
         android:layout_width="40dip"
@@ -21,4 +22,5 @@
         android:layout_marginRight="5dp"
         android:scaleType="fitCenter"
         />
+    -->
 </LinearLayout>

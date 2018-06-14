@@ -16,6 +16,7 @@
 
 package org.langwiki.brime;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -45,10 +46,18 @@ import java.util.List;
 
    TODO
      1. two pass drawing (d)
-     2. add an expand button on top-right corner
-        a. expand candidate view to full size when clicked on
-        b. shrinks the view when clicked on again
-     3. handle selection
+     2@. add two views into the window
+         - add the two views as children
+     2a. add an unexpanded view with a custom text view and a image view button
+         - xml (d)
+     2b. add an expanded view position below the unexpanded view and set its
+         dimensions and scrollbar options
+         - xml
+     2c. drop candidate_preview.xml (use the two specialized versions instead)
+     3. add an expand button on top-right corner (2a)
+        a. when clicked on toggle visibility of the expanded view and the state of the
+           button itself.
+     4. handle selection
  */
 public class MultilineCandidateView extends View {
 
@@ -394,8 +403,9 @@ public class MultilineCandidateView extends View {
         invalidate();
     }
     
+    @SuppressLint("WrongCall")
     public void setSuggestions(List<CharSequence> suggestions, boolean completions,
-            boolean typedWordValid, boolean haveMinimalSuggestion) {
+                               boolean typedWordValid, boolean haveMinimalSuggestion) {
         clear();
         if (suggestions != null) {
             int insertCount = Math.min(suggestions.size(), MAX_SUGGESTIONS);

@@ -955,6 +955,7 @@ public class LatinIME extends InputMethodService implements
         mJustAddedAutoSpace = false;
     }
 
+
     @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
         sKeyboardSettings.editorPackageName = attribute.packageName;
