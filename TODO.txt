@@ -1,6 +1,3 @@
-Hacker's Keyboard on RIME
-=========================
-
 TODO list
 ---------
 - List active schemes
@@ -11,3 +8,13 @@ TODO list
 - Fine control the IME key
   - Change to enter while composing (setImeOptions)
 - Add jav8 integration
+- Candidate view
+  - Handle the single-line mode using in-place view
+  - Show an expand button on the right if there is more candidates
+    - Change the candidate window to a different background color
+    - Test the button for toggling the scroll view
+  - In the pop-up window show the same candidates on the first row, and
+    more stuff below.
+  - Checkpoint 1: show all candidates in the scroll view
+  - This view needs to be properly drawn for this effect.
+  - Allow accurate typing of the candidates in 2D

@@ -26,6 +26,7 @@
         android:background="@drawable/keyboard_suggest_strip"
         >
 
+    <!-- Placeholder for candidates. -->
     <TextView
         android:id="@+id/candidates_placeholder"
         android:layout_width="0dip"
@@ -33,6 +34,17 @@
         android:layout_weight="1"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="@dimen/candidate_strip_fading_edge_length"
+        />
+
+    <ImageButton
+        android:id="@+id/candidate_expand_button"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:src="@drawable/down_arrow"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitCenter"
         />
 
 </LinearLayout>

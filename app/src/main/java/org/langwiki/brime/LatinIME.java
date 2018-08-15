@@ -184,14 +184,8 @@ public class LatinIME extends InputMethodService implements
 
     // private LatinKeyboardView mInputView;
 
-    // The candidate view layout
-    private LinearLayout mCandidateViewContainer;
-    // The placeholder for showing candidates. The real candidates are shown in popup aligned to this view
-    private View mCandidateViewPlaceholder;
-    private MultilineCandidateView mCandidateView;
-    private PopupWindow mCandidatePopupWindow;
-    private PopupWindow mImagePopopWindow; // For testing
-    private ImageButton mCandidateExpandButton;
+    private CandidateController mCandiateController;
+
     private Suggest mSuggest;
     private CompletionInfo[] mCompletions;
 
@@ -520,6 +514,8 @@ public class LatinIME extends InputMethodService implements
         if (inputLanguage == null) {
             inputLanguage = conf.locale.toString();
         }
+        mCandiateController = new CandidateController(this);
+
         Resources res = getResources();
         mReCorrectionEnabled = prefs.getBoolean(PREF_RECORRECTION_ENABLED,
                 res.getBoolean(R.bool.default_recorrection_enabled));
@@ -580,6 +576,7 @@ public class LatinIME extends InputMethodService implements
         prefs.registerOnSharedPreferenceChangeListener(this);
         setNotification(mKeyboardNotification);
 
+        // RIME integration
         mRimeHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -860,94 +857,14 @@ public class LatinIME extends InputMethodService implements
     	}
     }
 
+    // Framework callback to create a candidate view.
     @Override
     public View onCreateCandidatesView() {
-        //Log.i(TAG, "onCreateCandidatesView(), mCandidateViewContainer=" + mCandidateViewContainer);
-        //mKeyboardSwitcher.makeKeyboards(true);
-        if (mCandidateViewContainer == null) {
-            // This is the candidate view layout
-            mCandidateViewContainer = (LinearLayout) getLayoutInflater().inflate(
-                    R.layout.candidates, null);
-
-            View candidateWindow = getLayoutInflater().inflate(R.layout.candidate_window,null);
-            mCandidateView = candidateWindow.findViewById(R.id.candidates);
-
-            mCandidateView.setPadding(0, 0, 0, 0);
-            mCandidateView.setService(this);
-            mCandidateViewPlaceholder = mCandidateViewContainer.findViewById(R.id.candidates_placeholder);
-            setCandidatesView(mCandidateViewContainer);
-
-            mCandidateExpandButton = candidateWindow.findViewById(R.id.candidate_expand_button);
-            // TODO don't need the null check
-            if (mCandidateExpandButton != null) {
-                mCandidateExpandButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleCandidateExpansion();
-                    }
-                });
-            }
-
-            mCandidatePopupWindow = new PopupWindow(
-                    candidateWindow,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            // Set an elevation value for popup window
-            // Call requires API level 21
-            //if (Build.VERSION.SDK_INT >= 21){
-                mCandidatePopupWindow.setElevation(5.0f);
-            //}
-
-            // For testing popup windows
-            View simpleImageView = getLayoutInflater().inflate(R.layout.simple_image_view,null);
-            mImagePopopWindow = new PopupWindow(
-                    simpleImageView,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            mImagePopopWindow.setElevation(5.0f);
-
-            showCandidates();
-        }
-        return mCandidateViewContainer;
-    }
-
-    private void showCandidates() {
-        View window = mKeyboardSwitcher.getInputView();
-
-        // Finally, show the popup window at the center location of root relative layout
-        // popupWindow.showAtLocation(anyViewOnlyNeededForWindowToken, Gravity.CENTER, 0, 0);
-        // mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.TOP | Gravity.START,0,0);
-        mCandidatePopupWindow.showAtLocation(
-                window,
-                Gravity.NO_GRAVITY,20,20);
-
-        // Update location of the popup
-        int pos[] = new int[2];
-        mCandidateViewPlaceholder.getLocationInWindow(pos);
-        Log.i(TAG, String.format("CandidateViewPlaceholder getLocationInWindow (%d, %d)", pos[0], pos[1]));
-
-        // Test popup
-        mImagePopopWindow.showAtLocation(window, Gravity.NO_GRAVITY,0,0);
-    }
-
-    private void toggleCandidateExpansion() {
-        mCandidateView.setExpanded(!mCandidateView.isExpanded());
+        return mCandiateController.onCreateCandidatesView(mKeyboardSwitcher.getInputView());
     }
 
     private void removeCandidateViewContainer() {
-        //Log.i(TAG, "removeCandidateViewContainer(), mCandidateViewContainer=" + mCandidateViewContainer);
-        if (mCandidateViewContainer != null) {
-            mCandidateViewContainer.removeAllViews();
-            ViewParent parent = mCandidateViewContainer.getParent();
-            if (parent != null && parent instanceof ViewGroup) {
-                ((ViewGroup) parent).removeView(mCandidateViewContainer);
-            }
-            mCandidateViewContainer = null;
-            mCandidateView = null;
-        }
+        mCandiateController.removeContainer();
         resetPrediction();
     }
 
@@ -1241,11 +1158,9 @@ public class LatinIME extends InputMethodService implements
                         // Show the punctuation suggestions list if the current
                         // one is not
                         // and if not showing "Touch again to save".
-                        if (mCandidateView != null
-                                && !mSuggestPuncList.equals(mCandidateView
-                                        .getSuggestions())
-                                && !mCandidateView
-                                        .isShowingAddToDictionaryHint()) {
+                        if (mCandiateController.getCandidateView() != null
+                                && !mSuggestPuncList.equals(mCandiateController.getCandidateView().getSuggestions())
+                                && !mCandiateController.getCandidateView().isShowingAddToDictionaryHint()) {
                             setNextSuggestions();
                         }
                     }
@@ -1333,6 +1248,7 @@ public class LatinIME extends InputMethodService implements
         }
     }
 
+    // Creates and destroys candidate view
     private void setCandidatesViewShownInternal(boolean shown,
             boolean needsInputViewShown) {
 //        Log.i(TAG, "setCandidatesViewShownInternal(" + shown + ", " + needsInputViewShown +
@@ -1343,19 +1259,19 @@ public class LatinIME extends InputMethodService implements
 //                );
         // TODO: Remove this if we support candidates with hard keyboard
         boolean visible = shown
-        && onEvaluateInputViewShown()
-        && mKeyboardSwitcher.getInputView() != null
-        && isPredictionOn()
-        && (needsInputViewShown
-                ? mKeyboardSwitcher.getInputView().isShown()
-                        : true);
+            && onEvaluateInputViewShown()
+            && mKeyboardSwitcher.getInputView() != null
+            && isPredictionOn()
+            && (needsInputViewShown
+                    ? mKeyboardSwitcher.getInputView().isShown()
+                            : true);
         if (visible) {
-            if (mCandidateViewContainer == null) {
+            if (!mCandiateController.hasContainer()) {
                 onCreateCandidatesView();
                 setNextSuggestions();
             }
         } else {
-            if (mCandidateViewContainer != null) {
+            if (mCandiateController.hasContainer()) {
                 removeCandidateViewContainer();
                 commitTyped(getCurrentInputConnection(), true);
             }
@@ -1367,7 +1283,7 @@ public class LatinIME extends InputMethodService implements
     public void onFinishCandidatesView(boolean finishingInput) {
         //Log.i(TAG, "onFinishCandidatesView(), mCandidateViewContainer=" + mCandidateViewContainer);
         super.onFinishCandidatesView(finishingInput);
-        if (mCandidateViewContainer != null) {
+        if (mCandiateController.hasContainer()) {
             removeCandidateViewContainer();
         }
     }
@@ -2497,8 +2413,7 @@ public class LatinIME extends InputMethodService implements
                 && sameAsTextBeforeCursor(ic, mEnteredText)) {
             ic.deleteSurroundingText(mEnteredText.length(), 0);
         } else if (deleteChar) {
-            if (mCandidateView != null
-                    && mCandidateView.dismissAddToDictionaryHint()) {
+            if (mCandiateController.dismissAddToDictionaryHint()) {
                 // Go back to the suggestion mode if the user canceled the
                 // "Touch again to save".
                 // NOTE: In gerenal, we don't revert the word when backspacing
@@ -2690,8 +2605,7 @@ public class LatinIME extends InputMethodService implements
 
         // Should dismiss the "Touch again to save" message when handling
         // separator
-        if (mCandidateView != null
-                && mCandidateView.dismissAddToDictionaryHint()) {
+        if (mCandiateController.dismissAddToDictionaryHint()) {
             postUpdateSuggestions();
         }
 
@@ -2883,8 +2797,8 @@ public class LatinIME extends InputMethodService implements
             mIsShowingHint = false;
         }
 
-        if (mCandidateView != null) {
-            mCandidateView.setSuggestions(suggestions, completions,
+        if (mCandiateController.getCandidateView() != null) {
+            mCandiateController.getCandidateView().setSuggestions(suggestions, completions,
                     typedWordValid, haveMinimalSuggestion);
         }
 
@@ -2934,7 +2848,7 @@ public class LatinIME extends InputMethodService implements
         } else {
             showSuggestionsLatin(word);
         }
-        showCandidates();
+        mCandiateController.showCandidates();
     }
 
     private void showSuggestionsCJK(WordComposer word) {
@@ -3042,7 +2956,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void pickFirstSuggestionOrTypedText() {
-        List<CharSequence> suggestions = mCandidateView.getSuggestions();
+        List<CharSequence> suggestions = mCandiateController.getCandidateView().getSuggestions();
         if (suggestions != null && !suggestions.isEmpty()) {
             pickSuggestionManually(0, suggestions.get(0));
         } else {
@@ -3051,7 +2965,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     public void pickSuggestionManually(int index, CharSequence suggestion) {
-        List<CharSequence> suggestions = mCandidateView.getSuggestions();
+        List<CharSequence> suggestions = mCandiateController.getCandidateView().getSuggestions();
 
         final boolean correcting = TextEntryState.isCorrecting();
         InputConnection ic = getCurrentInputConnection();
@@ -3067,8 +2981,8 @@ public class LatinIME extends InputMethodService implements
                 ic.commitCompletion(ci);
             }
             mCommittedLength = suggestion.length();
-            if (mCandidateView != null) {
-                mCandidateView.clear();
+            if (mCandiateController.getCandidateView() != null) {
+                mCandiateController.getCandidateView().clear();
             }
             updateShiftKeyState(getCurrentInputEditorInfo());
             if (ic != null) {
@@ -3136,7 +3050,7 @@ public class LatinIME extends InputMethodService implements
             postUpdateOldSuggestions();
         }
         if (showingAddToDictionaryHint) {
-            mCandidateView.showAddToDictionaryHint(suggestion);
+            mCandiateController.getCandidateView().showAddToDictionaryHint(suggestion);
         }
         if (ic != null) {
             ic.endBatchEdit();
@@ -3341,8 +3255,8 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void setOldSuggestions() {
-        if (mCandidateView != null
-                && mCandidateView.isShowingAddToDictionaryHint()) {
+        if (mCandiateController.getCandidateView() != null
+                && mCandiateController.getCandidateView().isShowingAddToDictionaryHint()) {
             return;
         }
         InputConnection ic = getCurrentInputConnection();

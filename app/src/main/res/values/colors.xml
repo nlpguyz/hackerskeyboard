@@ -33,4 +33,5 @@
     <color name="latinkeyboard_feedback_language_text">#FFFFFFFF</color>
     <color name="latinkeyboard_key_color_white">#FFFFFFFF</color>
     <color name="latinkeyboard_key_color_black">#FF000000</color>
+    <color name="for_test">#FF007700</color>
 </resources>
