@@ -601,14 +601,16 @@ public class MultilineCandidateView extends View {
      * @param expanded <code>true</code> to expand, <code>false</code> to collapse.
      */
     public void setExpanded(boolean expanded) {
+        mExpanded = expanded;
+
         int[] fullSize;
         if (expanded) {
-            // XXX total height gets bigger after setting window size
             int height = Math.min(mTotalHeight, WINDOW_ROWS * mRowHeight);
             fullSize = new int[] {LayoutParams.MATCH_PARENT, height};
         } else {
             fullSize = new int[] {LayoutParams.MATCH_PARENT, mRowHeight};
         }
+
         setLayoutParams(new LinearLayout.LayoutParams(fullSize[0], fullSize[1]));
     }
 }
