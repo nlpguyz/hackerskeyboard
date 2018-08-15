@@ -878,12 +878,15 @@ public class LatinIME extends InputMethodService implements
             setCandidatesView(mCandidateViewContainer);
 
             mCandidateExpandButton = candidateWindow.findViewById(R.id.candidate_expand_button);
-            mCandidateExpandButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleCandidateExpansion();
-                }
-            });
+            // TODO don't need the null check
+            if (mCandidateExpandButton != null) {
+                mCandidateExpandButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleCandidateExpansion();
+                    }
+                });
+            }
 
             mCandidatePopupWindow = new PopupWindow(
                     candidateWindow,
