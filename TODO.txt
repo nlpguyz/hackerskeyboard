@@ -9,7 +9,9 @@ TODO list
   - Change to enter while composing (setImeOptions)
 - Add jav8 integration
 - Candidate view
+  - Debug the pop-up window size (always full window)
   - Handle the single-line mode using in-place view
+  - Add l/r buttons just for compatibility
   - Show an expand button on the right if there is more candidates
     - Change the candidate window to a different background color
     - Test the button for toggling the scroll view

@@ -19,11 +19,16 @@ public class CandidateController {
 
     private InputMethodService mContext;
     private View mWindow;
+
+    // The popup candidate window (for scroll candidates)
+    // mCandidatePopupWindow --> candidateWindow (candidate_window.xml) --> MultilineCandidateView mCandidateView
     private PopupWindow mCandidatePopupWindow;
     private PopupWindow mImagePopopWindow; // For testing
 
     // The candidate view layout
+    // mCandidateViewContainer (candidates.xml) <>--> candidate holder + expand button
     private LinearLayout mCandidateViewContainer;
+
     // The placeholder for showing candidates. The real candidates are shown in popup aligned to this view
     private View mCandidateViewPlaceholder;
 
@@ -79,7 +84,6 @@ public class CandidateController {
         mCandidateViewPlaceholder = mCandidateViewContainer.findViewById(R.id.candidates_placeholder);
         setCandidatesView(mCandidateViewContainer);
 
-        // TODO something should control the visibility of this button
         mCandidateExpandButton = mCandidateViewContainer.findViewById(R.id.candidate_expand_button);
         mCandidateExpandButton.setOnClickListener(new View.OnClickListener() {
             @Override

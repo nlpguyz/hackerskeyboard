@@ -7,7 +7,7 @@
 
     <org.langwiki.brime.MultilineCandidateView
         android:id="@+id/candidates"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_height="@dimen/candidate_strip_height"
         android:layout_weight="1"
         android:fadingEdge="horizontal"

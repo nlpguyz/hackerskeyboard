@@ -29,6 +29,7 @@
     <dimen name="keyboard_bottom_padding">0.06in</dimen>
     <dimen name="bubble_pointer_offset">22dip</dimen>
     <dimen name="candidate_strip_height">42dip</dimen>
+    <dimen name="candidate_window_max_row">5</dimen>
     <dimen name="candidate_strip_fading_edge_length">63dip</dimen>
     <dimen name="spacebar_vertical_correction">4dip</dimen>
     <!-- If the screen height in landscape is larger than the below value, then the keyboard

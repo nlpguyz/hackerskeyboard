@@ -37,6 +37,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import org.langwiki.brime.utils.GraphicsHelper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,6 +62,7 @@ import java.util.List;
      4. handle selection
  */
 public class MultilineCandidateView extends View {
+    private final int WINDOW_ROWS = 6;
 
     private static final int OUT_OF_BOUNDS_WORD_INDEX = -1;
     private static final int OUT_OF_BOUNDS_X_COORD = -1;
@@ -111,12 +114,17 @@ public class MultilineCandidateView extends View {
 
     private final int mMinTouchableWidth;
 
+    // Full view size to hold all candidates (in px)
+    // FIXME currently computed in onDraw. Better get some params from onDraw, and
+    // compute on 'expand'
     private int mTotalWidth;
     private int mTotalHeight;
 
     private final GestureDetector mGestureDetector;
     private boolean mExpanded;
-    private int defaultHeight;
+
+    // More data for multiline
+    private int mRowHeight;
 
     /**
      * Construct a CandidateView for showing suggested words for completion.
@@ -161,7 +169,8 @@ public class MultilineCandidateView extends View {
         scrollTo(0, getScrollY());
 
         mExpanded = false;
-        defaultHeight = -1;
+
+        mRowHeight = res.getDimensionPixelSize(R.dimen.candidate_strip_height);
     }
 
     private class CandidateStripGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -257,9 +266,6 @@ public class MultilineCandidateView extends View {
         // The default height. The needed height for enclosing all candidates is computed when the
         // method finishes.
         final int height = getHeight();
-        if (defaultHeight == -1) {
-            defaultHeight = getHeight();
-        }
 
         // Create background padding (the padding between drawable and the text)
         if (mBgPadding == null) {
@@ -581,23 +587,27 @@ public class MultilineCandidateView extends View {
         hidePreview();
     }
 
-    public int[] getExpandedSize() {
-        int w = mTotalWidth;
-        int h = mTotalHeight;
-        h = Math.min(h, 300); // TODO use the right height limit
-        return new int[] {w, h};
-    }
-
+    /**
+     * Check if the multiline window is expanded.
+     *
+     * @return <code>true</code> if expanded.
+     */
     public boolean isExpanded() {
         return mExpanded;
     }
 
+    /**
+     * Expand or collapse the the multiline window.
+     * @param expanded <code>true</code> to expand, <code>false</code> to collapse.
+     */
     public void setExpanded(boolean expanded) {
         int[] fullSize;
         if (expanded) {
-            fullSize = getExpandedSize();
+            // XXX total height gets bigger after setting window size
+            int height = Math.min(mTotalHeight, WINDOW_ROWS * mRowHeight);
+            fullSize = new int[] {LayoutParams.MATCH_PARENT, height};
         } else {
-            fullSize = new int[] {getWidth(), defaultHeight};
+            fullSize = new int[] {LayoutParams.MATCH_PARENT, mRowHeight};
         }
         setLayoutParams(new LinearLayout.LayoutParams(fullSize[0], fullSize[1]));
     }
