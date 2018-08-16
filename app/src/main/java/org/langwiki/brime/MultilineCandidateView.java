@@ -62,27 +62,18 @@ public class MultilineCandidateView extends View {
     private final int WINDOW_ROWS = 6;
 
     private static final int OUT_OF_BOUNDS_WORD_INDEX = -1;
-    private static final int OUT_OF_BOUNDS_X_COORD = -1;
-    private static final int OUT_OF_BOUNDS_Y_COORD = -1;
 
     private LatinIME mService;
     private final ArrayList<CharSequence> mSuggestions = new ArrayList<CharSequence>();
     private boolean mShowingCompletions;
     private CharSequence mSelectedString;
     private int mSelectedIndex;
-    private int mTouchX = OUT_OF_BOUNDS_X_COORD;
-    private int mTouchY = OUT_OF_BOUNDS_Y_COORD;
-    private final Drawable mSelectionHighlight;
-    private boolean mTypedWordValid;
-
-    private boolean mHaveMinimalSuggestion;
-
-    private Rect mBgPadding;
+    private int mTouchX = CandidateDrawer.OUT_OF_BOUNDS_X_COORD;
+    private int mTouchY = CandidateDrawer.OUT_OF_BOUNDS_Y_COORD;
 
     private final TextView mPreviewText;
     private final PopupWindow mPreviewPopup;
     private int mCurrentWordIndex;
-    private Drawable mDivider;
 
     private static final int MAX_SUGGESTIONS = 32;
     private static final int SCROLL_PIXELS = 20;
@@ -94,14 +85,6 @@ public class MultilineCandidateView extends View {
     private int mPopupPreviewX;
     private int mPopupPreviewY;
 
-    private int mXGap;
-    private int mXRightMargin;
-
-    private final int mColorNormal;
-    private final int mColorRecommended;
-    private final int mColorOther;
-    private final Paint mPaint;
-    private final int mDescent;
     private boolean mScrolled;
     private boolean mShowingAddToDictionary;
     private CharSequence mAddToDictionaryHint;
@@ -110,6 +93,9 @@ public class MultilineCandidateView extends View {
     private int mTargetScrollY; // NEW
 
     private final int mMinTouchableWidth;
+
+    private boolean mTypedWordValid;
+    private boolean mHaveMinimalSuggestion;
 
     // Full view size to hold all candidates (in px)
     // FIXME currently computed in onDraw. Better get some params from onDraw, and
@@ -121,7 +107,7 @@ public class MultilineCandidateView extends View {
     private boolean mExpanded;
 
     // More data for multiline
-    private int mRowHeight;
+    private CandidateDrawer mDrawer;
 
     /**
      * Construct a CandidateView for showing suggested words for completion.
@@ -130,8 +116,6 @@ public class MultilineCandidateView extends View {
      */
     public MultilineCandidateView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mSelectionHighlight = context.getResources().getDrawable(
-                R.drawable.list_selector_background_pressed);
 
         LayoutInflater inflate =
             (LayoutInflater) context
@@ -143,21 +127,14 @@ public class MultilineCandidateView extends View {
         mPreviewPopup.setContentView(mPreviewText);
         mPreviewPopup.setBackgroundDrawable(null);
         mPreviewPopup.setAnimationStyle(R.style.KeyPreviewAnimation);
-        mColorNormal = res.getColor(R.color.candidate_normal);
-        mColorRecommended = res.getColor(R.color.candidate_recommended);
-        mColorOther = res.getColor(R.color.candidate_other);
-        mDivider = res.getDrawable(R.drawable.keyboard_suggest_strip_divider);
+        mDrawer = new CandidateDrawer(context, mPreviewText.getTextSize(),
+                mWordWidth,
+                mWordX,
+                mWordY);
         mAddToDictionaryHint = res.getString(R.string.hint_add_to_dictionary);
 
-        mPaint = new Paint();
-        mPaint.setColor(mColorNormal);
-        mPaint.setAntiAlias(true);
-        mPaint.setTextSize(mPreviewText.getTextSize() * LatinIME.sKeyboardSettings.candidateScalePref);
-        mPaint.setStrokeWidth(0);
-        mPaint.setTextAlign(Align.CENTER);
-        mDescent = (int) mPaint.descent();
         mMinTouchableWidth = (int)res.getDimension(R.dimen.candidate_min_touchable_width);
-        
+
         mGestureDetector = new GestureDetector(
                 new CandidateStripGestureListener(mMinTouchableWidth));
         setWillNotDraw(false);
@@ -166,10 +143,6 @@ public class MultilineCandidateView extends View {
         scrollTo(0, getScrollY());
 
         mExpanded = false;
-
-        mRowHeight = res.getDimensionPixelSize(R.dimen.candidate_strip_height);
-        mXGap = res.getDimensionPixelOffset(R.dimen.candidate_x_gap);
-        mXRightMargin = res.getDimensionPixelOffset(R.dimen.candidate_window_right_margin);
     }
 
     private class CandidateStripGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -259,129 +232,30 @@ public class MultilineCandidateView extends View {
         if (canvas != null) {
             super.onDraw(canvas);
         }
-        mTotalWidth = 0;
 
-        // Limit for drawing. Only place widgets beyond the limit.
-        int xLimit = getWidth() - mXRightMargin;
+        boolean existsAutoCompletion = false;
 
         // The default height. The needed height for enclosing all candidates is computed when the
         // method finishes.
         final int height = getHeight();
 
-        // Create background padding (the padding between drawable and the text)
-        if (mBgPadding == null) {
-            mBgPadding = new Rect(0, 0, 0, 0);
-            if (getBackground() != null) {
-                getBackground().getPadding(mBgPadding);
-            }
-            mDivider.setBounds(0, 0, mDivider.getIntrinsicWidth(),
-                    mDivider.getIntrinsicHeight());
-        }
-
-        final int count = mSuggestions.size();
-        final Rect bgPadding = mBgPadding;
-        final Paint paint = mPaint;
-        final int touchX = mTouchX;
-        final int touchY = mTouchY; // NEW
+        // NEW
         final int scrollX = getScrollX();
-        final int scrollY = getScrollY(); // NEW
-        final boolean scrolled = mScrolled;
-        final boolean typedWordValid = mTypedWordValid;
-        // The start y for drawing text
-        final int sy = (int) (mRowHeight + mPaint.getTextSize() - mDescent) / 2;
+        final int scrollY = getScrollY();
 
-        boolean existsAutoCompletion = false;
+        mDrawer.setTouchXY(mTouchX, mTouchY);
+        mDrawer.setScrolled(mScrolled, scrollX, scrollY);
+        mDrawer.setSuggestions(mSuggestions);
 
-        int x = 0;
-        int y = sy;
-        int totalRows = 1;
+        int[] sizes = mDrawer.measure(this, mMinTouchableWidth);
+        mTotalWidth = sizes[0];
+        mTotalHeight = sizes[1];
 
-        // measure pass
-        for (int i = 0; i < count; i++) {
-            CharSequence suggestion = mSuggestions.get(i);
-            if (suggestion == null) continue;
-            final int wordLength = suggestion.length();
-
-            // Measure word width
-            int wordWidth;
-            if ((wordWidth = mWordWidth[i]) == 0) {
-                float textWidth =  paint.measureText(suggestion, 0, wordLength);
-                wordWidth = Math.max(mMinTouchableWidth, (int) textWidth + mXGap * 2);
-                mWordWidth[i] = wordWidth;
-            }
-
-            // Determine the position of the word
-            boolean newLine = x + wordWidth >= xLimit;
-            if (newLine) {
-                x = 0;
-                y += mRowHeight;
-                totalRows++;
-            }
-
-            mWordX[i] = x;
-            mWordY[i] = y;
-
-            x += wordWidth;
-
-            mTotalWidth = Math.max(mTotalWidth, x);
-        }
-
-        mTotalHeight = totalRows * mRowHeight;
-
-        // draw pass
-        for (int i = 0; i < count; i++) {
-            x = mWordX[i];
-            y = mWordY[i];
-
-            CharSequence suggestion = mSuggestions.get(i);
-            if (suggestion == null) continue;
-            final int wordLength = suggestion.length();
-            final int wordWidth = mWordWidth[i];
-
-            // Handle color
-            paint.setColor(mColorNormal);
-            if (mHaveMinimalSuggestion 
-                    && ((i == 1 && !typedWordValid) || (i == 0 && typedWordValid))) {
-                paint.setTypeface(Typeface.DEFAULT_BOLD);
-                paint.setColor(mColorRecommended);
-                existsAutoCompletion = true;
-            } else if (i != 0 || (wordLength == 1 && count > 1)) {
-                // HACK: even if i == 0, we use mColorOther when this suggestion's length is 1 and
-                // there are multiple suggestions, such as the default punctuation list.
-                paint.setColor(mColorOther);
-            }
-
-            // Draw the highlight
-            // TODO process touchY (highlight on row > 1)
-            boolean touchXHit = touchX != OUT_OF_BOUNDS_X_COORD && !scrolled
-                    && touchX + scrollX >= x && touchX + scrollX < x + wordWidth;
-            boolean touchYHit = touchY != OUT_OF_BOUNDS_X_COORD && !scrolled
-                    && touchY + scrollY >= y - sy && touchY + scrollY < y + mRowHeight - sy;
-            if (touchXHit && touchYHit) {
-                if (canvas != null && !mShowingAddToDictionary) {
-                    canvas.translate(x, y - sy);
-                    mSelectionHighlight.setBounds(0, bgPadding.top, wordWidth, mRowHeight);
-                    mSelectionHighlight.draw(canvas);
-                    canvas.translate(-x, -(y - sy));
-                }
-                mSelectedString = suggestion;
-                mSelectedIndex = i;
-            }
-
-            // Draw the text
-            // resized
-            if (canvas != null) {
-                canvas.drawText(suggestion, 0, wordLength, x + wordWidth / 2, y, paint);
-                paint.setColor(mColorOther);
-                canvas.translate(x + wordWidth, y - sy);
-                // Draw a divider unless it's after the hint
-                if (!(mShowingAddToDictionary && i == 1)) {
-                    mDivider.draw(canvas);
-                }
-                canvas.translate(-(x + wordWidth), -(y - sy));
-            }
-            paint.setTypeface(Typeface.DEFAULT);
-        }
+        CandidateDrawer.DrawStatus status = mDrawer.draw(this, canvas,
+                mHaveMinimalSuggestion, mTypedWordValid, mShowingAddToDictionary);
+        existsAutoCompletion = status.existsAutoCompletion;
+        mSelectedString = status.selectedString;
+        mSelectedIndex = status.selectIndex;
 
         if (!isInEditMode())
             mService.onAutoCompletionStateChanged(existsAutoCompletion);
@@ -465,8 +339,8 @@ public class MultilineCandidateView extends View {
         // Don't call mSuggestions.clear() because it's being used for logging
         // in LatinIME.pickSuggestionManually().
         mSuggestions.clear();
-        mTouchX = OUT_OF_BOUNDS_X_COORD;
-        mTouchY = OUT_OF_BOUNDS_Y_COORD;
+        mTouchX = CandidateDrawer.OUT_OF_BOUNDS_X_COORD;
+        mTouchY = CandidateDrawer.OUT_OF_BOUNDS_Y_COORD;
         mSelectedString = null;
         mSelectedIndex = -1;
         mShowingAddToDictionary = false;
@@ -538,8 +412,8 @@ public class MultilineCandidateView extends View {
     }
 
     private void hidePreview() {
-        mTouchX = OUT_OF_BOUNDS_X_COORD;
-        mTouchY = OUT_OF_BOUNDS_Y_COORD;
+        mTouchX = CandidateDrawer.OUT_OF_BOUNDS_X_COORD;
+        mTouchY = CandidateDrawer.OUT_OF_BOUNDS_Y_COORD;
         mCurrentWordIndex = OUT_OF_BOUNDS_WORD_INDEX;
         mPreviewPopup.dismiss();
     }
@@ -556,7 +430,7 @@ public class MultilineCandidateView extends View {
                 mPreviewText.setText(word);
                 mPreviewText.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), 
                         MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-                int wordWidth = (int) (mPaint.measureText(word, 0, word.length()) + mXGap * 2);
+                int wordWidth = (int) (mDrawer.measureText(word, 0, word.length()) + mDrawer.mXGap * 2);
                 final int popupWidth = wordWidth
                         + mPreviewText.getPaddingLeft() + mPreviewText.getPaddingRight();
                 final int popupHeight = mPreviewText.getMeasuredHeight();
@@ -612,10 +486,10 @@ public class MultilineCandidateView extends View {
 
         int[] fullSize;
         if (expanded) {
-            int height = Math.min(mTotalHeight, WINDOW_ROWS * mRowHeight);
+            int height = Math.min(mTotalHeight, WINDOW_ROWS * mDrawer.mRowHeight);
             fullSize = new int[] {LayoutParams.MATCH_PARENT, height};
         } else {
-            fullSize = new int[] {LayoutParams.MATCH_PARENT, mRowHeight};
+            fullSize = new int[] {LayoutParams.MATCH_PARENT, mDrawer.mRowHeight};
         }
 
         setLayoutParams(new LinearLayout.LayoutParams(fullSize[0], fullSize[1]));
