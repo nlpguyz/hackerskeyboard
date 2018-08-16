@@ -9,14 +9,8 @@ TODO list
   - Change to enter while composing (setImeOptions)
 - Add jav8 integration
 - Candidate view
-  - Debug the pop-up window size (always full window)
-  - Handle the single-line mode using in-place view
-  - Add l/r buttons just for compatibility
-  - Show an expand button on the right if there is more candidates
-    - Change the candidate window to a different background color
-    - Test the button for toggling the scroll view
-  - In the pop-up window show the same candidates on the first row, and
-    more stuff below.
-  - Checkpoint 1: show all candidates in the scroll view
-  - This view needs to be properly drawn for this effect.
-  - Allow accurate typing of the candidates in 2D
+  - Render first row in the static view with a drop button
+    - Add render code into a separate class.
+  - Select correct char in engine
+    - selection highlight at right row
+    - select it in the right page of engine
