@@ -3,13 +3,14 @@
 <!-- Popup window for scroll candidate view -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <org.langwiki.brime.MultilineCandidateView
         android:id="@+id/candidates"
         android:layout_width="0dp"
         android:layout_height="@dimen/candidate_strip_height"
         android:layout_weight="1"
+        android:layout_gravity="top"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="@dimen/candidate_strip_fading_edge_length"
         android:background="@color/for_test"

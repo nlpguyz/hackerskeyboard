@@ -31,13 +31,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import org.langwiki.brime.utils.GraphicsHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,8 +94,8 @@ public class MultilineCandidateView extends View {
     private int mPopupPreviewX;
     private int mPopupPreviewY;
 
-    private static final int X_GAP = 10;
-    private static final int X_RIGHT_MARGIN = 50;
+    private int mXGap;
+    private int mXRightMargin;
 
     private final int mColorNormal;
     private final int mColorRecommended;
@@ -171,6 +168,8 @@ public class MultilineCandidateView extends View {
         mExpanded = false;
 
         mRowHeight = res.getDimensionPixelSize(R.dimen.candidate_strip_height);
+        mXGap = res.getDimensionPixelOffset(R.dimen.candidate_x_gap);
+        mXRightMargin = res.getDimensionPixelOffset(R.dimen.candidate_window_right_margin);
     }
 
     private class CandidateStripGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -261,7 +260,9 @@ public class MultilineCandidateView extends View {
             super.onDraw(canvas);
         }
         mTotalWidth = 0;
-        int xLimit = getWidth() - X_RIGHT_MARGIN; // NEW
+
+        // Limit for drawing. Only place widgets beyond the limit.
+        int xLimit = getWidth() - mXRightMargin;
 
         // The default height. The needed height for enclosing all candidates is computed when the
         // method finishes.
@@ -287,12 +288,13 @@ public class MultilineCandidateView extends View {
         final boolean scrolled = mScrolled;
         final boolean typedWordValid = mTypedWordValid;
         // The start y for drawing text
-        final int sy = (int) (height + mPaint.getTextSize() - mDescent) / 2;
+        final int sy = (int) (mRowHeight + mPaint.getTextSize() - mDescent) / 2;
 
         boolean existsAutoCompletion = false;
 
         int x = 0;
         int y = sy;
+        int totalRows = 1;
 
         // measure pass
         for (int i = 0; i < count; i++) {
@@ -304,7 +306,7 @@ public class MultilineCandidateView extends View {
             int wordWidth;
             if ((wordWidth = mWordWidth[i]) == 0) {
                 float textWidth =  paint.measureText(suggestion, 0, wordLength);
-                wordWidth = Math.max(mMinTouchableWidth, (int) textWidth + X_GAP * 2);
+                wordWidth = Math.max(mMinTouchableWidth, (int) textWidth + mXGap * 2);
                 mWordWidth[i] = wordWidth;
             }
 
@@ -312,7 +314,8 @@ public class MultilineCandidateView extends View {
             boolean newLine = x + wordWidth >= xLimit;
             if (newLine) {
                 x = 0;
-                y += height; // TODO make sure this is the line height
+                y += mRowHeight;
+                totalRows++;
             }
 
             mWordX[i] = x;
@@ -321,8 +324,9 @@ public class MultilineCandidateView extends View {
             x += wordWidth;
 
             mTotalWidth = Math.max(mTotalWidth, x);
-            mTotalHeight = Math.max(mTotalHeight, y); // Add the line height
         }
+
+        mTotalHeight = totalRows * mRowHeight;
 
         // draw pass
         for (int i = 0; i < count; i++) {
@@ -348,14 +352,17 @@ public class MultilineCandidateView extends View {
             }
 
             // Draw the highlight
-            // TODO process touchY
-            if (touchX != OUT_OF_BOUNDS_X_COORD && !scrolled
-                    && touchX + scrollX >= x && touchX + scrollX < x + wordWidth) {
+            // TODO process touchY (highlight on row > 1)
+            boolean touchXHit = touchX != OUT_OF_BOUNDS_X_COORD && !scrolled
+                    && touchX + scrollX >= x && touchX + scrollX < x + wordWidth;
+            boolean touchYHit = touchY != OUT_OF_BOUNDS_X_COORD && !scrolled
+                    && touchY + scrollY >= y - sy && touchY + scrollY < y + mRowHeight - sy;
+            if (touchXHit && touchYHit) {
                 if (canvas != null && !mShowingAddToDictionary) {
-                    canvas.translate(x, 0);
-                    mSelectionHighlight.setBounds(0, bgPadding.top, wordWidth, height);
+                    canvas.translate(x, y - sy);
+                    mSelectionHighlight.setBounds(0, bgPadding.top, wordWidth, mRowHeight);
                     mSelectionHighlight.draw(canvas);
-                    canvas.translate(-x, 0);
+                    canvas.translate(-x, -(y - sy));
                 }
                 mSelectedString = suggestion;
                 mSelectedIndex = i;
@@ -366,12 +373,12 @@ public class MultilineCandidateView extends View {
             if (canvas != null) {
                 canvas.drawText(suggestion, 0, wordLength, x + wordWidth / 2, y, paint);
                 paint.setColor(mColorOther);
-                canvas.translate(x + wordWidth, 0);
+                canvas.translate(x + wordWidth, y - sy);
                 // Draw a divider unless it's after the hint
                 if (!(mShowingAddToDictionary && i == 1)) {
                     mDivider.draw(canvas);
                 }
-                canvas.translate(-x - wordWidth, 0);
+                canvas.translate(-(x + wordWidth), -(y - sy));
             }
             paint.setTypeface(Typeface.DEFAULT);
         }
@@ -549,7 +556,7 @@ public class MultilineCandidateView extends View {
                 mPreviewText.setText(word);
                 mPreviewText.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), 
                         MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-                int wordWidth = (int) (mPaint.measureText(word, 0, word.length()) + X_GAP * 2);
+                int wordWidth = (int) (mPaint.measureText(word, 0, word.length()) + mXGap * 2);
                 final int popupWidth = wordWidth
                         + mPreviewText.getPaddingLeft() + mPreviewText.getPaddingRight();
                 final int popupHeight = mPreviewText.getMeasuredHeight();

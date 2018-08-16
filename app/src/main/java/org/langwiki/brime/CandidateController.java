@@ -53,7 +53,7 @@ public class CandidateController {
         // mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.TOP | Gravity.START,0,0);
         mCandidatePopupWindow.showAtLocation(
                 mWindow,
-                Gravity.NO_GRAVITY,20,20);
+                Gravity.NO_GRAVITY,0,0); // TODO move to row 2
 
         // Update location of the popup
         int pos[] = new int[2];
