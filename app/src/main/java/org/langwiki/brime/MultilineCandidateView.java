@@ -235,10 +235,6 @@ public class MultilineCandidateView extends View {
 
         boolean existsAutoCompletion = false;
 
-        // The default height. The needed height for enclosing all candidates is computed when the
-        // method finishes.
-        final int height = getHeight();
-
         // NEW
         final int scrollX = getScrollX();
         final int scrollY = getScrollY();
@@ -398,6 +394,7 @@ public class MultilineCandidateView extends View {
                             //TextEntryState.manualTyped(mSelectedString);
                         }
                         mService.pickSuggestionManually(mSelectedIndex, mSelectedString);
+                        setExpanded(false);
                     }
                 }
             }
