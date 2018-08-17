@@ -793,6 +793,7 @@ public class LatinIME extends InputMethodService implements
         	unregisterReceiver(mNotificationReceiver);
             mNotificationReceiver = null;
         }
+
         LatinImeLogger.commit();
         LatinImeLogger.onDestroy();
         super.onDestroy();
@@ -1215,6 +1216,7 @@ public class LatinIME extends InputMethodService implements
         }
         mWordToSuggestions.clear();
         mWordHistory.clear();
+        mCandiateController.discussPopupWindow();
         super.hideWindow();
         TextEntryState.endSession();
     }

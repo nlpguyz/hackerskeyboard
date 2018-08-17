@@ -159,4 +159,9 @@ public class CandidateController {
     public boolean dismissAddToDictionaryHint() {
         return mCandidateView != null && mCandidateView.dismissAddToDictionaryHint();
     }
+
+    public void discussPopupWindow() {
+        mCandidatePopupWindow.setElevation(0);
+        mCandidatePopupWindow.dismiss();
+    }
 }
