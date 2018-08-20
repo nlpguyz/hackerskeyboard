@@ -794,6 +794,8 @@ public class LatinIME extends InputMethodService implements
             mNotificationReceiver = null;
         }
 
+        mCandiateController.discussPopupWindow();
+
         LatinImeLogger.commit();
         LatinImeLogger.onDestroy();
         super.onDestroy();
@@ -1274,6 +1276,7 @@ public class LatinIME extends InputMethodService implements
             }
         } else {
             if (mCandiateController.hasContainer()) {
+                mCandiateController.discussPopupWindow();
                 removeCandidateViewContainer();
                 commitTyped(getCurrentInputConnection(), true);
             }

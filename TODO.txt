@@ -11,6 +11,4 @@ TODO list
 - Candidate view
   - Render first row in the static view with a drop button
     - Add render code into a separate class.
-  - Select correct char in engine
-    - selection highlight at right row
-    - select it in the right page of engine
+    - Scroll support

@@ -80,7 +80,7 @@ public class MultilineCandidateView extends View {
 
     private final int[] mWordWidth = new int[MAX_SUGGESTIONS];
     private final int[] mWordX = new int[MAX_SUGGESTIONS];
-    private final int[] mWordY = new int[MAX_SUGGESTIONS]; // NEW
+    private final int[] mWordY = new int[MAX_SUGGESTIONS];
 
     private int mPopupPreviewX;
     private int mPopupPreviewY;
@@ -90,7 +90,7 @@ public class MultilineCandidateView extends View {
     private CharSequence mAddToDictionaryHint;
 
     private int mTargetScrollX;
-    private int mTargetScrollY; // NEW
+    private int mTargetScrollY;
 
     private final int mMinTouchableWidth;
 
@@ -171,7 +171,6 @@ public class MultilineCandidateView extends View {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2,
                 float distanceX, float distanceY) {
-            // TODO support vertical scroll
             if (!mScrolled) {
                 // This is applied only when we recognize that scrolling is starting.
                 final int deltaX = (int) (e2.getX() - e1.getX());
@@ -184,16 +183,29 @@ public class MultilineCandidateView extends View {
             }
 
             final int width = getWidth();
+            final int height = getHeight();
             mScrolled = true;
+
             int scrollX = getScrollX();
             int scrollY = getScrollY();
+
             scrollX += (int) distanceX;
             if (scrollX < 0) {
                 scrollX = 0;
             }
+
+            scrollY += (int) distanceY;
+            if (scrollY < 0)
+                scrollY = 0;
+
             if (distanceX > 0 && scrollX + width > mTotalWidth) {
                 scrollX -= (int) distanceX;
             }
+
+            if (distanceY > 0 && scrollY + height > mTotalHeight) {
+                scrollY -= (int) distanceY;
+            }
+
             mTargetScrollX = scrollX;
             mTargetScrollY = scrollY;
             scrollTo(scrollX, getScrollY());
@@ -262,8 +274,8 @@ public class MultilineCandidateView extends View {
     }
 
     private void scrollToTarget() {
-        // TODO Handle Y scroll
         int scrollX = getScrollX();
+
         if (mTargetScrollX > scrollX) {
             scrollX += SCROLL_PIXELS;
             if (scrollX >= mTargetScrollX) {
@@ -273,7 +285,7 @@ public class MultilineCandidateView extends View {
             } else {
                 scrollTo(scrollX, getScrollY());
             }
-        } else {
+        } else if (mTargetScrollX < scrollX){
             scrollX -= SCROLL_PIXELS;
             if (scrollX <= mTargetScrollX) {
                 scrollX = mTargetScrollX;
@@ -283,9 +295,31 @@ public class MultilineCandidateView extends View {
                 scrollTo(scrollX, getScrollY());
             }
         }
+
+        int scrollY = getScrollY();
+        if (mTargetScrollY > scrollY) {
+            scrollY += SCROLL_PIXELS;
+            if (scrollY >= mTargetScrollY) {
+                scrollY = mTargetScrollY;
+                scrollTo(getScrollX(), scrollY);
+                requestLayout();
+            } else {
+                scrollTo(getScrollX(), scrollY);
+            }
+        } else {
+            scrollY -= SCROLL_PIXELS;
+            if (scrollY <= mTargetScrollY) {
+                scrollY = mTargetScrollY;
+                scrollTo(getScrollX(), scrollY);
+                requestLayout();
+            } else {
+                scrollTo(getScrollX(), scrollY);
+            }
+        }
+
         invalidate();
     }
-    
+
     @SuppressLint("WrongCall")
     public void setSuggestions(List<CharSequence> suggestions, boolean completions,
                                boolean typedWordValid, boolean haveMinimalSuggestion) {
@@ -300,8 +334,9 @@ public class MultilineCandidateView extends View {
         }
         mShowingCompletions = completions;
         mTypedWordValid = typedWordValid;
-        scrollTo(0, getScrollY());
-        mTargetScrollX = 0;
+        // scrollTo(0, getScrollY());
+        scrollTo(0, 0);
+        mTargetScrollX = mTargetScrollY = 0;
         mHaveMinimalSuggestion = haveMinimalSuggestion;
         // Compute the total width
         onDraw(null);
