@@ -27,7 +27,6 @@
     import java.util.List;
     import java.util.logging.Logger;
 
-    import org.langwiki.alphatalk.script.*;
     import org.mozilla.javascript.*;
 
     import org.langwiki.brime.schema.SchemaManager;
@@ -40,6 +39,7 @@
      */
     public class Rime {
         private static Rime sInstance;
+        private static int sMaxCandidates = 400;
 
         public static Rime getInstance() {
             if (sInstance != null)
@@ -377,7 +377,6 @@
 
         final int pageUp = 65365;
         final int pageDown = 65366;
-        final int maxCands = 200;
 
         public List<RimeCandidate> getAllCandidates() {
             List<RimeCandidate> allCands = new ArrayList<>();
@@ -387,7 +386,7 @@
 
             RimeCandidate[] cands;
             boolean done = false;
-            while (!done && allCands.size() < maxCands) {
+            while (!done && allCands.size() < sMaxCandidates) {
                 cands = getCandidates();
                 if (cands != null) {
                     allCands.addAll(Arrays.asList(cands));

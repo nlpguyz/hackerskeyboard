@@ -11,4 +11,4 @@ TODO list
 - Candidate view
   - Render first row in the static view with a drop button
     - Add render code into a separate class.
-    - Scroll support
+    - Show all candidates for full spelling (containing vowel)
