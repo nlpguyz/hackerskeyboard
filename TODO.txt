@@ -9,6 +9,6 @@ TODO list
   - Change to enter while composing (setImeOptions)
 - Add jav8 integration
 - Candidate view
+  - Resize to keep size for V button
   - Render first row in the static view with a drop button
-    - Add render code into a separate class.
-    - Show all candidates for full spelling (containing vowel)
+  - Show all candidates for full spelling (containing vowel)

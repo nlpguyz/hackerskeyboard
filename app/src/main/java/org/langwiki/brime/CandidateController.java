@@ -94,16 +94,16 @@ public class CandidateController {
 
         // This is the window that contains a MultilineCandidateView which shows candidates
         View candidateWindow = mContext.getLayoutInflater().inflate(R.layout.candidate_window,null);
-        mCandidateView = candidateWindow.findViewById(R.id.candidates);
-
+        mCandidateView = candidateWindow.findViewById(R.id.candidates); // candidates width matches parent
         mCandidateView.setPadding(0, 0, 0, 0);
+
         // TODO check the interaction
         mCandidateView.setService((LatinIME) mContext);
 
         mCandidatePopupWindow = new PopupWindow(
                 candidateWindow,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT, // width
+                LinearLayout.LayoutParams.WRAP_CONTENT // height
         );
 
         // Set an elevation value for popup window
