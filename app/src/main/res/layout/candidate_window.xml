@@ -4,7 +4,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingRight="40dp">
+    android:paddingRight="20dp">
 
     <org.langwiki.brime.MultilineCandidateView
         android:id="@+id/candidates"

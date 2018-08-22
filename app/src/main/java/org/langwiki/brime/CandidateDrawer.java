@@ -25,6 +25,7 @@ class CandidateDrawer {
     int mWordX[];
     int mWordY[];
     int mWordWidth[];
+    int mWordInWidth[];
     boolean mWordAtRightBoundary[];
 
     private Rect mBgPadding;
@@ -54,6 +55,7 @@ class CandidateDrawer {
         this.mWordWidth = mWordWidth;
         this.mWordX = mWordX;
         this.mWordY = mWordY;
+        this.mWordInWidth = new int[mWordWidth.length];
         this.mWordAtRightBoundary = new boolean[mWordWidth.length];
 
         Resources res = context.getResources();
@@ -123,15 +125,17 @@ class CandidateDrawer {
             final int wordLength = suggestion.length();
 
             // Measure word width
-            int wordWidth;
+            int wordWidth, inlineWidth = mWordInWidth[i];
             if ((wordWidth = mWordWidth[i]) == 0) {
                 float textWidth =  mPaint.measureText(suggestion, 0, wordLength);
                 wordWidth = Math.max(minTouchableWidth, (int) textWidth + mXGap * 2);
+                inlineWidth = (int) textWidth + mXGap;
                 mWordWidth[i] = wordWidth;
+                mWordInWidth[i] = inlineWidth;
             }
 
             // Determine the position of the word
-            boolean newLine = x + wordWidth >= xLimit;
+            boolean newLine = x + inlineWidth >= xLimit;
             if (i >= 1)
                 mWordAtRightBoundary[i - 1] = newLine;
             if (newLine) {
@@ -153,6 +157,9 @@ class CandidateDrawer {
     }
 
     // Returns true if there is autocompletion
+    // [word width]        word width = text widht + 2 * gap
+    //      |
+    //  word drawn
     public DrawStatus draw(View view, Canvas canvas,
                         boolean hasMinimalSuggestion,
                         boolean typedWordValid,
