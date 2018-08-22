@@ -25,6 +25,7 @@ class CandidateDrawer {
     int mWordX[];
     int mWordY[];
     int mWordWidth[];
+    boolean mWordAtRightBoundary[];
 
     private Rect mBgPadding;
     private Drawable mDivider;
@@ -53,6 +54,7 @@ class CandidateDrawer {
         this.mWordWidth = mWordWidth;
         this.mWordX = mWordX;
         this.mWordY = mWordY;
+        this.mWordAtRightBoundary = new boolean[mWordWidth.length];
 
         Resources res = context.getResources();
         mColorNormal = res.getColor(R.color.candidate_normal);
@@ -114,6 +116,7 @@ class CandidateDrawer {
         int totalRows = 1;
 
         // measure pass
+        mWordAtRightBoundary[count-1] = true;
         for (int i = 0; i < count; i++) {
             CharSequence suggestion = mSuggestions.get(i);
             if (suggestion == null) continue;
@@ -129,6 +132,8 @@ class CandidateDrawer {
 
             // Determine the position of the word
             boolean newLine = x + wordWidth >= xLimit;
+            if (i >= 1)
+                mWordAtRightBoundary[i - 1] = newLine;
             if (newLine) {
                 x = 0;
                 y += mRowHeight;
@@ -206,13 +211,15 @@ class CandidateDrawer {
             // resized
             if (canvas != null) {
                 canvas.drawText(suggestion, 0, wordLength, x + wordWidth / 2, y, mPaint);
-                mPaint.setColor(mColorOther);
-                canvas.translate(x + wordWidth, y - sy);
-                // Draw a divider unless it's after the hint
-                if (!(showAddToDictionary && i == 1)) {
-                    mDivider.draw(canvas);
+                if (!mWordAtRightBoundary[i]) {
+                    mPaint.setColor(mColorOther);
+                    canvas.translate(x + wordWidth, y - sy);
+                    // Draw a divider unless it's after the hint
+                    if (!(showAddToDictionary && i == 1)) {
+                        mDivider.draw(canvas);
+                    }
+                    canvas.translate(-(x + wordWidth), -(y - sy));
                 }
-                canvas.translate(-(x + wordWidth), -(y - sy));
             }
             mPaint.setTypeface(Typeface.DEFAULT);
         }

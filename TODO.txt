@@ -9,6 +9,7 @@ TODO list
   - Change to enter while composing (setImeOptions)
 - Add jav8 integration
 - Candidate view
-  - Resize to keep size for V button
+  - Resize to avoid overlapping the V button
+  - No vertical bar for the last column
   - Render first row in the static view with a drop button
   - Show all candidates for full spelling (containing vowel)
