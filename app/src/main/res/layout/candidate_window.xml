@@ -14,6 +14,6 @@
         android:layout_gravity="top"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="@dimen/candidate_strip_fading_edge_length"
-        android:background="@color/for_test"
+        android:background="@color/latinkeyboard_candidate_background"
         />
 </LinearLayout>
