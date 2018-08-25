@@ -118,7 +118,8 @@ class CandidateDrawer {
         int totalRows = 1;
 
         // measure pass
-        mWordAtRightBoundary[count-1] = true;
+        if (count > 0)
+            mWordAtRightBoundary[count-1] = true;
         for (int i = 0; i < count; i++) {
             CharSequence suggestion = mSuggestions.get(i);
             if (suggestion == null) continue;
