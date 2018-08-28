@@ -12,3 +12,8 @@ TODO list
   - Align popup so that its first row is centered
   - Render first row in the static view with a drop button
   - Show all candidates for full spelling (containing vowel)
+- Keyboard layout
+  - Simple version: change the key label
+  - Full version: change rows/keys by definition files
+    - Create Keyboard at runtime (from other source of info)
+
