@@ -171,9 +171,8 @@ public class KeyboardSwitcher implements
      * Sets the input locale, when there are multiple locales for input. If no
      * locale switching is required, then the locale should be set to null.
      *
-     * @param locale
-     *            the current input locale, or null for default locale with no
-     *            locale layout_button.
+     * @param languageSwitcher
+     *            the language switcher object
      */
     public void setLanguageSwitcher(LanguageSwitcher languageSwitcher) {
         mLanguageSwitcher = languageSwitcher;
