@@ -75,7 +75,8 @@ public class MultilineCandidateView extends View {
     private final PopupWindow mPreviewPopup;
     private int mCurrentWordIndex;
 
-    private static final int MAX_SUGGESTIONS = 32;
+    // Set the max suggestions here
+    private static final int MAX_SUGGESTIONS = 200;
     private static final int SCROLL_PIXELS = 20;
 
     private final int[] mWordWidth = new int[MAX_SUGGESTIONS];

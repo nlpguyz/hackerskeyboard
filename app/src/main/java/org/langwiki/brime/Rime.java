@@ -394,7 +394,7 @@
             boolean done = false;
             while (!done && allCands.size() < sMaxCandidates) {
                 cands = getCandidates();
-                Log.severe("" + cands);
+                //Log.severe(cands == null ? "null" : Arrays.toString(cands));
                 if (cands != null) {
                     allCands.addAll(Arrays.asList(cands));
                     if (hasRight()) {
