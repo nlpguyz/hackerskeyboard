@@ -155,7 +155,7 @@ public class LatinKeyboard extends Keyboard {
     @Override
     protected Key createKeyFromXml(Resources res, Row parent, int x, int y,
             XmlResourceParser parser) {
-        Key key = new LatinKey(res, parent, x, y, parser);
+        Key key = new LatinKey(this, res, parent, x, y, parser);
         if (key.codes == null) return key;
         switch (key.codes[0]) {
         case LatinIME.ASCII_ENTER:
@@ -785,7 +785,8 @@ public class LatinKeyboard extends Keyboard {
     }
 
     // TODO LatinKey could be static class
-    class LatinKey extends Key {
+    static class LatinKey extends Key {
+        LatinKeyboard mLatinKeyboard;
 
         // functional normal state (with properties)
         private final int[] KEY_STATE_FUNCTIONAL_NORMAL = {
@@ -798,9 +799,10 @@ public class LatinKeyboard extends Keyboard {
                 android.R.attr.state_pressed
         };
 
-        public LatinKey(Resources res, Keyboard.Row parent, int x, int y,
+        public LatinKey(LatinKeyboard keyboard, Resources res, Keyboard.Row parent, int x, int y,
                 XmlResourceParser parser) {
             super(res, parent, x, y, parser);
+            mLatinKeyboard = keyboard;
         }
 
         // sticky is used for shift key.  If a key is not sticky and is modifier,
@@ -816,7 +818,7 @@ public class LatinKeyboard extends Keyboard {
         public boolean isInside(int x, int y) {
             // TODO This should be done by parent.isInside(this, x, y)
             // if Key.parent were protected.
-            boolean result = LatinKeyboard.this.isInside(this, x, y);
+            boolean result = mLatinKeyboard.isInside(this, x, y);
             return result;
         }
 
@@ -839,7 +841,7 @@ public class LatinKeyboard extends Keyboard {
         @Override
         public int squaredDistanceFrom(int x, int y) {
             // We should count vertical gap between rows to calculate the center of this Key.
-            final int verticalGap = LatinKeyboard.this.mVerticalGap;
+            final int verticalGap = mLatinKeyboard.mVerticalGap;
             final int xDist = this.x + width / 2 - x;
             final int yDist = this.y + (height + verticalGap) / 2 - y;
             return xDist * xDist + yDist * yDist;

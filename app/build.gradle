@@ -28,7 +28,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation project(':rimenative-release')
-    implementation 'com.android.support:support-v13:27.0.2'
+    implementation 'com.android.support:support-v13:27.1.0'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
 }

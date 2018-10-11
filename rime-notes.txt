@@ -19,3 +19,10 @@ if (r) commitText(Rime.getCommitText());
 
 // Candidate update
 
+// Maintenance Notes
+//   Update rimenative
+//      Modify settings.gradle and change "rimenative-release" to "rimenative"
+//      git submodule --init --recursive ?
+//   Make module 'rimenative' (flavors debug and release)
+//   Copy .aar to rimenative-{debug,release}
+//   Check settings.gradle and main build.gralde to restore reference to 'rimenative-release'

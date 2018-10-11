@@ -30,6 +30,7 @@
     import org.mozilla.javascript.*;
 
     import org.langwiki.brime.schema.SchemaManager;
+    import android.util.Log;
 
     /**
      * Rime與OpenCC的Java實現
@@ -38,6 +39,7 @@
      *     href="https://github.com/BYVoid/OpenCC">OpenCC</a>
      */
     public class Rime {
+        private static final String TAG = "BRime";
         private static Rime sInstance;
         private static int sMaxCandidates = 400;
 
@@ -378,6 +380,10 @@
         final int pageUp = 65365;
         final int pageDown = 65366;
 
+        /**
+         * Gets all candidates from engine.
+         * @return a list of RimeCandidate.
+         */
         public List<RimeCandidate> getAllCandidates() {
             List<RimeCandidate> allCands = new ArrayList<>();
 
@@ -388,6 +394,7 @@
             boolean done = false;
             while (!done && allCands.size() < sMaxCandidates) {
                 cands = getCandidates();
+                Log.severe("" + cands);
                 if (cands != null) {
                     allCands.addAll(Arrays.asList(cands));
                     if (hasRight()) {
@@ -402,7 +409,6 @@
 
             return allCands;
         }
-
 
         public boolean selectCandidateFromBeginning(int index) {
             // Rewind
