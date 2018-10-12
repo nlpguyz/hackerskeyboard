@@ -20,11 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -76,8 +71,8 @@ public class MultilineCandidateView extends View {
     private int mCurrentWordIndex;
 
     // Set the max suggestions here
-    private static final int MAX_SUGGESTIONS = 200;
-    private static final int SCROLL_PIXELS = 20;
+    private static final int MAX_SUGGESTIONS = Rime.MAX_CANDIDATES;
+    private static final int SCROLL_PIXELS = 40;
 
     private final int[] mWordWidth = new int[MAX_SUGGESTIONS];
     private final int[] mWordX = new int[MAX_SUGGESTIONS];

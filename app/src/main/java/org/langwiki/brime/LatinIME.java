@@ -65,7 +65,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.PrintWriterPrinter;
 import android.util.Printer;
-import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.View;
@@ -80,9 +79,6 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputBinding;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import java.io.File;
@@ -106,7 +102,7 @@ public class LatinIME extends InputMethodService implements
         ComposeSequencing,
         LatinKeyboardBaseView.OnKeyboardActionListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = "BRime";
+    private static final String TAG = IMEConfig.TAG;
     public static final String DEFAULT_LANGS = "en,zh_CN,";
     private static final String AUTHORITY = "org.langwiki.brime.inputcontent";
     private static final String MIME_TYPE_GIF = "image/gif";
@@ -794,7 +790,7 @@ public class LatinIME extends InputMethodService implements
             mNotificationReceiver = null;
         }
 
-        mCandiateController.discussPopupWindow();
+        mCandiateController.dismissPopupWindow();
 
         LatinImeLogger.commit();
         LatinImeLogger.onDestroy();
@@ -830,7 +826,10 @@ public class LatinIME extends InputMethodService implements
             reloadKeyboards();
             removeCandidateViewContainer();
         }
+
         super.onConfigurationChanged(conf);
+
+        mCandiateController.resetPopupWindow();
     }
 
     @Override
@@ -863,7 +862,8 @@ public class LatinIME extends InputMethodService implements
     // Framework callback to create a candidate view.
     @Override
     public View onCreateCandidatesView() {
-        return mCandiateController.onCreateCandidatesView(mKeyboardSwitcher.getInputView());
+        View view = mCandiateController.onCreateCandidatesView(mKeyboardSwitcher.getInputView());
+        return view;
     }
 
     private void removeCandidateViewContainer() {
@@ -1162,7 +1162,7 @@ public class LatinIME extends InputMethodService implements
                         // one is not
                         // and if not showing "Touch again to save".
                         if (mCandiateController.getCandidateView() != null
-                                && !mSuggestPuncList.equals(mCandiateController.getCandidateView().getSuggestions())
+                                && !mSuggestPuncList.equals(mCandiateController.getSuggestions())
                                 && !mCandiateController.getCandidateView().isShowingAddToDictionaryHint()) {
                             setNextSuggestions();
                         }
@@ -1218,7 +1218,7 @@ public class LatinIME extends InputMethodService implements
         }
         mWordToSuggestions.clear();
         mWordHistory.clear();
-        mCandiateController.discussPopupWindow();
+        mCandiateController.dismissPopupWindow();
         super.hideWindow();
         TextEntryState.endSession();
     }
@@ -1276,7 +1276,7 @@ public class LatinIME extends InputMethodService implements
             }
         } else {
             if (mCandiateController.hasContainer()) {
-                mCandiateController.discussPopupWindow();
+                mCandiateController.dismissPopupWindow();
                 removeCandidateViewContainer();
                 commitTyped(getCurrentInputConnection(), true);
             }
@@ -2961,7 +2961,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void pickFirstSuggestionOrTypedText() {
-        List<CharSequence> suggestions = mCandiateController.getCandidateView().getSuggestions();
+        List<CharSequence> suggestions = mCandiateController.getSuggestions();
         if (suggestions != null && !suggestions.isEmpty()) {
             pickSuggestionManually(0, suggestions.get(0));
         } else {
@@ -2970,7 +2970,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     public void pickSuggestionManually(int index, CharSequence suggestion) {
-        List<CharSequence> suggestions = mCandiateController.getCandidateView().getSuggestions();
+        List<CharSequence> suggestions = mCandiateController.getSuggestions();
 
         final boolean correcting = TextEntryState.isCorrecting();
         InputConnection ic = getCurrentInputConnection();

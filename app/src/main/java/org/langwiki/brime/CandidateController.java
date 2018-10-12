@@ -1,5 +1,6 @@
 package org.langwiki.brime;
 
+import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.util.Log;
@@ -10,6 +11,9 @@ import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CandidateController {
     private static final String TAG = "BRime";
@@ -36,6 +40,7 @@ public class CandidateController {
 
     // Holds the scroll candidate view and all candidates
     private MultilineCandidateView mCandidateView;
+    private List<CharSequence> suggestions;
 
     public CandidateController(InputMethodService context) {
         mContext = context;
@@ -51,9 +56,13 @@ public class CandidateController {
         // Finally, show the popup window at the center location of root relative layout
         // popupWindow.showAtLocation(anyViewOnlyNeededForWindowToken, Gravity.CENTER, 0, 0);
         // mCandidatePopupWindow.showAtLocation(mCandidateViewContainer, Gravity.TOP | Gravity.START,0,0);
+        if (mCandidatePopupWindow == null) {
+            createPopupWindow();
+        }
+
         mCandidatePopupWindow.showAtLocation(
                 mWindow,
-                Gravity.NO_GRAVITY,0,0); // TODO move to row 2
+                Gravity.NO_GRAVITY,0,5); // TODO move to row 2
 
         // Update location of the popup
         int pos[] = new int[2];
@@ -92,17 +101,20 @@ public class CandidateController {
             }
         });
 
+        return mCandidateViewContainer;
+    }
+
+    public void createPopupWindow() {
         // This is the window that contains a MultilineCandidateView which shows candidates
         View candidateWindow = mContext.getLayoutInflater().inflate(R.layout.candidate_window,null);
         mCandidateView = candidateWindow.findViewById(R.id.candidates); // candidates width matches parent
         mCandidateView.setPadding(0, 0, 0, 0);
 
-        // TODO check the interaction
-        mCandidateView.setService((LatinIME) mContext);
-
+        // TODO size depends on the parent and resize upon configuration change
+        int popupWidth = mCandidateViewPlaceholder.getMeasuredWidth();
         mCandidatePopupWindow = new PopupWindow(
                 candidateWindow,
-                LinearLayout.LayoutParams.WRAP_CONTENT, // width
+                popupWidth,
                 LinearLayout.LayoutParams.WRAP_CONTENT // height
         );
 
@@ -123,7 +135,8 @@ public class CandidateController {
             mImagePopopWindow.setElevation(5.0f);
         }
 
-        return mCandidateViewContainer;
+        // TODO check the interaction
+        mCandidateView.setService((LatinIME) mContext);
     }
 
     public MultilineCandidateView getCandidateView() {
@@ -160,8 +173,21 @@ public class CandidateController {
         return mCandidateView != null && mCandidateView.dismissAddToDictionaryHint();
     }
 
-    public void discussPopupWindow() {
-        mCandidatePopupWindow.setElevation(0);
-        mCandidatePopupWindow.dismiss();
+    public void dismissPopupWindow() {
+        if (mCandidatePopupWindow != null) {
+            mCandidatePopupWindow.setElevation(0);
+            mCandidatePopupWindow.dismiss();
+        }
+    }
+
+    public void resetPopupWindow() {
+        mCandidatePopupWindow = null;
+    }
+
+    public List<CharSequence> getSuggestions() {
+        if (getCandidateView() != null)
+            return getCandidateView().getSuggestions();
+        else
+            return new ArrayList<>();
     }
 }
