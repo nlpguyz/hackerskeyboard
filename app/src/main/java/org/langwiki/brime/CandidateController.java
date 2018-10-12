@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CandidateController {
-    private static final String TAG = "BRime";
+    private static final String TAG = IMEConfig.TAG;
 
     // Test flags
     static final boolean TEST_POPUP_WINDOW = false;
