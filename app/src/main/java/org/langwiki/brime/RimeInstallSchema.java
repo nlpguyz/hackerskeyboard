@@ -7,7 +7,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import org.langwiki.brime.schema.ExternalStorage;
 import org.langwiki.brime.schema.IMDF;
 import org.langwiki.brime.schema.SchemaManager;
 
@@ -16,7 +18,8 @@ import java.util.List;
 import jline.internal.Nullable;
 
 public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener {
-    private static final String TAG = "BRime-Pref";
+    private static final String TAG = IMEConfig.TAG;
+    public static final String SDCARD_IS_NOT_WRITABLE = "SDCard is not writable!";
     PreferenceCategory schemaParent;
     SchemaManager sm;
 
@@ -65,6 +68,13 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    if (!ExternalStorage.isWritable()) {
+                        Toast.makeText(RimeInstallSchema.this,
+                                SDCARD_IS_NOT_WRITABLE,
+                                Toast.LENGTH_LONG);
+                        return true;
+                    }
+
                     final String id = preference.getKey();
                     new Thread() {
                         @Override
@@ -72,7 +82,8 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
                             SchemaManager.getInstance().installSchema(id, true);
                         }
                     }.start();
-                    return false;
+
+                    return true;
                 }
             });
 

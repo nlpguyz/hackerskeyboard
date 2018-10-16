@@ -1,5 +1,6 @@
 package org.langwiki.brime.schema;
 
+import org.langwiki.brime.IMEConfig;
 import org.langwiki.brime.LatinIME;
 import org.langwiki.brime.R;
 
@@ -27,13 +28,14 @@ import java.util.Locale;
 import java.util.Map;
 
 public class SchemaManager {
-    private static final String TAG = "BRime";
+    private static final String TAG = IMEConfig.TAG;
 
     private static SchemaManager sInstance;
     private Context context;
     private Resources resources;
 
-    public static final String USER_DIR = "/sdcard/brime";
+    // The directory name in external storage
+    public static final String USER_DIR = "brime";
     public static final String DEFAULT_IMDF = "brime_basic.json";
 
     public static final String IMDF_SERVER_URL

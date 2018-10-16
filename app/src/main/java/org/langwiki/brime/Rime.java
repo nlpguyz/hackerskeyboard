@@ -27,6 +27,7 @@
     import java.util.List;
     import java.util.logging.Logger;
 
+    import org.langwiki.brime.schema.ExternalStorage;
     import org.mozilla.javascript.*;
 
     import org.langwiki.brime.schema.SchemaManager;
@@ -57,11 +58,11 @@
 
         static class Config {
             static String getSharedDataDir() {
-                return SchemaManager.USER_DIR;
+                return ExternalStorage.getSdCardPath() + SchemaManager.USER_DIR;
             }
 
             static String getUserDataDir() {
-                return SchemaManager.USER_DIR;
+                return ExternalStorage.getSdCardPath() + SchemaManager.USER_DIR;
             }
 
             static void deployOpencc() {

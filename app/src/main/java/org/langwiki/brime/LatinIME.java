@@ -111,6 +111,7 @@ public class LatinIME extends InputMethodService implements
     static final boolean DEBUG = false;
     static final boolean TRACE = false;
     static final boolean JS_DEBUG_SERVER = true;
+    public static final String ENGINE_BUSY = "Engine busy...";
 
     private static Context sContext;
 
@@ -2882,7 +2883,7 @@ public class LatinIME extends InputMethodService implements
 
         // Engine busy case: if no suggestions, show "engine busy"
         if (stringList.isEmpty() && mRime.isBusy()) {
-            stringList.add("Engine busy...");
+            stringList.add(ENGINE_BUSY);
         }
 
         // TODO check the values
