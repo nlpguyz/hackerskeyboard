@@ -87,6 +87,8 @@ public class CandidateView extends View {
     private int mTotalWidth;
     
     private final GestureDetector mGestureDetector;
+    private Typeface mTypeface;
+    private Typeface mTypefaceBold;
 
     /**
      * Construct a CandidateView for showing suggested words for completion.
@@ -129,6 +131,16 @@ public class CandidateView extends View {
         setHorizontalScrollBarEnabled(false);
         setVerticalScrollBarEnabled(false);
         scrollTo(0, getScrollY());
+
+        if (true) {
+            // Default type face
+            mTypeface = Typeface.DEFAULT;
+            mTypefaceBold = Typeface.DEFAULT_BOLD;
+        } else {
+            // New type face
+            mTypeface = Typeface.createFromFile("abc.ttf"); // TODO
+            mTypefaceBold = Typeface.create(mTypeface, Typeface.BOLD);
+        }
     }
 
     private class CandidateStripGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -240,7 +252,7 @@ public class CandidateView extends View {
             paint.setColor(mColorNormal);
             if (mHaveMinimalSuggestion 
                     && ((i == 1 && !typedWordValid) || (i == 0 && typedWordValid))) {
-                paint.setTypeface(Typeface.DEFAULT_BOLD);
+                paint.setTypeface(mTypefaceBold);
                 paint.setColor(mColorRecommended);
                 existsAutoCompletion = true;
             } else if (i != 0 || (wordLength == 1 && count > 1)) {
@@ -279,7 +291,7 @@ public class CandidateView extends View {
                 }
                 canvas.translate(-x - wordWidth, 0);
             }
-            paint.setTypeface(Typeface.DEFAULT);
+            paint.setTypeface(mTypeface);
             x += wordWidth;
         }
         if (!isInEditMode())
