@@ -35,7 +35,7 @@ public class SchemaManager {
     private Resources resources;
 
     // The directory name in external storage
-    public static final String USER_DIR = "brime";
+    private static final String USER_DIR = "brime";
     public static final String DEFAULT_IMDF = "brime_basic.json";
 
     public static final String IMDF_SERVER_URL
@@ -53,6 +53,13 @@ public class SchemaManager {
         mList = null;
     }
 
+    /**
+     * Activates a schema.
+     *
+     * The schema is activated in the engine and the font is selected.
+     *
+     * @param schemaId The ID of the schema.
+     */
     public void selectSchema(final String schemaId) {
         final Rime rime = Rime.getInstance();
         new Thread() {
@@ -116,7 +123,7 @@ public class SchemaManager {
 
     public void initializeDataDir() {
         // Make sure the path exists
-        File brimePath = new File(USER_DIR);
+        File brimePath = new File(getUserDir());
         brimePath.mkdir();
 
         final AssetManager assetMgr = context.getAssets();
@@ -149,7 +156,7 @@ public class SchemaManager {
     }
 
     public boolean deployImdf(IMDF imdf, FileOpener opener) {
-        String versionFileName = USER_DIR + File.separator + imdf.id + ".ver";
+        String versionFileName = getUserDir() + File.separator + imdf.id + ".ver";
         File versionFile = new File(versionFileName);
         String version = FileHelper.loadFile(versionFile, null);
         if (version != null && version.trim().compareTo(imdf.version) >= 0) {
@@ -163,7 +170,7 @@ public class SchemaManager {
             String schemaFilepath = null;
             for (String fn : imdf.files) {
                 try {
-                    String dstPath = USER_DIR + File.separator + fn;
+                    String dstPath = getUserDir() + File.separator + fn;
                     if (fn.endsWith("schema.yaml"))
                         schemaFilepath = dstPath;
 
@@ -313,5 +320,9 @@ public class SchemaManager {
             value = map.get("zh");
         }
         return value;
+    }
+
+    public static String getUserDir() {
+        return ExternalStorage.getSdCardPath() + "/" + USER_DIR;
     }
 }

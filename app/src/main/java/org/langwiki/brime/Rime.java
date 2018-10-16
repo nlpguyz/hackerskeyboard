@@ -58,11 +58,11 @@
 
         static class Config {
             static String getSharedDataDir() {
-                return ExternalStorage.getSdCardPath() + SchemaManager.USER_DIR;
+                return SchemaManager.getUserDir();
             }
 
             static String getUserDataDir() {
-                return ExternalStorage.getSdCardPath() + SchemaManager.USER_DIR;
+                return SchemaManager.getUserDir();
             }
 
             static void deployOpencc() {

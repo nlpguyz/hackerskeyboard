@@ -43,6 +43,9 @@ class CandidateDrawer {
     private int mScrollY;
     private int mStartY;
 
+    private Typeface mTypeface;
+    private Typeface mTypefaceBold;
+
     protected static class DrawStatus {
         public CharSequence selectedString;
         public int selectIndex;
@@ -81,6 +84,16 @@ class CandidateDrawer {
         mXRightMargin = res.getDimensionPixelOffset(R.dimen.candidate_window_right_margin);
 
         mDrawStatus = new DrawStatus();
+
+        if (true) {
+            // Default type face
+            mTypeface = Typeface.DEFAULT;
+            mTypefaceBold = Typeface.DEFAULT_BOLD;
+        } else {
+            // New type face
+            mTypeface = Typeface.createFromFile("abc.ttf"); // TODO
+            mTypefaceBold = Typeface.create(mTypeface, Typeface.BOLD);
+        }
     }
 
     public void setSuggestions(List<CharSequence> suggestions) {
@@ -189,7 +202,7 @@ class CandidateDrawer {
             mPaint.setColor(mColorNormal);
             if (hasMinimalSuggestion
                     && ((i == 1 && !typedWordValid) || (i == 0 && typedWordValid))) {
-                mPaint.setTypeface(Typeface.DEFAULT_BOLD);
+                mPaint.setTypeface(mTypefaceBold);
                 mPaint.setColor(mColorRecommended);
                 mDrawStatus.existsAutoCompletion = true;
             } else if (i != 0 || (wordLength == 1 && count > 1)) {
@@ -229,7 +242,7 @@ class CandidateDrawer {
                     canvas.translate(-(x + wordWidth), -(y - sy));
                 }
             }
-            mPaint.setTypeface(Typeface.DEFAULT);
+            mPaint.setTypeface(mTypeface);
         }
 
         return mDrawStatus;
