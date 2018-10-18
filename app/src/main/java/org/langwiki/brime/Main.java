@@ -43,19 +43,19 @@ public class Main extends Activity {
         String html = getString(R.string.main_body);
         html += "<p><i>Version: " + getString(R.string.auto_version) + "</i></p>";
         Spanned content = Html.fromHtml(html);
-        TextView description = (TextView) findViewById(R.id.main_description);
+        TextView description = findViewById(R.id.main_description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
         description.setText(content, BufferType.SPANNABLE);
 
 
-        final Button setup1 = (Button) findViewById(R.id.main_setup_btn_configure_imes);
+        final Button setup1 = findViewById(R.id.main_setup_btn_configure_imes);
         setup1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivityForResult(new Intent(android.provider.Settings.ACTION_INPUT_METHOD_SETTINGS), 0);
             }
         });
 
-        final Button setup2 = (Button) findViewById(R.id.main_setup_btn_set_ime);
+        final Button setup2 = findViewById(R.id.main_setup_btn_set_ime);
         setup2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -65,13 +65,21 @@ public class Main extends Activity {
         
         final Activity that = this;
 
-        final Button setup4 = (Button) findViewById(R.id.main_setup_btn_input_lang);
+        final Button setup4 = findViewById(R.id.main_setup_btn_input_lang);
         setup4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivityForResult(new Intent(that, InputLanguageSelection.class), 0);
             }
         });
 
+        LatinIME.setContext(this);
+        final Button setup5 = findViewById(R.id.main_setup_btn_setup_rime);
+        setup5.setOnClickListener(new View.OnClickListener() {
+                                      public void onClick(View v) {
+                                          startActivityForResult(new Intent(that, RimePreference.class), 0);
+                                      }
+                                  });
+        /*
         final Button setup3 = (Button) findViewById(R.id.main_setup_btn_get_dicts);
         setup3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -85,7 +93,7 @@ public class Main extends Activity {
                             .show();
                 }
             }
-        });
+        }); */
         // PluginManager.getPluginDictionaries(getApplicationContext()); // why?
     }    
 }

@@ -7,21 +7,10 @@ import android.preference.PreferenceManager;
 public class SettingManager {
     public static final String KEY_CURRENT_RIME_SCHEMA_ID = "current_rime_schema_id";
 
-    private static SettingManager sInstance;
     private Context context;
     private SharedPreferences prefs;
 
-    public static SettingManager getInstance() {
-        if (sInstance != null)
-            return sInstance;
-
-        synchronized (SettingManager.class) {
-            sInstance = new SettingManager(LatinIME.getContext());
-            return sInstance;
-        }
-    }
-
-    private SettingManager(Context ctx) {
+    public SettingManager(Context ctx) {
         context = ctx;
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
     }

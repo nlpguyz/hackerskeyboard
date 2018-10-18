@@ -20,8 +20,11 @@
 		<TableRow>
 			<Button android:text="@string/main_setup_set_ime" android:id="@+id/main_setup_btn_set_ime"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-			<Button android:text="@string/main_setup_get_dicts"
+			<!-- <Button android:text="@string/main_setup_get_dicts"
 				android:id="@+id/main_setup_btn_get_dicts" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></Button> -->
+			<Button android:text="@string/main_setup_rime"
+				android:id="@+id/main_setup_btn_setup_rime" android:layout_width="wrap_content"
 				android:layout_height="wrap_content"></Button>
 		</TableRow>
 	</TableLayout>

@@ -15,13 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 public class RimePreference extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
-    private static final String TAG = "BRime-Pref";
+    private static final String TAG = IMEConfig.TAG + "-Pref";
 
     private List<CheckBoxPreference> mSchemaPrefs = new ArrayList<>();
+    private SettingManager mSettingsManager;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        mSettingsManager = new SettingManager(this);
         addPreferencesFromResource(R.xml.pref_rime);
     }
 
@@ -35,7 +37,7 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         schemaParent.removeAll();
         mSchemaPrefs.clear();
 
-        String selectedId = SettingManager.getInstance().getCurrentRimeSchemaId();
+        String selectedId = mSettingsManager.getCurrentRimeSchemaId();
         CheckBoxPreference first = null;
         CheckBoxPreference selected = null;
 
@@ -76,7 +78,7 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
     }
 
     public void onDeployButton(View v) {
-        SchemaManager.getInstance().redeploy(false, true);
+        SchemaManager.getInstance().redeploy(this, false, true);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
         boolean value = ((Boolean)newValue).booleanValue();
 
         // Cannot deselect last schema
-        if (value == false && preference.getKey().equals(SettingManager.getInstance().getCurrentRimeSchemaId())) {
+        if (value == false && preference.getKey().equals(mSettingsManager.getCurrentRimeSchemaId())) {
             return false;
         }
 
@@ -103,7 +105,7 @@ public class RimePreference extends PreferenceActivity implements Preference.OnP
             }
 
             // Save
-            SettingManager.getInstance().setCurrentRimeSchemaId(preference.getKey());
+            mSettingsManager.setCurrentRimeSchemaId(preference.getKey());
 
             // Enable
             SchemaManager.getInstance().selectSchema(preference.getKey());

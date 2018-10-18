@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.langwiki.brime.IMEConfig;
 import org.langwiki.brime.utils.AnimatedGifEncoder;
 
 import java.io.File;
@@ -26,7 +27,7 @@ import java.io.OutputStream;
   https://android--examples.blogspot.com/2015/11/android-how-to-draw-text-on-canvas.html
  */
 public class RenderManager {
-    private static final String TAG = "BRime";
+    private static final String TAG = IMEConfig.TAG;
     private static RenderManager sInstance;
     private Context context;
 

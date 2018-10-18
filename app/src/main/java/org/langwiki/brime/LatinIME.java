@@ -251,7 +251,7 @@ public class LatinIME extends InputMethodService implements
     private String mVolDownAction;
 
     public static final GlobalKeyboardSettings sKeyboardSettings = new GlobalKeyboardSettings();
-    static LatinIME sInstance;
+    static Context sInstance;
 
     private int mHeightPortrait;
     private int mHeightLandscape;
@@ -366,6 +366,10 @@ public class LatinIME extends InputMethodService implements
             //postUpdateSuggestions();
         }
     };
+
+    public LatinIME() {
+        sInstance = this;
+    }
 
     public void showAlert(String msgValue) {
         Message msg = mRimeHandler.obtainMessage(1, msgValue);
@@ -484,6 +488,7 @@ public class LatinIME extends InputMethodService implements
         }
     };
 
+    public static void setContext(Context ctx) { sInstance = ctx; }
     public static Context getContext() {
         return sInstance;
     }
@@ -494,7 +499,6 @@ public class LatinIME extends InputMethodService implements
         LatinImeLogger.init(this);
         KeyboardSwitcher.init(this);
         super.onCreate();
-        sInstance = this;
         // setStatusIcon(R.drawable.ime_qwerty);
         mResources = getResources();
         final Configuration conf = mResources.getConfiguration();
@@ -592,7 +596,7 @@ public class LatinIME extends InputMethodService implements
 
         mTypeFace = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 
-        mSchemaManager.redeploy(true, true);
+        mSchemaManager.redeploy(this, true, true);
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");

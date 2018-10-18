@@ -79,7 +79,7 @@ import java.util.WeakHashMap;
  * @attr ref R.styleable#LatinKeyboardBaseView_popupLayout
  */
 public class LatinKeyboardBaseView extends View implements PointerTracker.UIProxy {
-    private static final String TAG = "BRime";
+    private static final String TAG = IMEConfig.TAG;
     private static final boolean DEBUG = false;
 
     public static final int NOT_A_TOUCH_COORDINATE = -1;

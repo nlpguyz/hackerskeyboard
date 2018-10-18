@@ -10,7 +10,9 @@ public class VibratePreference extends SeekBarPreferenceString {
     
     @Override
     public void onChange(float val) {
-        LatinIME ime = LatinIME.sInstance;
+        if (LatinIME.sInstance instanceof  LatinIME)
+            return;
+        LatinIME ime = (LatinIME) LatinIME.sInstance;
         if (ime != null) ime.vibrate((int) val);
     }
 }

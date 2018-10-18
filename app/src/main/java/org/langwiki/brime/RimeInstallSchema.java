@@ -56,7 +56,7 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
         // Add schema checkboxes
         for (IMDF imdf : list) {
             SchemaManager sm = SchemaManager.getInstance();
-            String name = sm.getLocaleString(imdf.name);
+            String name = sm.getLocaleString(this, imdf.name);
             if (name == null) {
                 name = imdf.id;
             }
@@ -79,7 +79,8 @@ public class RimeInstallSchema extends PreferenceActivity implements SchemaManag
                     new Thread() {
                         @Override
                         public void run() {
-                            SchemaManager.getInstance().installSchema(id, true);
+                            SchemaManager.getInstance().installSchema(
+                                    RimeInstallSchema.this, id, true);
                         }
                     }.start();
 

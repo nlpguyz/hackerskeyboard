@@ -31,8 +31,6 @@ public class SchemaManager {
     private static final String TAG = IMEConfig.TAG;
 
     private static SchemaManager sInstance;
-    private Context context;
-    private Resources resources;
 
     // The directory name in external storage
     private static final String USER_DIR = "brime";
@@ -70,14 +68,14 @@ public class SchemaManager {
         }.start();
     }
 
-    public void redeploy(final boolean initial, boolean background) {
+    public void redeploy(final Context context, final boolean initial, boolean background) {
         final Rime rime = Rime.getInstance();
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (initial) {
                     Log.i(TAG, "Starting to copy schema files");
-                    initializeDataDir();
+                    initializeDataDir(context);
                     rime.initSchema();
                 }
                 rime.incrementBusy();
@@ -109,19 +107,17 @@ public class SchemaManager {
             return sInstance;
 
         synchronized (SchemaManager.class) {
-            sInstance = new SchemaManager(LatinIME.getContext());
+            sInstance = new SchemaManager();
             return sInstance;
         }
     }
 
-    private SchemaManager(Context context) {
-        this.context = context;
-        resources = context.getResources();
+    private SchemaManager() {
         listeners = new ArrayList<>();
         mHandler = new Handler();
     }
 
-    public void initializeDataDir() {
+    public void initializeDataDir(Context context) {
         // Make sure the path exists
         File brimePath = new File(getUserDir());
         brimePath.mkdir();
@@ -194,7 +190,7 @@ public class SchemaManager {
         return !fail;
     }
 
-    private void showToast(final String msg) {
+    private void showToast(final Context context, final String msg) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -204,7 +200,7 @@ public class SchemaManager {
         });
     }
 
-    public boolean installOnlineImdf(final IMDF imdf, boolean showToast) {
+    public boolean installOnlineImdf(final Context context, final IMDF imdf, boolean showToast) {
         final String homeUrl = imdf.homeUrl;
         if (homeUrl == null || homeUrl.isEmpty()) {
             return false;
@@ -213,8 +209,8 @@ public class SchemaManager {
         Resources res = context.getResources();
 
         if (showToast) {
-            showToast(String.format(res.getString(R.string.text_installing_rime_schema),
-                    getLocaleString(imdf.name)));
+            showToast(context, String.format(res.getString(R.string.text_installing_rime_schema),
+                    getLocaleString(context, imdf.name)));
         }
 
         FileOpener opener = new FileOpener() {
@@ -230,23 +226,23 @@ public class SchemaManager {
         if (showToast) {
             String msg = successful
                     ? String.format(res.getString(R.string.rime_install_schema_successful),
-                        getLocaleString(imdf.name))
+                        getLocaleString(context, imdf.name))
                     : String.format(res.getString(R.string.rime_install_schema_failed),
-                        getLocaleString(imdf.name));
-            showToast(msg);
+                        getLocaleString(context, imdf.name));
+            showToast(context, msg);
         }
 
         return successful;
     }
 
-    public void installSchema(String id, boolean showToast) {
+    public void installSchema(Context context, String id, boolean showToast) {
         if (mList == null) {
             return;
         }
 
         for (IMDF im : mList) {
             if (id.equals(im.id)) {
-                installOnlineImdf(im, showToast);
+                installOnlineImdf(context, im, showToast);
                 return;
             }
         }
@@ -297,8 +293,9 @@ public class SchemaManager {
         listeners.remove(l);
     }
 
-    public String getLocaleString(Map<String,String> map) {
-        Locale current = resources.getConfiguration().locale;
+    public String getLocaleString(Context context, Map<String,String> map) {
+        Resources res = context.getResources();
+        Locale current = res.getConfiguration().locale;
         String lang = current.toString();
 
         // remove _#HAN

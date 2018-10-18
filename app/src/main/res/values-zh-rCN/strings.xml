@@ -198,6 +198,7 @@
     <string name="main_setup_set_ime">选择输入法</string>
     <string name="main_setup_get_dicts">获取字典</string>
     <string name="main_setup_input_lang">输入语言</string>
+    <string name="main_setup_rime">设置中州韵</string>
     <string name="main_body">"
         &lt;h2&gt;启用黑客键盘&lt;/h2&gt;
 
