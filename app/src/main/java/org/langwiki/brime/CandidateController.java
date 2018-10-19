@@ -149,7 +149,9 @@ public class CandidateController {
     }
 
     private void toggleCandidateExpansion() {
-        mCandidateView.setExpanded(!mCandidateView.isExpanded());
+        if (mCandidateView != null) {
+            mCandidateView.setExpanded(!mCandidateView.isExpanded());
+        }
     }
 
     public boolean hasContainer() {
