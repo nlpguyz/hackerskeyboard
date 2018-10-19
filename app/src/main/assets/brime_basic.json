@@ -11,6 +11,7 @@
     "default.yaml",
     "essay.txt",
     "luna_pinyin.dict.yaml",
-    "luna_pinyin.schema.yaml"
+    "luna_pinyin.schema.yaml",
+    "symbols.yaml"
   ]
 }
