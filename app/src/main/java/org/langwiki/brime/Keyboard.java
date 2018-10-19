@@ -783,7 +783,7 @@ public class Keyboard {
                     ((edgeFlags & Keyboard.EDGE_RIGHT) != 0 ? "R" : "-") +
                     ((edgeFlags & Keyboard.EDGE_TOP) != 0 ? "T" : "-") +
                     ((edgeFlags & Keyboard.EDGE_BOTTOM) != 0 ? "B" : "-"));
-            return "KeyDebugFIXME(label=" + label +
+            return "KeyDebug(label=" + label +
                 (shiftLabel != null ? " shift=" + shiftLabel : "") +
                 (capsLabel != null ? " caps=" + capsLabel : "") +
                 (text != null ? " text=" + text : "" ) +
