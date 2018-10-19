@@ -142,5 +142,20 @@
             "en": "Cantonese Pinyin (Jyutping)",
             "zh_CN": "\u7cb5\u62fc"
         }
+    },
+    {
+        "files": [
+            "wugniu.schema.yaml",
+            "wugniu_lopha.dict.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/dialects/",
+        "version": "0.15",
+        "id": "wugniu",
+        "name": {
+            "default": "Shanghainese Pinyin (Wugniu)",
+            "zh_TW": "\u4e0a\u6d77\u65b0\u6d3e",
+            "en": "Shanghainese Pinyin (Wugniu)",
+            "zh_CN": "\u4e0a\u6d77\u65b0\u6d3e"
+        }
     }
 ]
