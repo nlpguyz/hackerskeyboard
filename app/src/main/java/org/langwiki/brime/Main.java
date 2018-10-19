@@ -32,9 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.BufferType;
 
+import org.langwiki.brime.schema.SchemaManager;
+
 public class Main extends Activity {
 
     private final static String MARKET_URI = "market://search?q=pub:\"Klaus Weidner\"";
+    private SchemaManager mSchemaManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,10 @@ public class Main extends Activity {
                                           startActivityForResult(new Intent(that, RimePreference.class), 0);
                                       }
                                   });
+
+        mSchemaManager = SchemaManager.getInstance();
+        mSchemaManager.redeploy(this, true, true);
+
         /*
         final Button setup3 = (Button) findViewById(R.id.main_setup_btn_get_dicts);
         setup3.setOnClickListener(new View.OnClickListener() {

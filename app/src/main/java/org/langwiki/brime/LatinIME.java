@@ -591,12 +591,10 @@ public class LatinIME extends InputMethodService implements
         };
 
         mRime.setRimeListener(mRimeListener);
-
-        mSchemaManager = SchemaManager.getInstance();
-
         mTypeFace = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 
-        mSchemaManager.redeploy(this, true, true);
+        mSchemaManager = SchemaManager.getInstance();
+        mSchemaManager.redeploy(this, false, true);
 
         if (JS_DEBUG_SERVER) {
             Log.i(TAG, "Starting debug server");

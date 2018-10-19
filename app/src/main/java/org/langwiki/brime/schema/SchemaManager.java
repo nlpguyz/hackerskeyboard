@@ -320,6 +320,6 @@ public class SchemaManager {
     }
 
     public static String getUserDir() {
-        return ExternalStorage.getSdCardPath() + "/" + USER_DIR;
+        return ExternalStorage.getSdCardPath() + USER_DIR;
     }
 }
