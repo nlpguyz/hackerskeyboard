@@ -347,7 +347,7 @@
             return checkAutoCommit();
         }
 
-        private boolean checkAutoCommit() {
+        public boolean checkAutoCommit() {
             boolean r = getCommit();
             if (r && mRimeListener != null)
                 mRimeListener.commitText(getCommitText());

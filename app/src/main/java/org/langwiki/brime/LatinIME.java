@@ -112,6 +112,8 @@ public class LatinIME extends InputMethodService implements
     static final boolean TRACE = false;
     static final boolean JS_DEBUG_SERVER = true;
     public static final String ENGINE_BUSY = "Engine busy...";
+    public static final int MSG_SHOW_ALERT = 1;
+    public static final int MSG_QUEUE_KEY = 2;
 
     private static Context sContext;
 
@@ -326,6 +328,8 @@ public class LatinIME extends InputMethodService implements
     private List<Rime.RimeCandidate> mRimeCandidates;
     // Delay commit until composition is done
     private boolean mRimeFullCompositionCommit = true;
+    private boolean mNoSuggestionIntercept;
+
     // Rime is doing composition
     private boolean mRimeInSelection = false;
     private StringBuilder mRimeSelection = new StringBuilder();
@@ -368,8 +372,10 @@ public class LatinIME extends InputMethodService implements
 
         @Override
         public void commitText(String commitText) {
-            LatinIME.this.commitText(commitText);
             Log.d(TAG, "RIME commitText(" + commitText + ")");
+            mNoSuggestionIntercept = true;
+            pickSuggestion(commitText, false);
+            mNoSuggestionIntercept = false;
         }
     };
 
@@ -378,7 +384,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     public void showAlert(String msgValue) {
-        Message msg = mRimeHandler.obtainMessage(1, msgValue);
+        Message msg = mRimeHandler.obtainMessage(MSG_SHOW_ALERT, msgValue);
         msg.sendToTarget();
     }
 
@@ -588,10 +594,15 @@ public class LatinIME extends InputMethodService implements
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 1:
+                    case MSG_SHOW_ALERT:
                         Log.i(TAG, "Alert to be displayed " + msg.obj);
                         alert("Message value: " + msg.obj);
                         break;
+                    case MSG_QUEUE_KEY: {
+                        int key = msg.arg1;
+                        onKey(key, new int[] {key}, 0, 0);
+                        break;
+                    }
                 }
             }
         };
@@ -2584,6 +2595,17 @@ public class LatinIME extends InputMethodService implements
                 // could be either auto-caps or manual shift.
                 mWord.setFirstCharCapitalized(true);
             }
+
+            // FIXME Send key to Rime engine here
+            if (false && isCJK()) {
+                mRime.onKey(new int[]{primaryCode, 0});
+                boolean committed = mRime.checkAutoCommit();
+                if (committed) {
+                    mComposing.setLength(0);
+                    mWord.reset();
+                }
+            }
+
             mComposing.append((char) primaryCode);
             mWord.add(primaryCode, keyCodes);
             handleCharacterCJK(primaryCode);
@@ -2875,26 +2897,28 @@ public class LatinIME extends InputMethodService implements
 
         List<CharSequence> stringList = new ArrayList<>();
 
+        // Simulate typing here (will be removed, as onKey is called)
         if (typedWord != null) {
             if (!mRimeInSelection) {
                 boolean autoCommit = mRime.setComposition(typedWord);
                 if (autoCommit) {
                     String composing = mRime.getCompositionText();
-                    Log.d(TAG, "Updated composing=" + composing);
-                    LatinIME.this.resetPrediction();
-                    for (int i = 0; i < composing.length(); i++) {
-                        char pressedKey = composing.charAt(i);
-                        handleCharacter(pressedKey, new int[]{pressedKey});
+                    if (composing != null) {
+                        for (int i = 0; i < composing.length(); i++) {
+                            char pressedKey = composing.charAt(i);
+                            Message msg = mRimeHandler.obtainMessage(MSG_QUEUE_KEY, pressedKey);
+                            mRimeHandler.sendMessageDelayed(msg, 100);
+                        }
                     }
                 }
             }
+        }
 
-            // Get all candidates from Rime engine
-            mRimeCandidates = mRime.getAllCandidates();
-            if (mRimeCandidates != null) {
-                for (Rime.RimeCandidate c : mRimeCandidates) {
-                    stringList.add(c.text);
-                }
+        // Get all candidates from Rime engine
+        mRimeCandidates = mRime.getAllCandidates();
+        if (mRimeCandidates != null) {
+            for (Rime.RimeCandidate c : mRimeCandidates) {
+                stringList.add(c.text);
             }
         }
 
@@ -3132,7 +3156,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private boolean rimeIntercept() {
-        return isCJK() && mRimeFullCompositionCommit;
+        return isCJK() && mRimeFullCompositionCommit && !mNoSuggestionIntercept;
     }
 
     /*
