@@ -54,6 +54,12 @@
         public interface RimeListener {
             void onMessage(String message_type, String message_value);
             void onEngineStateChanged(boolean busy);
+
+            /**
+             * Engine-initiated commit
+             * @param commitText
+             */
+            void commitText(String commitText);
         }
 
         static class Config {
@@ -316,14 +322,19 @@
             return mContext.commit_text_preview;
         }
 
-        public void setComposition(CharSequence typedWord) {
+        /**
+         * New API to just set the whole typed word
+         * @param typedWord user-typed word
+         * @return true if auto-commit occurred.
+         */
+        public boolean setComposition(CharSequence typedWord) {
             String current = getCommitText();
             if (current != null) {
                 // Optimized for the case of one more key
                 if (typedWord.length() == getCommitText().length() + 1 &&
                         typedWord.toString().startsWith(getCommitText())) {
                     onKey(new int[]{typedWord.charAt(typedWord.length() - 1), 0});
-                    return;
+                    return checkAutoCommit();
                 }
             }
 
@@ -333,6 +344,14 @@
                 char ch = Character.toLowerCase(typedWord.charAt(i));
                 onKey(new int[]{ch, 0});
             }
+            return checkAutoCommit();
+        }
+
+        private boolean checkAutoCommit() {
+            boolean r = getCommit();
+            if (r && mRimeListener != null)
+                mRimeListener.commitText(getCommitText());
+            return r;
         }
 
         private Rime() {
@@ -673,7 +692,7 @@
 
         public void onMessage(String message_type, String message_value) {
             mOnMessage = true;
-            String msg = String.format("message: [%s] %s", message_type, message_value);
+            String msg = String.format("RIME message: [%s] %s", message_type, message_value);
             Log.info(msg);
             if (mOnMessageFunc != null) {
                 mOnMessageFunc.invoke(msg);
@@ -682,6 +701,7 @@
             if (mRimeListener != null) {
                 mRimeListener.onMessage(message_type, message_value);
             }
+            mOnMessage = false;
         }
 
         public String openccConvert(String line, String name) {

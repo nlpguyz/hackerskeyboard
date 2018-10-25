@@ -365,6 +365,12 @@ public class LatinIME extends InputMethodService implements
             // Crash if not initialized. fix it later.
             //postUpdateSuggestions();
         }
+
+        @Override
+        public void commitText(String commitText) {
+            LatinIME.this.commitText(commitText);
+            Log.d(TAG, "RIME commitText(" + commitText + ")");
+        }
     };
 
     public LatinIME() {
@@ -2871,7 +2877,16 @@ public class LatinIME extends InputMethodService implements
 
         if (typedWord != null) {
             if (!mRimeInSelection) {
-                mRime.setComposition(typedWord);
+                boolean autoCommit = mRime.setComposition(typedWord);
+                if (autoCommit) {
+                    String composing = mRime.getCompositionText();
+                    Log.d(TAG, "Updated composing=" + composing);
+                    LatinIME.this.resetPrediction();
+                    for (int i = 0; i < composing.length(); i++) {
+                        char pressedKey = composing.charAt(i);
+                        handleCharacter(pressedKey, new int[]{pressedKey});
+                    }
+                }
             }
 
             // Get all candidates from Rime engine
@@ -3124,7 +3139,7 @@ public class LatinIME extends InputMethodService implements
       Select the candidate in rime, and see if it is complete.
      */
     private CharSequence updateSuggestionByRime(CharSequence suggestion) {
-        // Select the suggestion in the engine. TODO multipage.
+        // Select the suggestion in the engine.
         int i = 0, sel = -1;
         for (Rime.RimeCandidate cand : mRimeCandidates) {
             if (cand.text.equals(suggestion)) {
