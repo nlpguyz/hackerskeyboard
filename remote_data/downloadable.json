@@ -157,5 +157,20 @@
             "en": "Shanghainese Pinyin (Wugniu)",
             "zh_CN": "\u4e0a\u6d77\u65b0\u6d3e"
         }
+    },
+    {
+        "files": [
+            "langwiki-mangul-pair.dict.yaml",
+            "langwiki-mangul-pair.schema.yaml"
+        ],
+        "homeUrl": "https://raw.githubusercontent.com/nlpguyz/rime-depot/master/dialects/",
+        "version": "0.1",
+        "id": "langwiki-mangul-pair",
+        "name": {
+            "default": "Hangul Pinyin (Bilingual)",
+            "zh_TW": "\u8afa\u62fc\u97f3\uff08\u6f22\u8afa\u5c0d\u7167\uff09",
+            "en": "Hangul Pinyin (Bilingual)",
+            "zh_CN": "\u8c1a\u62fc\u97f3\uff08\u6c49\u8c1a\u5bf9\u7167\uff09"
+        }
     }
 ]
