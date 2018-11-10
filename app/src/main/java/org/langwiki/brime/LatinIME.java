@@ -2701,7 +2701,20 @@ public class LatinIME extends InputMethodService implements
                     pickSuggestion(composing, false);
                     return;
                 }
-                pickFirstSuggestionOrTypedText();
+
+                if (true) {
+                    pickFirstSuggestionOrTypedText();
+                    mRime.clearComposition(); // TMP hack to clear engine
+                    mWord.reset();
+                    mComposing.setLength(0);
+                }
+
+                // TODO new key handling method (pass SPC to engine)
+                if (false) {
+                    mRime.onKey(new int[]{primaryCode, 0});
+                    boolean committed = mRime.checkAutoCommit();
+                    if (committed) doAutoCommit();
+                }
             }
 
             // If the key is SPACE, do not add the separator.
@@ -2927,17 +2940,7 @@ public class LatinIME extends InputMethodService implements
         if (typedWord != null) {
             if (!mRimeInSelection) {
                 boolean autoCommit = mRime.setComposition(typedWord);
-                if (autoCommit) {
-                    String composing = mRime.getCompositionText();
-                    Log.d(TAG, "Updated composing=" + composing);
-                    LatinIME.this.resetPrediction();
-                    if (mRimeCachedKeys == null)
-                        mRimeCachedKeys = composing;
-                    else
-                        mRimeCachedKeys += composing;
-                    Message msg = mHandler.obtainMessage(MSG_PUSH_KEYS);
-                    mHandler.sendMessageDelayed(msg, PUSH_KEY_DELAY);
-                }
+                if (autoCommit) doAutoCommit();
             }
         }
 
@@ -2958,6 +2961,18 @@ public class LatinIME extends InputMethodService implements
         boolean correctionAvailable = false;
         boolean typedWordValid = true;
         showSuggestions(stringList, typedWord, typedWordValid, correctionAvailable);
+    }
+
+    private void doAutoCommit() {
+        String composing = mRime.getCompositionText();
+        Log.d(TAG, "Updated composing=" + composing);
+        LatinIME.this.resetPrediction();
+        if (mRimeCachedKeys == null)
+            mRimeCachedKeys = composing;
+        else
+            mRimeCachedKeys += composing;
+        Message msg = mHandler.obtainMessage(MSG_PUSH_KEYS);
+        mHandler.sendMessageDelayed(msg, PUSH_KEY_DELAY);
     }
 
     private void showSuggestionsLatin(WordComposer word) {

@@ -12,6 +12,8 @@ TODO list
   - Align popup so that its first row is centered
   - Render first row in the static view with a drop button
   - Show all candidates for full spelling (containing vowel)
+- Auto commit
+  - DH空格S出了还还, 应该只出还字, 还有个S
 - Keyboard layout
   - Update the popups and key labels
   - Simple version: change the key label
