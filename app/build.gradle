@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "org.langwiki.brime"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 21
     }
 
     buildTypes {
