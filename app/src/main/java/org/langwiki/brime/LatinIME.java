@@ -163,6 +163,10 @@ public class LatinIME extends InputMethodService implements
     private static final int MSG_UPDATE_SHIFT_STATE = 2;
     private static final int MSG_VOICE_RESULTS = 3;
     private static final int MSG_UPDATE_OLD_SUGGESTIONS = 4;
+    private static final int MSG_PUSH_KEYS = 5;
+
+    // Timing constants
+    private long PUSH_KEY_DELAY = 20; // unit ms
 
     // How many continuous deletes at which to start deleting at a higher speed.
     private static final int DELETE_ACCELERATE_AT = 20;
@@ -320,7 +324,6 @@ public class LatinIME extends InputMethodService implements
     public boolean mCommitTextAsGif = false;
 
     // If false, use internal composing buffer. If true, use Rime for composing
-    private final boolean useRimeForOnKey = true;
     public Rime mRime = Rime.getInstance(); // public for debugging
     public SchemaManager mSchemaManager;
     private List<Rime.RimeCandidate> mRimeCandidates;
@@ -329,6 +332,7 @@ public class LatinIME extends InputMethodService implements
     // Rime is doing composition
     private boolean mRimeInSelection = false;
     private StringBuilder mRimeSelection = new StringBuilder();
+    private String mRimeCachedKeys;
 
     protected Handler mRimeHandler;
 
@@ -489,6 +493,13 @@ public class LatinIME extends InputMethodService implements
                 break;
             case MSG_UPDATE_SHIFT_STATE:
                 updateShiftKeyState(getCurrentInputEditorInfo());
+                break;
+            case MSG_PUSH_KEYS:
+                if (mRimeCachedKeys != null) {
+                    String keys = mRimeCachedKeys;
+                    mRimeCachedKeys = null;
+                    pushCachedKeys(keys);
+                }
                 break;
             }
         }
@@ -2202,6 +2213,13 @@ public class LatinIME extends InputMethodService implements
     // Implementation of KeyboardViewListener
 
     public void onKey(int primaryCode, int[] keyCodes, int x, int y) {
+        // Check if any key is pending
+        if (isCJK() && mRimeCachedKeys != null) {
+            String keysToPush = mRimeCachedKeys;
+            mRimeCachedKeys = null;
+            pushCachedKeys(keysToPush);
+        }
+
         long when = SystemClock.uptimeMillis();
 
         if (primaryCode != Keyboard.KEYCODE_DELETE
@@ -2865,6 +2883,14 @@ public class LatinIME extends InputMethodService implements
         mCandiateController.showCandidates();
     }
 
+    private void pushCachedKeys(String keysToPush) {
+        for (int i = 0; i < keysToPush.length(); i++) {
+            char pressedKey = keysToPush.charAt(i);
+            // issue: the character is committed mBestWord shouldn't be pushed to hisotry
+            handleCharacter(pressedKey, new int[]{pressedKey});
+        }
+    }
+
     private void showSuggestionsCJK(WordComposer word) {
         // Handle two cases
         // 1. A new word is typed
@@ -2882,10 +2908,12 @@ public class LatinIME extends InputMethodService implements
                     String composing = mRime.getCompositionText();
                     Log.d(TAG, "Updated composing=" + composing);
                     LatinIME.this.resetPrediction();
-                    for (int i = 0; i < composing.length(); i++) {
-                        char pressedKey = composing.charAt(i);
-                        handleCharacter(pressedKey, new int[]{pressedKey});
-                    }
+                    if (mRimeCachedKeys == null)
+                        mRimeCachedKeys = composing;
+                    else
+                        mRimeCachedKeys += composing;
+                    Message msg = mHandler.obtainMessage(MSG_PUSH_KEYS);
+                    mHandler.sendMessageDelayed(msg, PUSH_KEY_DELAY);
                 }
             }
 
