@@ -15,6 +15,7 @@
 -->
 
 <resources>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight"></style>
     <style name="LatinKeyboardBaseView">
         <item name="android:background">@drawable/keyboard_background</item>
 

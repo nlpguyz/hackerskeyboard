@@ -366,7 +366,9 @@
         public void initSchema() {
             mSchemaList = get_schema_list();
             String schema_id = getSchemaId();
-            mSchema = new RimeSchema(schema_id);
+            if (schema_id != null) {
+                mSchema = new RimeSchema(schema_id);
+            }
             getStatus();
         }
 

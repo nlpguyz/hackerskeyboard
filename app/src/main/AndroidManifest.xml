@@ -24,7 +24,9 @@
             android:restoreAnyVersion="true"
             android:hardwareAccelerated="false"
             android:killAfterRestore="false"
-            android:icon="@drawable/icon">
+            android:icon="@drawable/icon"
+            android:theme="@style/AppTheme"
+        >
 
         <service android:name="LatinIME"
                 android:label="@string/english_ime_name"

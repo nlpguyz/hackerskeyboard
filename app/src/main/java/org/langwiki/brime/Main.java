@@ -16,8 +16,12 @@
 
 package org.langwiki.brime;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v13.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +29,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -34,14 +39,44 @@ import android.widget.TextView.BufferType;
 
 import org.langwiki.brime.schema.SchemaManager;
 
-public class Main extends Activity {
+public class Main extends AppCompatActivity {
 
     private final static String MARKET_URI = "market://search?q=pub:\"Klaus Weidner\"";
     private SchemaManager mSchemaManager;
 
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(IMEConfig.TAG,"Permission is granted");
+                return true;
+            } else {
+                Log.v(IMEConfig.TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[] {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(IMEConfig.TAG,"Permission is granted");
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.v(IMEConfig.TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isStoragePermissionGranted();
+
         setContentView(R.layout.main);
         String html = getString(R.string.main_body);
         html += "<p><i>Version: " + getString(R.string.auto_version) + "</i></p>";
@@ -54,7 +89,7 @@ public class Main extends Activity {
         final Button setup1 = findViewById(R.id.main_setup_btn_configure_imes);
         setup1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivityForResult(new Intent(android.provider.Settings.ACTION_INPUT_METHOD_SETTINGS), 0);
+                startActivityForResult(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS), 0);
             }
         });
 
@@ -66,7 +101,7 @@ public class Main extends Activity {
             }
         });
         
-        final Activity that = this;
+        final AppCompatActivity that = this;
 
         final Button setup4 = findViewById(R.id.main_setup_btn_input_lang);
         setup4.setOnClickListener(new View.OnClickListener() {

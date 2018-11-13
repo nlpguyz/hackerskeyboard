@@ -7,7 +7,8 @@ android {
     defaultConfig {
         applicationId "org.langwiki.brime"
         minSdkVersion 21
-        targetSdkVersion 21
+        // TODO upgrade to 26 for Google Play
+        targetSdkVersion 26
     }
 
     buildTypes {
@@ -29,6 +30,7 @@ dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation project(':rimenative-release')
     implementation 'com.android.support:support-v13:27.0.0'
+    implementation 'com.android.support:appcompat-v7:27.0.0'
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.7'
