@@ -2687,8 +2687,9 @@ public class LatinIME extends InputMethodService implements
 
         // CJK mode: commit default suggestion for SPACE
         if (isCJK()) {
-            if (inHandleSeparator > 1)
+            if (inHandleSeparator > 1) {
                 return;
+            }
 
             // This is temporary. Better use existing logic to do it.
             // Check if user entered anything
@@ -2697,6 +2698,9 @@ public class LatinIME extends InputMethodService implements
 
             // Commit first candidate
             if (isComposing) {
+                // Hack: do not commit the next word when typing a new char
+                mRime.setDropCommit(true);
+
                 if (primaryCode == ASCII_ENTER) {
                     pickSuggestion(composing, false);
                     return;

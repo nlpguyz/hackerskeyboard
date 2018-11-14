@@ -42,6 +42,7 @@
         public static int MAX_CANDIDATES = 200;
 
         private static Rime sInstance;
+
         public static Rime getInstance() {
             if (sInstance != null)
                 return sInstance;
@@ -266,6 +267,7 @@
         private RimeListener mRimeListener;
 
         private int mBusyCount;
+        private boolean mDropCommit;
 
         static {
             System.loadLibrary("opencc");
@@ -323,7 +325,9 @@
         }
 
         /**
-         * New API to just set the whole typed word
+         * New API to just set the whole typed word.
+         * Note: For some reasons, it always commits the previous word, if a new string
+         * is passed. Need to figure out why.
          * @param typedWord user-typed word
          * @return true if auto-commit occurred.
          */
@@ -344,13 +348,19 @@
                 char ch = Character.toLowerCase(typedWord.charAt(i));
                 onKey(new int[]{ch, 0});
             }
-            return checkAutoCommit();
+            boolean commited = checkAutoCommit();
+            return commited;
+        }
+
+        public void setDropCommit(boolean drop) {
+            mDropCommit = drop;
         }
 
         public boolean checkAutoCommit() {
             boolean r = getCommit();
-            if (r && mRimeListener != null)
+            if (r && mRimeListener != null && !mDropCommit)
                 mRimeListener.commitText(getCommitText());
+            mDropCommit = false;
             return r;
         }
 
