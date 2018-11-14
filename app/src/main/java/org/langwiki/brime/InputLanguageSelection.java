@@ -71,7 +71,7 @@ public class InputLanguageSelection extends PreferenceActivity {
         "ar", "bg", "bg_ST", "ca", "cs", "cs_QY", "da", "de", "de_NE",
         "el", "en", "en_CX", "en_DV", "en_GB", "es", "es_LA", "es_US",
         "fa", "fi", "fr", "fr_CA", "he", "hr", "hu", "hu_QY", "hy", "in",
-        "it", "iw", "ja", "ka", "ko", "lo", "lt", "lv", "nb", "nl", "pl",
+        "it", "iw", "ja", "jb", "ka", "ko", "lo", "lt", "lv", "nb", "nl", "pl",
         "pt", "pt_PT", "rm", "ro", "ru", "ru_PH", "si", "sk", "sk_QY", "sl",
         "sr", "sv", "ta", "th", "tl", "tr", "uk", "vi", "zh_CN", /*"zh_TW"*/
     };
@@ -112,6 +112,8 @@ public class InputLanguageSelection extends PreferenceActivity {
             return "Slovenčina (QWERTY)";
         } else if (lang.equals("ru") && country.equals("PH")) {
             return "Русский (Phonetic)";
+        } else if (lang.equals("jb")) {
+            return "lojban";
         } else if (lang.equals("bg")) {
             if (country.equals("ST")) {
                 return "български език (Standard)";
@@ -338,7 +340,7 @@ public class InputLanguageSelection extends PreferenceActivity {
                     // zz_rYY
                     l = new Locale(language, s.substring(4, 6));
                 } else {
-                    l = new Locale(language);                	
+                    l = new Locale(language);
                 }
                 
                 // Exclude languages that are not relevant to LatinIME
