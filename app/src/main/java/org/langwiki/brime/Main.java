@@ -39,12 +39,14 @@ import android.widget.TextView.BufferType;
 
 import org.langwiki.brime.schema.SchemaManager;
 
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
+
 public class Main extends AppCompatActivity {
 
     private final static String MARKET_URI = "market://search?q=pub:\"Klaus Weidner\"";
     private SchemaManager mSchemaManager;
 
-    public  boolean isStoragePermissionGranted() {
+    public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -76,6 +78,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         isStoragePermissionGranted();
+        isOverlayPermissionGranted();
 
         setContentView(R.layout.main);
         String html = getString(R.string.main_body);
@@ -137,6 +140,16 @@ public class Main extends AppCompatActivity {
             }
         }); */
         // PluginManager.getPluginDictionaries(getApplicationContext()); // why?
-    }    
+    }
+
+    private void isOverlayPermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 1234);
+            }
+        }
+    }
 }
 

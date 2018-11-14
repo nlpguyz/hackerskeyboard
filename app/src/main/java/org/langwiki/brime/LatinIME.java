@@ -26,11 +26,13 @@ import org.langwiki.brime.render.RenderManager;
 import org.langwiki.brime.schema.SchemaManager;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ClipDescription;
 import android.content.Context;
@@ -55,6 +57,7 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
@@ -166,6 +169,8 @@ public class LatinIME extends InputMethodService implements
     private static final int MSG_VOICE_RESULTS = 3;
     private static final int MSG_UPDATE_OLD_SUGGESTIONS = 4;
     private static final int MSG_PUSH_KEYS = 5;
+
+    private static final int RC_OVERLAY = 101;
 
     // Timing constants
     private long PUSH_KEY_DELAY = 20; // unit ms
@@ -385,6 +390,13 @@ public class LatinIME extends InputMethodService implements
 
     public LatinIME() {
         sInstance = this;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void getOverlayPermission() {
+        if (Settings.canDrawOverlays(this)) {
+            return;
+        }
     }
 
     public void showAlert(String msgValue) {
@@ -636,6 +648,8 @@ public class LatinIME extends InputMethodService implements
             th.setDaemon(true);
             th.start();
         }
+
+        getOverlayPermission();
     }
 
     private int getKeyboardModeNum(int origMode, int override) {
@@ -4056,7 +4070,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void showOptionsMenu() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setCancelable(true);
         builder.setIcon(R.drawable.ic_dialog_keyboard);
         builder.setNegativeButton(android.R.string.cancel, null);
@@ -4096,8 +4110,16 @@ public class LatinIME extends InputMethodService implements
         mOptionsDialog = builder.create();
         Window window = mOptionsDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
-        lp.token = mKeyboardSwitcher.getInputView().getWindowToken();
-        lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+
+        int layoutFlag;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
+            layoutFlag = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            lp.token = mKeyboardSwitcher.getInputView().getWindowToken();
+            layoutFlag = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+        }
+
+        lp.type = layoutFlag;
         window.setAttributes(lp);
         window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         mOptionsDialog.show();

@@ -120,8 +120,8 @@ public class CandidateController {
 
         // Set an elevation value for popup window
         // Call requires API level 21
-        if (Build.VERSION.SDK_INT >= 21){
-            mCandidatePopupWindow.setElevation(5.0f);
+        if (Build.VERSION.SDK_INT >= 21) {
+            // mCandidatePopupWindow.setElevation(5.0f);
         }
 
         if (TEST_POPUP_WINDOW) {
