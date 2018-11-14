@@ -4112,7 +4112,7 @@ public class LatinIME extends InputMethodService implements
         WindowManager.LayoutParams lp = window.getAttributes();
 
         int layoutFlag;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(this)) {
             layoutFlag = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         } else {
             lp.token = mKeyboardSwitcher.getInputView().getWindowToken();
