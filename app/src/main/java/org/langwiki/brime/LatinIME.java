@@ -32,7 +32,6 @@ import android.app.AppOpsManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ClipDescription;
 import android.content.Context;
@@ -118,8 +117,6 @@ public class LatinIME extends InputMethodService implements
     public static final int MSG_SHOW_ALERT = 1;
     public static final int MSG_QUEUE_KEY = 2;
 
-    private static Context sContext;
-
     static Map<Integer, String> ESC_SEQUENCES;
     static Map<Integer, Integer> CTRL_SEQUENCES;
 
@@ -169,8 +166,6 @@ public class LatinIME extends InputMethodService implements
     private static final int MSG_VOICE_RESULTS = 3;
     private static final int MSG_UPDATE_OLD_SUGGESTIONS = 4;
     private static final int MSG_PUSH_KEYS = 5;
-
-    private static final int RC_OVERLAY = 101;
 
     // Timing constants
     private long PUSH_KEY_DELAY = 20; // unit ms
@@ -923,7 +918,6 @@ public class LatinIME extends InputMethodService implements
         mJustAddedAutoSpace = false;
     }
 
-
     @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
         sKeyboardSettings.editorPackageName = attribute.packageName;
@@ -1283,7 +1277,7 @@ public class LatinIME extends InputMethodService implements
                 return;
             }
 
-            List<CharSequence> stringList = new ArrayList<CharSequence>();
+            List<CharSequence> stringList = new ArrayList<>();
             for (int i = 0; i < (completions != null ? completions.length : 0); i++) {
                 CompletionInfo ci = completions[i];
                 if (ci != null)
@@ -2926,7 +2920,7 @@ public class LatinIME extends InputMethodService implements
     private void pushCachedKeys(String keysToPush) {
         for (int i = 0; i < keysToPush.length(); i++) {
             char pressedKey = keysToPush.charAt(i);
-            // issue: the character is committed mBestWord shouldn't be pushed to hisotry
+            // issue: the character is committed mBestWord shouldn't be pushed to history
             handleCharacter(pressedKey, new int[]{pressedKey});
         }
     }
