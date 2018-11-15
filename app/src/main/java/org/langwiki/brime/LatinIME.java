@@ -4051,6 +4051,13 @@ public class LatinIME extends InputMethodService implements
             // Not user-configured, load the language-specific default.
             suggestPuncs = getResources().getString(R.string.suggested_punctuations);
         }
+
+        // Get default local
+        Locale current = getResources().getConfiguration().locale;
+        if (current.getLanguage().contains("zh")) {
+            suggestPuncs = "！？，。：；（）【】";
+        }
+
         if (suggestPuncs != null) {
             for (int i = 0; i < suggestPuncs.length(); i++) {
                 mSuggestPuncList.add(suggestPuncs.subSequence(i, i + 1));
