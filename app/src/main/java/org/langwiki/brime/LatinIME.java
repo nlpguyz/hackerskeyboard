@@ -116,6 +116,7 @@ public class LatinIME extends InputMethodService implements
     public static final String ENGINE_BUSY = "Engine busy...";
     public static final int MSG_SHOW_ALERT = 1;
     public static final int MSG_QUEUE_KEY = 2;
+    public static final String SUGGEST_PUNCS_ZH = "！？，。：“”；（）【】";
 
     static Map<Integer, String> ESC_SEQUENCES;
     static Map<Integer, Integer> CTRL_SEQUENCES;
@@ -4055,7 +4056,7 @@ public class LatinIME extends InputMethodService implements
         // Get default local
         Locale current = getResources().getConfiguration().locale;
         if (current.getLanguage().contains("zh")) {
-            suggestPuncs = "！？，。：；（）【】";
+            suggestPuncs = SUGGEST_PUNCS_ZH;
         }
 
         if (suggestPuncs != null) {
