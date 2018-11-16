@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -41,6 +42,7 @@ public class CandidateController {
     // Holds the scroll candidate view and all candidates
     private MultilineCandidateView mCandidateView;
     private List<CharSequence> suggestions;
+    private RotateController mExpandButtonRotator;
 
     public CandidateController(InputMethodService context) {
         mContext = context;
@@ -101,6 +103,8 @@ public class CandidateController {
             }
         });
 
+        mExpandButtonRotator = new RotateController(mCandidateExpandButton);
+
         return mCandidateViewContainer;
     }
 
@@ -151,7 +155,19 @@ public class CandidateController {
     private void toggleCandidateExpansion() {
         if (mCandidateView != null) {
             mCandidateView.setExpanded(!mCandidateView.isExpanded());
+            if (mCandidateView.isExpanded()) {
+                mExpandButtonRotator.rotate();
+            } else {
+                mExpandButtonRotator.unrotate();
+            }
         }
+    }
+
+    public void hideCandidateExpansion() {
+        if (mCandidateView == null)
+            return;
+        mCandidateView.setExpanded(false);
+        mExpandButtonRotator.unrotate();
     }
 
     public boolean hasContainer() {
@@ -191,5 +207,54 @@ public class CandidateController {
             return getCandidateView().getSuggestions();
         else
             return new ArrayList<>();
+    }
+
+    class RotateController {
+        View target;
+
+        public RotateController(View target) {
+            this.target = target;
+        }
+
+        public boolean rotated;
+        public boolean busy;
+
+        public boolean rotate() {
+            if (rotated || busy)
+                return rotated;
+            rotated = !rotated;
+            target.post(runnableRotate);
+            return rotated;
+        }
+
+        public boolean unrotate() {
+            if (!rotated || busy)
+                return rotated;
+            rotated = !rotated;
+            target.post(runnableUnrotate);
+            return rotated;
+        }
+
+        Runnable runnableRotate = new Runnable() {
+            @Override
+            public void run() {
+                target.animate()
+                        .rotation(90)
+                        .withEndAction(this)
+                        .setDuration(200)
+                        .setInterpolator(new LinearInterpolator()).start();
+            }
+        };
+
+        Runnable runnableUnrotate = new Runnable() {
+            @Override
+            public void run() {
+                target.animate()
+                        .rotation(0)
+                        .withEndAction(this)
+                        .setDuration(200)
+                        .setInterpolator(new LinearInterpolator()).start();
+            }
+        };
     }
 }

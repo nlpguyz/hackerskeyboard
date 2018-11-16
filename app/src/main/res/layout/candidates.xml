@@ -38,13 +38,14 @@
 
     <ImageButton
         android:id="@+id/candidate_expand_button"
-        android:layout_width="40dip"
-        android:layout_height="40dip"
-        android:src="@drawable/down_arrow"
-        android:layout_marginTop="1dp"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="1dp"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:src="@drawable/right_arrow"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_vertical"
         android:scaleType="fitCenter"
+        android:background="@color/transparent"
         />
 
 </LinearLayout>
