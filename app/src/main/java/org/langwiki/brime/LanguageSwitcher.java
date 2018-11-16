@@ -60,7 +60,15 @@ public class LanguageSwitcher {
      */
     public boolean loadLocales(SharedPreferences sp) {
         String selectedLanguages = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, LatinIME.DEFAULT_LANGS);
-        String currentLanguage   = sp.getString(LatinIME.PREF_INPUT_LANGUAGE, null);
+
+        String defaultLang = "en";
+        if (Locale.getDefault().getLanguage().contains("zh")) {
+            defaultLang = "zh_CN";
+        }
+
+        Log.d(IMEConfig.TAG, "Default lang " + defaultLang);
+
+        String currentLanguage   = sp.getString(LatinIME.PREF_INPUT_LANGUAGE, defaultLang);
         if (selectedLanguages == null || selectedLanguages.length() < 1) {
             loadDefaults();
             if (mLocales.length == 0) {

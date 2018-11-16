@@ -46,30 +46,14 @@ public class Main extends AppCompatActivity {
     private final static String MARKET_URI = "market://search?q=pub:\"Klaus Weidner\"";
     private SchemaManager mSchemaManager;
 
-    public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(IMEConfig.TAG,"Permission is granted");
-                return true;
-            } else {
-                Log.v(IMEConfig.TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[] {
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(IMEConfig.TAG,"Permission is granted");
-            return true;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
             Log.v(IMEConfig.TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             //resume tasks needing this permission
+            SchemaManager.getInstance().setWritePermission(true);
+            mSchemaManager.redeploy(this, false, true);
         }
     }
 
@@ -142,12 +126,41 @@ public class Main extends AppCompatActivity {
         // PluginManager.getPluginDictionaries(getApplicationContext()); // why?
     }
 
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            SchemaManager.getInstance().setWritePermission(false);
+            try {
+                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    Log.v(IMEConfig.TAG, "Permission is granted");
+                    return true;
+                } else {
+                    Log.v(IMEConfig.TAG, "Permission is revoked");
+                    ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(IMEConfig.TAG,"Permission is granted");
+            mSchemaManager.redeploy(this, false, true);
+            return true;
+        }
+    }
+
     private void isOverlayPermissionGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 1234);
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, 1234);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

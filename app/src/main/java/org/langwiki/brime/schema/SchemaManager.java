@@ -45,6 +45,7 @@ public class SchemaManager {
 
     protected Handler mHandler;
     protected Toast mToast;
+    private boolean mWritePermission = true;
 
     public void clearCache() {
         mListReady = false;
@@ -69,6 +70,11 @@ public class SchemaManager {
     }
 
     public void redeploy(final Context context, final boolean initial, boolean background) {
+        if (!mWritePermission) {
+            Log.e(IMEConfig.TAG, "Cannot deploy. No write permission!");
+            return;
+        }
+
         final Rime rime = Rime.getInstance();
         final Runnable runnable = new Runnable() {
             @Override
@@ -96,6 +102,10 @@ public class SchemaManager {
         }
     }
 
+    public void setWritePermission(boolean writable) {
+        mWritePermission = writable;
+    }
+
     public interface SchemaManagerListener {
         void onSchemaList(List<IMDF> list);
     }
@@ -118,6 +128,11 @@ public class SchemaManager {
     }
 
     public void initializeDataDir(Context context) {
+        if (!mWritePermission) {
+            Log.e(IMEConfig.TAG, "initializeDataDir: No write permission!");
+            return;
+        }
+
         // Make sure the path exists
         File brimePath = new File(getUserDir());
         brimePath.mkdir();

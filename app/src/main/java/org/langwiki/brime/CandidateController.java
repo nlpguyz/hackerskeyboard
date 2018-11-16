@@ -166,8 +166,10 @@ public class CandidateController {
     public void hideCandidateExpansion() {
         if (mCandidateView == null)
             return;
-        mCandidateView.setExpanded(false);
-        mExpandButtonRotator.unrotate();
+        if (mCandidateView.isExpanded()) {
+            mCandidateView.setExpanded(false);
+            mExpandButtonRotator.unrotate();
+        }
     }
 
     public boolean hasContainer() {

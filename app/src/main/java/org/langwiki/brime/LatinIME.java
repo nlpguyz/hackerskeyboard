@@ -2234,10 +2234,13 @@ public class LatinIME extends InputMethodService implements
 
     public void onKey(int primaryCode, int[] keyCodes, int x, int y) {
         // Check if any key is pending
-        if (isCJK() && mRimeCachedKeys != null) {
-            String keysToPush = mRimeCachedKeys;
-            mRimeCachedKeys = null;
-            pushCachedKeys(keysToPush);
+        if (isCJK()) {
+            mCandiateController.hideCandidateExpansion();
+            if (mRimeCachedKeys != null) {
+                String keysToPush = mRimeCachedKeys;
+                mRimeCachedKeys = null;
+                pushCachedKeys(keysToPush);
+            }
         }
 
         long when = SystemClock.uptimeMillis();
