@@ -219,22 +219,21 @@ public class CandidateController {
         }
 
         public boolean rotated;
-        public boolean busy;
 
         public boolean rotate() {
-            if (rotated || busy)
-                return rotated;
-            rotated = !rotated;
+            if (rotated)
+                return false;
+            rotated = true;
             target.post(runnableRotate);
-            return rotated;
+            return true;
         }
 
         public boolean unrotate() {
-            if (!rotated || busy)
-                return rotated;
-            rotated = !rotated;
+            if (!rotated)
+                return false;
+            rotated = false;
             target.post(runnableUnrotate);
-            return rotated;
+            return true;
         }
 
         Runnable runnableRotate = new Runnable() {
