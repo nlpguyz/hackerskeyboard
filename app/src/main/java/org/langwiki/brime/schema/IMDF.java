@@ -11,4 +11,6 @@ public class IMDF {
     public String homeUrl;
     public String license;
     public String[] files;
+    // below is used by the app
+    public Boolean installed;
 }

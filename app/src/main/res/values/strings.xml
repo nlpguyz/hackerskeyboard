@@ -690,4 +690,6 @@
     <string name="rime_install_schema_failed">Failed to install %s</string>
     <string name="rime_install_schema_successful">Successfully installed %s!</string>
     <string name="deploy">Deploy</string>
+    <string name="main_no_items">No IME to install.</string>
+    <string name="install">Install</string>
 </resources>

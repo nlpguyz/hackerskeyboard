@@ -1,100 +1,104 @@
 package org.langwiki.brime;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.langwiki.brime.schema.ExternalStorage;
 import org.langwiki.brime.schema.IMDF;
+import org.langwiki.brime.schema.ImdfAdapter;
 import org.langwiki.brime.schema.SchemaManager;
 
 import java.util.List;
 
 import jline.internal.Nullable;
 
-public class RimeInstallSchema extends PreferenceActivity implements SchemaManager.SchemaManagerListener {
+public class RimeInstallSchema extends AppCompatActivity {
     private static final String TAG = IMEConfig.TAG;
     public static final String SDCARD_IS_NOT_WRITABLE = "SDCard is not writable!";
-    PreferenceCategory schemaParent;
-    SchemaManager sm;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        addPreferencesFromResource(R.xml.pref_rime_install_schemata);
-
-        schemaParent = (PreferenceCategory)findPreference("rime_schemata");
-        sm = SchemaManager.getInstance();
-        sm.addListener(RimeInstallSchema.this);
-
-        startDownload(false);
+        getFragmentManager().beginTransaction().replace(android.R.id.content,
+                new SchemaInstallFragment()).commit();
     }
 
-    protected void startDownload(final boolean refresh) {
-        new Thread() {
-            @Override
-            public void run() {
-                if (refresh) {
-                    sm.clearCache();
-                }
-                sm.getInstallList();
-            }
-        }.start();
-    }
+    public static class SchemaInstallFragment extends Fragment
+            implements SchemaManager.SchemaManagerListener {
+        SchemaManager sm;
+        ListView listView;
 
-    @Override
-    public void onSchemaList(@Nullable List<IMDF> list) {
-        if (list == null) {
-            return;
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            sm = SchemaManager.getInstance();
+            sm.addListener(this);
+
+            View view = inflater.inflate(R.layout.layout_install_schema, container, false);
+            listView = view.findViewById(R.id.ime_list);
+
+            startDownload(false);
+            return view;
         }
 
-        // Add schema checkboxes
-        for (IMDF imdf : list) {
-            SchemaManager sm = SchemaManager.getInstance();
-            String name = sm.getLocaleString(this, imdf.name);
-            if (name == null) {
-                name = imdf.id;
+        protected void startDownload(final boolean refresh) {
+            new Thread() {
+                @Override
+                public void run() {
+                    if (refresh) {
+                        sm.clearCache();
+                    }
+                    sm.getInstallList();
+                }
+            }.start();
+        }
+
+        @Override
+        public void onSchemaList(@Nullable List<IMDF> list) {
+            if (list == null) {
+                return;
             }
 
-            CheckBoxPreference pref = new CheckBoxPreference(this);
-            pref.setTitle(name);
-            pref.setKey(imdf.id);
+            // Add schema checkboxes
+            for (IMDF imdf : list) {
+                imdf.installed = false;
+            }
 
-            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
+            getActivity().runOnUiThread(()->{
+                listView.setAdapter(new ImdfAdapter(getContext(), R.layout.layout_schema_row, list));
+                listView.setOnItemClickListener((parent, view, position, id) -> {
                     if (!ExternalStorage.isWritable()) {
-                        Toast.makeText(RimeInstallSchema.this,
+                        Toast.makeText(getContext(),
                                 SDCARD_IS_NOT_WRITABLE,
                                 Toast.LENGTH_LONG);
-                        return true;
+                        return;
                     }
 
-                    final String id = preference.getKey();
+                    final String imeId = ""; //view.findViewById()
                     new Thread() {
                         @Override
                         public void run() {
                             SchemaManager.getInstance().installSchema(
-                                    RimeInstallSchema.this, id, true);
+                                    getContext(), imeId, true);
                         }
                     }.start();
-
-                    return true;
-                }
+                });
             });
 
-            schemaParent.addPreference(pref);
         }
-    }
 
-    public void refresh(View view) {
-        Log.d(TAG, "refresh");
-        schemaParent.removeAll();
-        startDownload(true);
+        public void refresh(View view) {
+            Log.d(TAG, "refresh");
+            //schemaParent.removeAll();
+            startDownload(true);
+        }
     }
 }
