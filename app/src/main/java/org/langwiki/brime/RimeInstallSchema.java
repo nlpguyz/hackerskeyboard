@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.langwiki.brime.schema.ExternalStorage;
@@ -23,10 +24,15 @@ import jline.internal.Nullable;
 public class RimeInstallSchema extends AppCompatActivity {
     private static final String TAG = IMEConfig.TAG;
     public static final String SDCARD_IS_NOT_WRITABLE = "SDCard is not writable!";
+    public static final String UNINSTALL_NOT_SUPPORTED = "Sorry, uninstall is not yet supported!";
+
+    public interface DoneCallback {
+        void done(boolean succ);
+    }
 
     public interface InstallCallback {
-        void install(String imeId);
-        void uninstall(String imeId);
+        void install(View view, String imeId, DoneCallback doneCallback);
+        void uninstall(View view, String imeId, DoneCallback doneCallback);
     }
 
     @Override
@@ -43,7 +49,7 @@ public class RimeInstallSchema extends AppCompatActivity {
 
         private InstallCallback installCallback = new InstallCallback() {
             @Override
-            public void install(String imeId) {
+            public void install(View view, String imeId, DoneCallback doneCallback) {
                 if (!ExternalStorage.isWritable()) {
                     Toast.makeText(getContext(),
                             SDCARD_IS_NOT_WRITABLE,
@@ -53,12 +59,36 @@ public class RimeInstallSchema extends AppCompatActivity {
 
                 new Thread(()->{
                     SchemaManager.getInstance().installSchema(getContext(), imeId, true);
+                    getActivity().runOnUiThread(()->{
+                        doneCallback.done(true);
+                    });
                 }).start();
             }
 
             @Override
-            public void uninstall(String imeId) {
-                // TODO
+            public void uninstall(View view, String imeId, DoneCallback doneCallback) {
+                if (!ExternalStorage.isWritable()) {
+                    Toast.makeText(getContext(),
+                            SDCARD_IS_NOT_WRITABLE,
+                            Toast.LENGTH_LONG);
+                    return;
+                }
+
+                boolean uninstalled = false;
+
+                if (true) {
+                    Toast.makeText(getContext(),
+                            UNINSTALL_NOT_SUPPORTED,
+                            Toast.LENGTH_LONG);
+                } else {
+                    new Thread(() -> {
+                        SchemaManager.getInstance().uninstallSchema(getContext(), imeId, true);
+                    }).start();
+                }
+
+                getActivity().runOnUiThread(() -> {
+                    doneCallback.done(uninstalled);
+                });
             }
         };
 
@@ -77,14 +107,12 @@ public class RimeInstallSchema extends AppCompatActivity {
         }
 
         protected void startDownload(final boolean refresh) {
-            new Thread() {
-                @Override
-                public void run() {
-                    if (refresh) {
-                        sm.clearCache();
-                    }
-                    sm.getInstallList();
+            new Thread(()->{
+                if (refresh) {
+                    sm.clearCache();
                 }
+                sm.getInstallList();
+            }) {
             }.start();
         }
 

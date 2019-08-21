@@ -141,12 +141,8 @@ public class SchemaManager {
         brimePath.mkdir();
 
         final AssetManager assetMgr = context.getAssets();
-        FileOpener opener = new FileOpener() {
-            @Override
-            public InputStream open(String path) throws IOException {
-                return assetMgr.open(path);
-            }
-        };
+        FileOpener opener = path->assetMgr.open(path);
+
         try {
             InputStream is = assetMgr.open(DEFAULT_IMDF);
             String imdfText = FileHelper.read(is);
@@ -209,12 +205,9 @@ public class SchemaManager {
     }
 
     private void showToast(final Context context, final String msg) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mToast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-                mToast.show();
-            }
+        mHandler.post(()->{
+            mToast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+            mToast.show();
         });
     }
 
@@ -231,12 +224,9 @@ public class SchemaManager {
                     getLocaleString(context, imdf.name)));
         }
 
-        FileOpener opener = new FileOpener() {
-            @Override
-            public InputStream open(String path) throws IOException {
-                InputStream input = new URL(homeUrl + path).openStream();
-                return input;
-            }
+        FileOpener opener = path -> {
+            InputStream input = new URL(homeUrl + path).openStream();
+            return input;
         };
 
         boolean successful = deployImdf(imdf, opener);
@@ -259,6 +249,17 @@ public class SchemaManager {
         return successful;
     }
 
+    private void uninstallOnlineImdf(Context context, IMDF imdf, boolean showToast) {
+        boolean successful = false;
+
+        // Save status in shared preferences
+        /*
+        SharedPreferences pref = context.getSharedPreferences(SchemaManager.SHARED_PREF_NAME, 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(imdf.id, !successful);
+        editor.commit();*/
+    }
+
     public void installSchema(Context context, String id, boolean showToast) {
         if (mList == null) {
             return;
@@ -267,6 +268,19 @@ public class SchemaManager {
         for (IMDF im : mList) {
             if (id.equals(im.id)) {
                 installOnlineImdf(context, im, showToast);
+                return;
+            }
+        }
+    }
+
+    public void uninstallSchema(Context context, String id, boolean showToast) {
+        if (mList == null) {
+            return;
+        }
+
+        for (IMDF im : mList) {
+            if (id.equals(im.id)) {
+                uninstallOnlineImdf(context, im, showToast);
                 return;
             }
         }
