@@ -3,13 +3,13 @@ package org.langwiki.brime;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.langwiki.brime.schema.ExternalStorage;
@@ -46,14 +46,21 @@ public class RimeInstallSchema extends AppCompatActivity {
             implements SchemaManager.SchemaManagerListener {
         SchemaManager sm;
         ListView listView;
+        private Handler mHandler;
+
+        public SchemaInstallFragment() {
+            mHandler = new Handler();
+        }
 
         private InstallCallback installCallback = new InstallCallback() {
             @Override
             public void install(View view, String imeId, DoneCallback doneCallback) {
                 if (!ExternalStorage.isWritable()) {
-                    Toast.makeText(getContext(),
-                            SDCARD_IS_NOT_WRITABLE,
-                            Toast.LENGTH_LONG);
+                    mHandler.post(()->{
+                        Toast.makeText(getContext(),
+                                SDCARD_IS_NOT_WRITABLE,
+                                Toast.LENGTH_LONG);
+                    });
                     return;
                 }
 
@@ -68,18 +75,22 @@ public class RimeInstallSchema extends AppCompatActivity {
             @Override
             public void uninstall(View view, String imeId, DoneCallback doneCallback) {
                 if (!ExternalStorage.isWritable()) {
-                    Toast.makeText(getContext(),
-                            SDCARD_IS_NOT_WRITABLE,
-                            Toast.LENGTH_LONG);
+                    mHandler.post(()->{
+                        Toast.makeText(getContext(),
+                                SDCARD_IS_NOT_WRITABLE,
+                                Toast.LENGTH_LONG);
+                    });
                     return;
                 }
 
                 boolean uninstalled = false;
 
                 if (true) {
-                    Toast.makeText(getContext(),
-                            UNINSTALL_NOT_SUPPORTED,
-                            Toast.LENGTH_LONG);
+                    mHandler.post(()->{
+                        Toast.makeText(getContext(),
+                                UNINSTALL_NOT_SUPPORTED,
+                                Toast.LENGTH_LONG);
+                    });
                 } else {
                     new Thread(() -> {
                         SchemaManager.getInstance().uninstallSchema(getContext(), imeId, true);

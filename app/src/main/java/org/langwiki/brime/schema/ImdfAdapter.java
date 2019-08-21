@@ -28,7 +28,7 @@ public class ImdfAdapter extends ArrayAdapter<IMDF> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (v == null) {
-            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.layout_schema_row, null);
         }
 
