@@ -5,6 +5,7 @@ import org.langwiki.brime.LatinIME;
 import org.langwiki.brime.R;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -35,6 +36,8 @@ public class SchemaManager {
     // The directory name in external storage
     private static final String USER_DIR = "brime";
     public static final String DEFAULT_IMDF = "brime_basic.json";
+
+    public static final String SHARED_PREF_NAME = "imdf_install";
 
     public static final String IMDF_SERVER_URL
             = "https://raw.githubusercontent.com/nlpguyz/hackerskeyboard/gradle/remote_data/downloadable.json";
@@ -237,6 +240,12 @@ public class SchemaManager {
         };
 
         boolean successful = deployImdf(imdf, opener);
+
+        // Save status in shared preferences
+        SharedPreferences pref = context.getSharedPreferences(SchemaManager.SHARED_PREF_NAME, 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(imdf.id, successful);
+        editor.commit();
 
         if (showToast) {
             String msg = successful

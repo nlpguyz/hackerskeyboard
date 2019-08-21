@@ -692,4 +692,5 @@
     <string name="deploy">Deploy</string>
     <string name="main_no_items">No IME to install.</string>
     <string name="install">Install</string>
+    <string name="uninstall">Uninstall</string>
 </resources>

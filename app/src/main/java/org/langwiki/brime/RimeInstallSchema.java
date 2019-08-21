@@ -1,6 +1,7 @@
 package org.langwiki.brime;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +24,11 @@ public class RimeInstallSchema extends AppCompatActivity {
     private static final String TAG = IMEConfig.TAG;
     public static final String SDCARD_IS_NOT_WRITABLE = "SDCard is not writable!";
 
+    public interface InstallCallback {
+        void install(String imeId);
+        void uninstall(String imeId);
+    }
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -34,6 +40,27 @@ public class RimeInstallSchema extends AppCompatActivity {
             implements SchemaManager.SchemaManagerListener {
         SchemaManager sm;
         ListView listView;
+
+        private InstallCallback installCallback = new InstallCallback() {
+            @Override
+            public void install(String imeId) {
+                if (!ExternalStorage.isWritable()) {
+                    Toast.makeText(getContext(),
+                            SDCARD_IS_NOT_WRITABLE,
+                            Toast.LENGTH_LONG);
+                    return;
+                }
+
+                new Thread(()->{
+                    SchemaManager.getInstance().installSchema(getContext(), imeId, true);
+                }).start();
+            }
+
+            @Override
+            public void uninstall(String imeId) {
+                // TODO
+            }
+        };
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,32 +94,15 @@ public class RimeInstallSchema extends AppCompatActivity {
                 return;
             }
 
-            // Add schema checkboxes
+            // Add schema list, get installed states from SharedPreferences
+            SharedPreferences pref = getContext().getSharedPreferences(SchemaManager.SHARED_PREF_NAME, 0); // 0 - for private mode
             for (IMDF imdf : list) {
-                imdf.installed = false;
+                imdf.installed = pref.getBoolean(imdf.id, false);
             }
 
             getActivity().runOnUiThread(()->{
-                listView.setAdapter(new ImdfAdapter(getContext(), R.layout.layout_schema_row, list));
-                listView.setOnItemClickListener((parent, view, position, id) -> {
-                    if (!ExternalStorage.isWritable()) {
-                        Toast.makeText(getContext(),
-                                SDCARD_IS_NOT_WRITABLE,
-                                Toast.LENGTH_LONG);
-                        return;
-                    }
-
-                    final String imeId = ""; //view.findViewById()
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            SchemaManager.getInstance().installSchema(
-                                    getContext(), imeId, true);
-                        }
-                    }.start();
-                });
+                listView.setAdapter(new ImdfAdapter(getContext(), R.layout.layout_schema_row, list, installCallback));
             });
-
         }
 
         public void refresh(View view) {
