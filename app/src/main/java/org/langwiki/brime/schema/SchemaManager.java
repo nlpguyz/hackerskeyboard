@@ -110,7 +110,7 @@ public class SchemaManager {
     }
 
     public interface SchemaManagerListener {
-        void onSchemaList(List<IMDF> list);
+        void onSchemaList(Context ctx, List<IMDF> list);
     }
 
     protected List<SchemaManagerListener> listeners;
@@ -292,18 +292,18 @@ public class SchemaManager {
         return imdf;
     }
 
-    public void getInstallList() {
+    public void getInstallList(final Context ctx) {
         synchronized (mLock) {
             if (mListReady) {
-                doListReady();
+                doListReady(ctx);
                 return;
             }
         }
 
-        startDownloadList();
+        startDownloadList(ctx);
     }
 
-    private void startDownloadList() {
+    private void startDownloadList(final Context ctx) {
         try {
             String jsonText = NetHelper.getText(IMDF_SERVER_URL);
             Gson gson = new Gson();
@@ -313,13 +313,13 @@ public class SchemaManager {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            doListReady();
+            doListReady(ctx);
         }
     }
 
-    private void doListReady() {
+    private void doListReady(Context ctx) {
         for (SchemaManagerListener l : listeners) {
-            l.onSchemaList(mList);
+            l.onSchemaList(ctx, mList);
         }
     }
 

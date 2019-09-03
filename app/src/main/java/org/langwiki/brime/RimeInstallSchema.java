@@ -1,6 +1,8 @@
 package org.langwiki.brime;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -113,41 +115,44 @@ public class RimeInstallSchema extends AppCompatActivity {
             View view = inflater.inflate(R.layout.layout_install_schema, container, false);
             listView = view.findViewById(R.id.ime_list);
 
-            startDownload(false);
+            startDownload(getContext(), false);
             return view;
         }
 
-        protected void startDownload(final boolean refresh) {
+        protected void startDownload(final Context ctx, final boolean refresh) {
             new Thread(()->{
                 if (refresh) {
                     sm.clearCache();
                 }
-                sm.getInstallList();
+                sm.getInstallList(ctx);
             }) {
             }.start();
         }
 
         @Override
-        public void onSchemaList(@Nullable List<IMDF> list) {
+        public void onSchemaList(Context ctx, @Nullable List<IMDF> list) {
             if (list == null) {
                 return;
             }
 
             // Add schema list, get installed states from SharedPreferences
-            SharedPreferences pref = getContext().getSharedPreferences(SchemaManager.SHARED_PREF_NAME, 0); // 0 - for private mode
+            SharedPreferences pref = ctx.getSharedPreferences(SchemaManager.SHARED_PREF_NAME, 0); // 0 - for private mode
             for (IMDF imdf : list) {
                 imdf.installed = pref.getBoolean(imdf.id, false);
             }
 
-            getActivity().runOnUiThread(()->{
-                listView.setAdapter(new ImdfAdapter(getContext(), R.layout.layout_schema_row, list, installCallback));
-            });
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    listView.setAdapter(new ImdfAdapter(getContext(), R.layout.layout_schema_row, list, installCallback));
+                });
+            }
         }
 
         public void refresh(View view) {
             Log.d(TAG, "refresh");
             //schemaParent.removeAll();
-            startDownload(true);
+            startDownload(getContext(), true);
         }
     }
 }

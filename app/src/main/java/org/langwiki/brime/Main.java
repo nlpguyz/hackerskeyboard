@@ -133,6 +133,7 @@ public class Main extends AppCompatActivity {
                 if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED) {
                     Log.v(IMEConfig.TAG, "Permission is granted");
+                    SchemaManager.getInstance().setWritePermission(true);
                     return true;
                 } else {
                     Log.v(IMEConfig.TAG, "Permission is revoked");

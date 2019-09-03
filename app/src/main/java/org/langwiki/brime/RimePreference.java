@@ -1,6 +1,5 @@
 package org.langwiki.brime;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -89,10 +88,6 @@ public class RimePreference extends PreferenceActivity {
             }
         }
 
-        public void onDeployButton(View v) {
-            SchemaManager.getInstance().redeploy(getContext(), false, true);
-        }
-
         @Override
         public void onResume() {
             super.onResume();
@@ -127,4 +122,9 @@ public class RimePreference extends PreferenceActivity {
         }
 
     }
+
+    public void onDeployButton(View v) {
+        SchemaManager.getInstance().redeploy(this, false, true);
+    }
+
 }
