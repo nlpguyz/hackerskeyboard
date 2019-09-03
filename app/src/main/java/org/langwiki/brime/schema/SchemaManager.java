@@ -97,6 +97,8 @@ public class SchemaManager {
         if (background) {
             new Thread() {
                 public void run() {
+                    // FIXME This thread is not allowed to access JNI
+                    // https://stackoverflow.com/questions/26534304/android-jni-call-attachcurrentthread-without-detachcurrentthread
                     runnable.run();
                 }
             }.start();
