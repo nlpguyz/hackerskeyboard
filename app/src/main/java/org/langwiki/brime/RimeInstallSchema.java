@@ -69,7 +69,7 @@ public class RimeInstallSchema extends AppCompatActivity {
                 new Thread(()->{
                     SchemaManager.getInstance().installSchema(getContext(), imeId, true);
                     getActivity().runOnUiThread(()->{
-                        doneCallback.done(true);
+                        doneCallback.done(true); // TODO use proper status
                     });
                 }).start();
             }
@@ -87,7 +87,7 @@ public class RimeInstallSchema extends AppCompatActivity {
 
                 boolean uninstalled = false;
 
-                if (true) {
+                if (false) {
                     mHandler.post(()->{
                         Toast.makeText(getContext(),
                                 UNINSTALL_NOT_SUPPORTED,
@@ -96,12 +96,11 @@ public class RimeInstallSchema extends AppCompatActivity {
                 } else {
                     new Thread(() -> {
                         SchemaManager.getInstance().uninstallSchema(getContext(), imeId, true);
+                        getActivity().runOnUiThread(() -> {
+                            doneCallback.done(true); // TODO use proper status
+                        });
                     }).start();
                 }
-
-                getActivity().runOnUiThread(() -> {
-                    doneCallback.done(uninstalled);
-                });
             }
         };
 

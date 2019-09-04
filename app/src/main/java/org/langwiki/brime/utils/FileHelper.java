@@ -89,4 +89,9 @@ public class FileHelper {
             e.printStackTrace();
         }
     }
+
+    public static void remove(String dstPath) {
+        File file = new File(dstPath);
+        file.delete();
+    }
 }

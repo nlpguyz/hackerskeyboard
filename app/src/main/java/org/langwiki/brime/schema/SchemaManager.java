@@ -206,6 +206,26 @@ public class SchemaManager {
         return !fail;
     }
 
+    public boolean undeployImdf(IMDF imdf) {
+        String versionFileName = getUserDir() + File.separator + imdf.id + ".ver";
+        FileHelper.remove(versionFileName);
+
+        boolean fail = false;
+
+        try {
+            Rime.getInstance().incrementBusy();
+            for (String fn : imdf.files) {
+                String dstPath = getUserDir() + File.separator + fn;
+                FileHelper.remove(dstPath);
+            }
+            Rime.getInstance().initSchema();
+        } finally {
+            Rime.getInstance().decrementBusy();
+        }
+
+        return !fail;
+    }
+
     private void showToast(final Context context, final String msg) {
         mHandler.post(()->{
             mToast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
@@ -252,14 +272,29 @@ public class SchemaManager {
     }
 
     private void uninstallOnlineImdf(Context context, IMDF imdf, boolean showToast) {
-        boolean successful = false;
+        Resources res = context.getResources();
+
+        if (showToast) {
+            showToast(context, String.format(res.getString(R.string.text_uninstalling_rime_schema),
+                    getLocaleString(context, imdf.name)));
+        }
+
+        boolean successful = undeployImdf(imdf);
 
         // Save status in shared preferences
-        /*
         SharedPreferences pref = context.getSharedPreferences(SchemaManager.SHARED_PREF_NAME, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(imdf.id, !successful);
-        editor.commit();*/
+        editor.commit();
+
+        if (showToast) {
+            String msg = successful
+                    ? String.format(res.getString(R.string.rime_uninstall_schema_successful),
+                    getLocaleString(context, imdf.name))
+                    : String.format(res.getString(R.string.rime_uninstall_schema_failed),
+                    getLocaleString(context, imdf.name));
+            showToast(context, msg);
+        }
     }
 
     public void installSchema(Context context, String id, boolean showToast) {
