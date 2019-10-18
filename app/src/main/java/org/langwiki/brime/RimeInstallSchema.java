@@ -68,9 +68,11 @@ public class RimeInstallSchema extends AppCompatActivity {
 
                 new Thread(()->{
                     SchemaManager.getInstance().installSchema(getContext(), imeId, true);
-                    getActivity().runOnUiThread(()->{
-                        doneCallback.done(true); // TODO use proper status
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(()->{
+                            doneCallback.done(true); // TODO use proper status
+                        });
+                    }
                 }).start();
             }
 
@@ -96,7 +98,9 @@ public class RimeInstallSchema extends AppCompatActivity {
                 } else {
                     new Thread(() -> {
                         SchemaManager.getInstance().uninstallSchema(getContext(), imeId, true);
-                        getActivity().runOnUiThread(() -> {
+                        Activity activity = getActivity();
+                        if (activity != null)
+                            activity.runOnUiThread(() -> {
                             doneCallback.done(true); // TODO use proper status
                         });
                     }).start();
