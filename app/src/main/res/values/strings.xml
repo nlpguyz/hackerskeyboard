@@ -678,6 +678,9 @@
     <string name="seek_pref_val">x%</string>
     <string name="seek_pref_max">100%</string>
 
+    <!-- Hackers keyboard -->
+    <string name="keyboard_version">0.80</string>
+
     <!-- RIME -->
     <string name="menu_rime_settings">RIME setup</string>
     <string name="pref_rime_title">RIME settings</string>

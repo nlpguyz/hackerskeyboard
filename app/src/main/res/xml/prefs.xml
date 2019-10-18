@@ -336,7 +336,7 @@
     <Preference
             android:key="label_version"
             android:title="@string/title_version"
-            android:summary="@string/auto_version"
+            android:summary="@string/keyboard_version"
             />
     </PreferenceCategory>
 
